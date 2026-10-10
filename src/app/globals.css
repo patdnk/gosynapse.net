@@ -1,0 +1,197 @@
+@import "tailwindcss";
+
+/* Button labels are set in capitals, with a touch of tracking so the caps do
+   not crowd: "Sign in" reads SIGN IN. Lives in the components layer so a
+   utility such as `normal-case` on a tab or a glyph-only control still wins. */
+@layer components {
+  button,
+  .btn {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+
+:root {
+  /* Synapse palette — Oracle-clean: crisp neutrals, near-black ink, lots of
+     white, one strong accent. Where Oracle uses red, Synapse uses purple.
+     "Clean but clear": high contrast, minimal, confident. */
+  --brand: #6c2bd9; /* Synapse purple (Oracle's red, replaced) */
+  --brand-strong: #5620ad; /* darker purple — hover / pressed */
+  --brand-soft: #f2ecfd; /* faint purple tint — soft fills */
+  --accent: #9b4dff; /* brighter violet — gradients / pops */
+  --ink: #18161d; /* near-black — headings + body */
+  --ink-900: #100e15; /* darkest — dark bands */
+  --muted: #59565f; /* neutral gray — secondary text */
+  --surface-1: #ffffff;
+  --surface-2: #f7f6f8; /* faint neutral off-white */
+  --surface-3: #efedf2;
+  --border: #e5e3ea; /* light neutral line */
+}
+
+/* Type: Mona Sans throughout, Space Grotesk for small details. Both bundled
+   by next/font in layout.tsx, which sets --font-mona / --font-grotesk. */
+@theme inline {
+  --font-sans: var(--font-mona), ui-sans-serif, system-ui, sans-serif;
+  --font-detail: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--border);
+}
+
+html {
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+}
+
+body {
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  background: var(--surface-1);
+}
+
+/* Space Grotesk for the details: eyebrows and section labels (every uppercase
+   run on the page is one), captions, table headers and aligned figures.
+   Headlines, copy and buttons stay in Mona Sans. */
+.uppercase,
+th,
+.font-detail,
+.tabular-nums {
+  font-family: var(--font-detail);
+}
+
+/* Soft purple glow behind the hero. */
+.hero-glow {
+  background: radial-gradient(60% 55% at 50% 0%, rgba(108, 43, 217, 0.14), transparent 70%),
+    radial-gradient(40% 40% at 85% 10%, rgba(155, 77, 255, 0.1), transparent 70%);
+}
+
+/* Faint grid, masked to fade out. */
+.bg-grid {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 0%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 60% at 50% 0%, #000 35%, transparent 100%);
+  opacity: 0.55;
+}
+
+/* ---------------------------------------------------------------------------
+   Animated illustrations (tiquo/kaluza-style, kept subtle & premium).
+   All motion is ambient and slow; every animation is disabled under
+   prefers-reduced-motion at the bottom of this file.
+--------------------------------------------------------------------------- */
+
+/* Drifting gradient orbs behind the hero. */
+@keyframes orb-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(4%, -6%, 0) scale(1.08); }
+}
+@keyframes orb-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-5%, 5%, 0) scale(1.12); }
+}
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(48px);
+  opacity: 0.5;
+  pointer-events: none;
+  will-change: transform;
+}
+.orb-a { animation: orb-a 16s ease-in-out infinite; }
+.orb-b { animation: orb-b 20s ease-in-out infinite; }
+
+/* Synapse network: a signal travelling out along a spoke (hub -> node).
+   Per-element --dx/--dy set the destination offset in SVG user units. */
+@keyframes net-signal {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  12%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+}
+.net-signal {
+  transform-box: fill-box;
+  animation: net-signal 3.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Node arrival pulse — a soft breathing glow, staggered per node. */
+@keyframes net-node {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
+.net-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: net-node 3.4s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Edge flow — a dash creeping outward along each spoke. */
+@keyframes net-dash {
+  to { stroke-dashoffset: -24; }
+}
+.net-edge { animation: net-dash 2.6s linear infinite; }
+
+/* Real-time sync: a dot travelling down the connector between surfaces. */
+@keyframes sync-travel {
+  0%   { transform: translateY(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(var(--dist, 40px)); opacity: 0; }
+}
+.sync-travel {
+  animation: sync-travel 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Expanding ring — used on a live badge / active surface. */
+@keyframes pulse-ring {
+  0%   { transform: scale(0.6); opacity: 0.5; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.pulse-ring { animation: pulse-ring 2.4s ease-out infinite; }
+
+/* Gentle floating bob for framed illustrations. */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-soft { animation: float-soft 7s ease-in-out infinite; }
+
+/* Reservation chip / till line-item entering. */
+@keyframes item-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.item-in { animation: item-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Data packet travelling left→right along a pipeline connector. */
+@keyframes flow-x {
+  0% { left: 0; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.flow-dot { animation: flow-x 1.15s linear infinite; }
+
+/* A stat/record card swapping in. */
+@keyframes stage-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stage-in { animation: stage-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .orb-a, .orb-b,
+  .net-signal, .net-node, .net-edge,
+  .sync-travel, .pulse-ring, .float-soft, .item-in,
+  .flow-dot, .stage-in {
+    animation: none !important;
+  }
+}
