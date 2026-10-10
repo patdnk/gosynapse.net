@@ -38,18 +38,48 @@ async function send({ website, ...fields }: Record<string, string>) {
   }
 }
 
+/**
+ * Phone numbers must be international, with the country code (E.164): "+",
+ * then 7–15 digits, the first of which is not 0. People type spaces, dashes,
+ * dots and brackets, and often "00" for "+", so those are tidied away first;
+ * what reaches the inbox is always the clean form, e.g. "+442079460958".
+ */
+const PHONE_RE = /^\+[1-9]\d{6,14}$/;
+
+function normalizePhone(raw: string) {
+  return raw.replace(/[\s().\-/]/g, "").replace(/^00/, "+");
+}
+
+/** null when the (optional) phone is empty or valid, otherwise what's wrong. */
+function phoneProblem(raw: string): string | null {
+  const v = normalizePhone(raw);
+  if (!v) return null;
+  if (!v.startsWith("+")) return "Include the country code, starting with + (e.g. +44 for the UK).";
+  if (!PHONE_RE.test(v)) return "That doesn't look like a full international number.";
+  return null;
+}
+
 export function ContactForm({ bare = false, onDone }: { bare?: boolean; onDone?: () => void } = {}) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("sending");
-    setError(null);
-
     const form = e.currentTarget;
     const fd = new FormData(form);
     const payload = Object.fromEntries(fd.entries()) as Record<string, string>;
+
+    const problem = phoneProblem(payload.phone ?? "");
+    if (problem) {
+      setPhoneError(problem);
+      form.querySelector<HTMLInputElement>('input[name="phone"]')?.focus();
+      return;
+    }
+    if (payload.phone) payload.phone = normalizePhone(payload.phone);
+
+    setStatus("sending");
+    setError(null);
 
     try {
       await send(payload);
@@ -125,7 +155,25 @@ export function ContactForm({ bare = false, onDone }: { bare?: boolean; onDone?:
         </label>
         <label className="block">
           <span className="mb-1.5 block text-xs font-medium text-white/70">Phone</span>
-          <input name="phone" maxLength={40} className={field} placeholder="+44 …" />
+          <input
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            maxLength={40}
+            className={`${field} ${phoneError ? "border-red-300/70" : ""}`}
+            placeholder="+44 20 7946 0958"
+            aria-invalid={phoneError ? true : undefined}
+            aria-describedby="phone-hint"
+            onBlur={(e) => setPhoneError(phoneProblem(e.currentTarget.value))}
+            onInput={() => phoneError && setPhoneError(null)}
+          />
+          <span
+            id="phone-hint"
+            className={`mt-1.5 block text-xs ${phoneError ? "text-red-300" : "text-white/40"}`}
+          >
+            {phoneError ?? "With country code, e.g. +44 for the UK."}
+          </span>
         </label>
         <label className="block sm:col-span-2">
           <span className="mb-1.5 block text-xs font-medium text-white/70">Venue type</span>
