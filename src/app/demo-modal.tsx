@@ -1,9 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { createPortal } from "react-dom";
 
-import { ContactForm } from "./contact-form";
+// The form carries libphonenumber's metadata (~145 kB), so it is its own chunk,
+// fetched when the dialog first opens rather than with the page.
+const ContactForm = dynamic(() => import("./contact-form").then((m) => m.ContactForm), {
+  ssr: false,
+  loading: () => <p className="py-10 text-center text-sm text-white/50">Loading…</p>,
+});
 
 /**
  * "Book a demo" dialog. The form is mounted only once the dialog opens, so the

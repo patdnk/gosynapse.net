@@ -1,5 +1,6 @@
 "use client";
 
+import { parsePhoneNumberFromString } from "libphonenumber-js/max";
 import { useState, type FormEvent } from "react";
 
 const VENUE_TYPES = ["Restaurant", "Bar", "Members' club", "Hotel", "Events", "Other"];
@@ -39,24 +40,33 @@ async function send({ website, ...fields }: Record<string, string>) {
 }
 
 /**
- * Phone numbers must be international, with the country code (E.164): "+",
- * then 7–15 digits, the first of which is not 0. People type spaces, dashes,
- * dots and brackets, and often "00" for "+", so those are tidied away first;
- * what reaches the inbox is always the clean form, e.g. "+442079460958".
+ * Phone numbers must be international, with the country code, and valid for
+ * that country — checked against libphonenumber's full metadata ("max": real
+ * number ranges per country, not just lengths). "00" is accepted for "+";
+ * spaces, dashes, dots and brackets are fine. The inbox always gets E.164,
+ * e.g. "+442079460958"; the field is tidied to "+44 20 7946 0958" on blur.
+ * The library is ~145 kB, so this whole form is loaded only when the dialog
+ * opens (see demo-modal.tsx).
  */
-const PHONE_RE = /^\+[1-9]\d{6,14}$/;
+type PhoneCheck = { problem: string | null; e164?: string; display?: string };
 
-function normalizePhone(raw: string) {
-  return raw.replace(/[\s().\-/]/g, "").replace(/^00/, "+");
-}
+const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 
-/** null when the (optional) phone is empty or valid, otherwise what's wrong. */
-function phoneProblem(raw: string): string | null {
-  const v = normalizePhone(raw);
-  if (!v) return null;
-  if (!v.startsWith("+")) return "Include the country code, starting with + (e.g. +44 for the UK).";
-  if (!PHONE_RE.test(v)) return "That doesn't look like a full international number.";
-  return null;
+function checkPhone(raw: string): PhoneCheck {
+  const v = raw.trim().replace(/^00/, "+");
+  if (!v) return { problem: null };
+  if (!v.startsWith("+")) {
+    return { problem: "Include the country code, starting with + (e.g. +44 for the UK)." };
+  }
+  const phone = parsePhoneNumberFromString(v);
+  if (!phone) return { problem: "That doesn't look like a full international number." };
+  if (!phone.isValid()) {
+    // Shared codes (+1, +44, +7…) can't name one country for an invalid
+    // number, so fall back to the code itself.
+    const where = phone.country ? `in ${regionNames.of(phone.country)}` : `for +${phone.countryCallingCode}`;
+    return { problem: `That isn't a valid number ${where}.` };
+  }
+  return { problem: null, e164: phone.number, display: phone.formatInternational() };
 }
 
 export function ContactForm({ bare = false, onDone }: { bare?: boolean; onDone?: () => void } = {}) {
@@ -70,13 +80,13 @@ export function ContactForm({ bare = false, onDone }: { bare?: boolean; onDone?:
     const fd = new FormData(form);
     const payload = Object.fromEntries(fd.entries()) as Record<string, string>;
 
-    const problem = phoneProblem(payload.phone ?? "");
-    if (problem) {
-      setPhoneError(problem);
+    const phone = checkPhone(payload.phone ?? "");
+    if (phone.problem) {
+      setPhoneError(phone.problem);
       form.querySelector<HTMLInputElement>('input[name="phone"]')?.focus();
       return;
     }
-    if (payload.phone) payload.phone = normalizePhone(payload.phone);
+    if (phone.e164) payload.phone = phone.e164;
 
     setStatus("sending");
     setError(null);
@@ -165,7 +175,11 @@ export function ContactForm({ bare = false, onDone }: { bare?: boolean; onDone?:
             placeholder="+44 20 7946 0958"
             aria-invalid={phoneError ? true : undefined}
             aria-describedby="phone-hint"
-            onBlur={(e) => setPhoneError(phoneProblem(e.currentTarget.value))}
+            onBlur={(e) => {
+              const phone = checkPhone(e.currentTarget.value);
+              setPhoneError(phone.problem);
+              if (phone.display) e.currentTarget.value = phone.display;
+            }}
             onInput={() => phoneError && setPhoneError(null)}
           />
           <span
