@@ -527,13 +527,7 @@ export default function Home() {
               Screenshots from the synapse admin, with every number counted by the engine as it ran.
             </p>
           </div>
-          <figure className="mx-auto mt-10 max-w-5xl">
-            <Reveal>
-              <Shot src="/screenshots/marketing-journey-live.png" alt="synapse admin — the booking reminder journey, live, with how many people are at each step" w={2880} h={1800} />
-            </Reveal>
-            <figcaption className="mt-3 text-sm text-[var(--muted)]">A journey, live — the booking reminder: six joined, four waiting until 24 hours before, and two left early: one cancelled, one booked too late for a reminder.</figcaption>
-          </figure>
-          <div className="mx-auto mt-6 grid max-w-5xl gap-6 lg:grid-cols-2">
+          <div className="mx-auto mt-10 grid max-w-5xl gap-6 lg:grid-cols-2">
             <figure>
               <Reveal delayMs={60}>
                 <Shot src="/screenshots/marketing-journey-builder.png" alt="synapse admin — journey builder with email, wait-for-open and SMS follow-up steps" w={2880} h={1800} />
