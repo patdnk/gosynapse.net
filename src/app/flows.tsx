@@ -16,7 +16,7 @@ import {
 
 // A monotonically increasing tick, used to derive stage/record indices so we
 // can detect wrap-around and "commit" a completed record to the graphs.
-function useTick(intervalMs: number, active: boolean) {
+export function useTick(intervalMs: number, active: boolean) {
   const [tick, setTick] = useState(0);
   useEffect(() => {
     if (!active) return;
@@ -28,7 +28,7 @@ function useTick(intervalMs: number, active: boolean) {
 
 /* --------------------------------- icons --------------------------------- */
 
-function FlowIcon({ name, className = "h-4 w-4" }: { name: string; className?: string }) {
+export function FlowIcon({ name, className = "h-4 w-4" }: { name: string; className?: string }) {
   const p = { className, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   switch (name) {
     case "order": return <svg {...p}><path d="M6 2 4 6v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6l-2-4Z" /><path d="M4 6h16M9 10a3 3 0 0 0 6 0" /></svg>;
@@ -39,15 +39,22 @@ function FlowIcon({ name, className = "h-4 w-4" }: { name: string; className?: s
     case "checkin": return <svg {...p}><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><path d="M10 17l5-5-5-5M15 12H3" /></svg>;
     case "track": return <svg {...p}><path d="M3 3v18h18" /><path d="M7 14l3-4 3 3 5-7" /></svg>;
     case "bolt": return <svg {...p}><path d="M13 2 4 14h7l-1 8 9-12h-7Z" /></svg>;
+    case "calendar": return <svg {...p}><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>;
+    case "send": return <svg {...p}><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z" /></svg>;
+    case "tick": return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="m8 12 3 3 5-6" /></svg>;
+    case "mail": return <svg {...p}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>;
+    case "clock": return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>;
+    case "branch": return <svg {...p}><circle cx="6" cy="6" r="2" /><circle cx="6" cy="18" r="2" /><circle cx="18" cy="9" r="2" /><path d="M6 8v8M8 6h2a6 6 0 0 1 6 3" /></svg>;
+    case "sms": return <svg {...p}><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z" /><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" /></svg>;
     default: return <svg {...p}><circle cx="12" cy="12" r="8" /></svg>;
   }
 }
 
 /* ------------------------------- pipeline -------------------------------- */
 
-type Stage = { key: string; label: string; icon: string };
+export type Stage = { key: string; label: string; icon: string };
 
-function Pipeline({ stages, active, run }: { stages: Stage[]; active: number; run: boolean }) {
+export function Pipeline({ stages, active, run }: { stages: Stage[]; active: number; run: boolean }) {
   return (
     <div className="flex items-start">
       {stages.map((s, i) => {
@@ -235,7 +242,7 @@ const MEM_STAGES: Stage[] = [
   { key: "track", label: "Tracking", icon: "track" },
 ];
 
-const MEMBER_TABLE: Record<string, { table: string; time: string }> = {
+export const MEMBER_TABLE: Record<string, { table: string; time: string }> = {
   "SF-0001": { table: "Window 4", time: "19:45" },
   "SF-0002": { table: "Bar 1", time: "20:00" },
   "SF-0003": { table: "Window 2", time: "20:15" },
@@ -403,7 +410,7 @@ function OrderLines({ lines }: { lines: Order["lines"] }) {
 // only the active one visible. The card is always as tall as its tallest
 // stage, so the page never shifts as the stages cycle. The active panel is
 // re-keyed when it becomes active so its entrance animation replays.
-function StageStack({ active, panels }: { active: number; panels: React.ReactNode[] }) {
+export function StageStack({ active, panels }: { active: number; panels: React.ReactNode[] }) {
   return (
     <div className="grid rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm">
       {panels.map((panel, i) => {
@@ -418,7 +425,7 @@ function StageStack({ active, panels }: { active: number; panels: React.ReactNod
   );
 }
 
-function StageBody({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
+export function StageBody({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
   return (
     <div>
       <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--brand-strong)]">
@@ -430,7 +437,7 @@ function StageBody({ title, icon, children }: { title: string; icon: string; chi
   );
 }
 
-function Row({ k, v, accent, muted, big }: { k: string; v: string; accent?: boolean; muted?: boolean; big?: boolean }) {
+export function Row({ k, v, accent, muted, big }: { k: string; v: string; accent?: boolean; muted?: boolean; big?: boolean }) {
   return (
     <div className={"flex justify-between py-0.5 " + (big ? "border-t border-[var(--border)] pt-2 mt-1 text-base font-bold text-[var(--ink)]" : "")}>
       <span className={accent ? "font-semibold text-[var(--brand-strong)]" : muted ? "text-[var(--muted)]" : "text-[var(--ink)]"}>{k}</span>

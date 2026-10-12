@@ -9,12 +9,14 @@ import { VenueConfigurator } from "./venue-configurator";
 import { Reveal } from "./reveal";
 import { HeroNetwork, SyncFlow, FloorPlanLive, TillLive, Frame } from "./anim";
 import { RevenueFlow, MemberJourney } from "./flows";
+import { MarketingShowcase } from "./marketing";
 
 /* ---------------------------------- data --------------------------------- */
 
 const NAV = [
   { label: "Platform", href: "#platform" },
   { label: "Modules", href: "#products" },
+  { label: "Marketing", href: "#marketing" },
   { label: "Solutions", href: "#solutions" },
   { label: "Security", href: "#security" },
 ];
@@ -28,7 +30,7 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
       { label: "POS system", href: "#products" },
       { label: "Till", href: "#products" },
       { label: "Kitchen display", href: "#products" },
-      { label: "Marketing & messaging", href: "#features" },
+      { label: "Marketing & messaging", href: "#marketing" },
       { label: "Payments & insights", href: "#products" },
     ],
   },
@@ -113,6 +115,12 @@ const FEATURES = [
   { title: "Email & SMS automations", desc: "Booking and ticket confirmations, reminders the day before, and journeys you draw — wait, branch, follow up if unopened.", icon: "mail" },
   { title: "Audiences & campaigns", desc: "Segments that keep themselves current — VIPs not seen in a month, everyone booked this week — and campaigns from your own designed templates.", icon: "flow" },
   { title: "Consent & deliverability", desc: "Opt-ins recorded with their wording, one-click unsubscribe and STOP, quiet hours, and sending from your own domain.", icon: "consent" },
+];
+
+const MARKETING_POINTS = [
+  { title: "Templates you design", desc: "Drag-and-drop email in your own branding, SMS with a live character count, merge fields from the member record.", icon: "mail" },
+  { title: "Audiences that keep up", desc: "VIPs not seen in a month, everyone with a ticket for Friday — segments update themselves as members visit, book and buy.", icon: "member" },
+  { title: "Journeys with a plan B", desc: "Wait, branch and split. Follow up by text if the email goes unopened, or fall back to SMS when an address bounces.", icon: "flow" },
 ];
 
 const PAYMENTS = ["Visa", "Mastercard", "Amex", "Apple Pay", "Google Pay", "Card-present"];
@@ -428,6 +436,81 @@ export default function Home() {
             <p className="mt-1 text-sm text-[var(--muted)]">Switch floor plans, kitchen display, bookings, loyalty, passes or marketing on per venue — the configurator gates the rest until they&apos;re ready.</p>
           </div>
           <ButtonGhost href="#solutions">See what your venue needs</ButtonGhost>
+        </div>
+      </section>
+
+      {/* marketing & messaging */}
+      <section id="marketing" className="border-t border-[var(--border)] bg-[var(--surface-2)]">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <div className="max-w-2xl">
+            <Eyebrow>Marketing &amp; messaging</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Messages that know your members</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              Email and SMS built on the same member record as the door and the till. A confirmation
+              the moment a table is booked, a reminder the day before, and journeys you draw yourself.
+              Consent, unsubscribes and quiet hours are handled for you.
+            </p>
+          </div>
+          <figure className="mx-auto mt-14 max-w-4xl">
+            <Reveal>
+              <Frame>
+                <MarketingShowcase />
+              </Frame>
+            </Reveal>
+            <figcaption className="mt-3 text-sm text-[var(--muted)]">Triggers, journeys, campaigns and templates — the booking reminder, the example journey and the copy shown are the ones synapse ships with.</figcaption>
+          </figure>
+          <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-3">
+            {MARKETING_POINTS.map((m) => (
+              <div key={m.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
+                  <Icon name={m.icon} className="h-5 w-5" />
+                </div>
+                <h3 className="mt-3 font-bold tracking-tight">{m.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{m.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* the real admin, running the flows above on the demo club */}
+          <div className="mx-auto mt-24 max-w-2xl text-center">
+            <Eyebrow>In the product</Eyebrow>
+            <h3 className="text-3xl font-bold tracking-[-0.02em] sm:text-4xl">Live flows, not slideware</h3>
+            <p className="mt-4 text-base text-[var(--muted)]">
+              Screenshots from the synapse admin, with every number counted by the engine as it ran.
+            </p>
+          </div>
+          <figure className="mx-auto mt-10 max-w-5xl">
+            <Reveal>
+              <Shot src="/screenshots/marketing-journey-live.png" alt="synapse admin — the booking reminder journey, live, with how many people are at each step" w={2880} h={1800} />
+            </Reveal>
+            <figcaption className="mt-3 text-sm text-[var(--muted)]">A journey, live — the booking reminder: six joined, four waiting until 24 hours before, and two left early: one cancelled, one booked too late for a reminder.</figcaption>
+          </figure>
+          <div className="mx-auto mt-6 grid max-w-5xl gap-6 lg:grid-cols-2">
+            <figure>
+              <Reveal delayMs={60}>
+                <Shot src="/screenshots/marketing-journey-builder.png" alt="synapse admin — journey builder with email, wait-for-open and SMS follow-up steps" w={2880} h={1800} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Journey builder — drag steps in, branch on whether the email was opened, follow up by text.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={140}>
+                <Shot src="/screenshots/marketing-automations.png" alt="synapse admin — booking automations with their triggers and templates" w={2880} h={1800} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Triggers — what each automation listens for, what it checks, and which template it sends.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={60}>
+                <Shot src="/screenshots/marketing-audience.png" alt="synapse admin — audience rule with its live member count" w={2880} h={1800} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Audiences — a rule, and who matches it right now. Campaigns go to exactly these people.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={140}>
+                <Shot src="/screenshots/marketing-template.png" alt="synapse admin — drag-and-drop email template editor with merge fields" w={2880} h={1800} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Templates — drag-and-drop email with merge fields, versioned so a live journey never changes mid-flight.</figcaption>
+            </figure>
+          </div>
         </div>
       </section>
 
