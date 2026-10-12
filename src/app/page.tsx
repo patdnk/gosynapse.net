@@ -10,6 +10,7 @@ import { Reveal } from "./reveal";
 import { HeroNetwork, SyncFlow, FloorPlanLive, TillLive, Frame } from "./anim";
 import { RevenueFlow, MemberJourney, MemberTrail } from "./flows";
 import { MarketingShowcase } from "./marketing";
+import { ApiSection } from "./api";
 
 /* ---------------------------------- data --------------------------------- */
 
@@ -17,6 +18,7 @@ const NAV = [
   { label: "Platform", href: "#platform" },
   { label: "Modules", href: "#products" },
   { label: "Marketing", href: "#marketing" },
+  { label: "API", href: "#api" },
   { label: "Solutions", href: "#solutions" },
   { label: "Security", href: "#security" },
 ];
@@ -48,7 +50,9 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
     title: "Company",
     links: [
       { label: "Platform", href: "#platform" },
+      { label: "API", href: "#api" },
       { label: "Security", href: "#security" },
+      { label: "Roadmap", href: "#roadmap" },
       { label: "Book a demo", href: "#demo" },
     ],
   },
@@ -121,6 +125,50 @@ const MARKETING_POINTS = [
   { title: "Templates you design", desc: "Drag-and-drop email in your own branding, SMS with a live character count, merge fields from the member record.", icon: "mail" },
   { title: "Audiences that keep up", desc: "VIPs not seen in a month, everyone with a ticket for Friday — segments update themselves as members visit, book and buy.", icon: "member" },
   { title: "Journeys with a plan B", desc: "Wait, branch and split. Follow up by text if the email goes unopened, or fall back to SMS when an address bounces.", icon: "flow" },
+];
+
+const SHIPPED = ["Marketing & messaging: email and SMS", "Journeys, audiences and campaigns", "Event outbox and webhooks"];
+
+const ROADMAP: { phase: string; why: string; items: { title: string; desc: string }[] }[] = [
+  {
+    phase: "Foundations",
+    why: "Reach members without a staff member holding the phone.",
+    items: [
+      { title: "WhatsApp and pass delivery", desc: "Passes sent by SMS, WhatsApp and email; bulk issue to a whole plan." },
+      { title: "Billing adjustments", desc: "Pro-rata, freezes, upgrades and downgrades, with credit notes." },
+      { title: "Accounting export", desc: "Sales, VAT and journals into Xero and QuickBooks." },
+    ],
+  },
+  {
+    phase: "Member-facing",
+    why: "A home for the member, deep-linked from their wallet pass.",
+    items: [
+      { title: "Member portal", desc: "Book, buy tickets, see the bill and top up credit — a web app, no app store." },
+      { title: "Passwordless sign-in", desc: "A magic link by SMS or email." },
+      { title: "Bookings & events API v2", desc: "Holds, waitlists, deposits and no-show fees, ticket tiers." },
+      { title: "Tap to Pay", desc: "Any staff phone as a card terminal; pay at the table." },
+    ],
+  },
+  {
+    phase: "Developer-facing",
+    why: "Partners and a venue's own apps build on the same data.",
+    items: [
+      { title: "Public REST API", desc: "/public/v1 with scoped keys, OAuth and rate limits per key." },
+      { title: "GraphQL read plane", desc: "Member 360, a booking with its spend, an event with its tickets — one query." },
+      { title: "Webhooks v2", desc: "Many endpoints per club, signed envelopes, retries and replay." },
+      { title: "Docs, sandbox, SDKs", desc: "Everything a partner needs to ship without a call." },
+    ],
+  },
+  {
+    phase: "Intelligence & trust",
+    why: "Answers from the venue's own data, and the certificates buyers ask for.",
+    items: [
+      { title: "AI insights", desc: "Questions in plain language, automatic reports and forecasts." },
+      { title: "Kitchen display", desc: "Course pacing, hold-and-fire and an expo view." },
+      { title: "Procurement", desc: "Purchase orders and invoice capture matched to deliveries." },
+      { title: "SOC 2 Type II, then ISO 27001", desc: "Most controls already exist in code; the programme does the rest." },
+    ],
+  },
 ];
 
 const PAYMENTS = ["Visa", "Mastercard", "Amex", "Apple Pay", "Google Pay", "Card-present"];
@@ -816,6 +864,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* API — in and out */}
+      <section id="api" className="border-t border-[var(--border)] bg-[var(--surface-2)]">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <div className="mx-auto max-w-2xl text-center">
+            <Eyebrow>API</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Open in both directions</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              Bring members, reservations and events in from the platforms you already run, and serve
+              every module back out to your own apps and partners — REST today, GraphQL next, with
+              webhooks so nobody has to poll.
+            </p>
+          </div>
+          <div className="mt-14">
+            <ApiSection />
+          </div>
+        </div>
+      </section>
+
       {/* verticals */}
       <section id="solutions" className="border-t border-[var(--border)] bg-[var(--surface-2)]">
         <div className="mx-auto max-w-6xl px-5 py-28">
@@ -868,6 +934,47 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* roadmap */}
+      <section id="roadmap" className="border-t border-[var(--border)]">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <div className="max-w-2xl">
+            <Eyebrow>Roadmap</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Where synapse goes next</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              From a complete venue platform to a member-facing, developer-facing, certified product.
+              Sequenced by dependency, so every phase ships something a venue or a partner can use.
+            </p>
+          </div>
+          <div className="mt-8 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">Recently shipped</span>
+            {SHIPPED.map((x) => (
+              <span key={x} className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">✓ {x}</span>
+            ))}
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {ROADMAP.map((p, i) => (
+              <div key={p.phase} className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand-strong)]">Phase {i + 1}</p>
+                <h3 className="mt-1 text-lg font-bold tracking-tight">{p.phase}</h3>
+                <p className="mt-1 text-sm text-[var(--muted)]">{p.why}</p>
+                <ul className="mt-4 space-y-2.5">
+                  {p.items.map((it) => (
+                    <li key={it.title} className="text-sm">
+                      <span className="font-semibold text-[var(--ink)]">{it.title}</span>
+                      <span className="block text-[var(--muted)]">{it.desc}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-[var(--muted)]">
+            Inbound order ingestion and a native member app come after the public API and the member
+            portal they depend on.
+          </p>
         </div>
       </section>
 
