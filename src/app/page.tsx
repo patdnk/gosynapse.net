@@ -28,6 +28,7 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
       { label: "POS system", href: "#products" },
       { label: "Till", href: "#products" },
       { label: "Kitchen display", href: "#products" },
+      { label: "Marketing & messaging", href: "#features" },
       { label: "Payments & insights", href: "#products" },
     ],
   },
@@ -76,9 +77,9 @@ const PRODUCT_LINES: {
     parts: [
       { name: "Members", desc: "Applications and vetting, plans and recurring dues, member records and cases.", icon: "member" },
       { name: "Reception", desc: "The front-of-house app on the door: who's in, check-in by NFC tap or QR scan, one-tap check-out, guests and cloakroom.", icon: "frame" },
-      { name: "Engagement", desc: "Bookings, events and tickets, Apple & Google wallet passes, loyalty credit.", icon: "pass" },
+      { name: "Engagement", desc: "Bookings, events and tickets, Apple & Google wallet passes, loyalty credit — and the emails and texts that follow up on all of it.", icon: "pass" },
     ],
-    includes: ["Card-on-file billing", "Salesforce, SevenRooms, PeopleVine", "CRM reporting: growth, attendance, churn"],
+    includes: ["Card-on-file billing", "Email & SMS journeys", "Salesforce, SevenRooms, PeopleVine", "CRM reporting: growth, attendance, churn"],
   },
   {
     key: "pos",
@@ -109,6 +110,9 @@ const FEATURES = [
   { title: "Wallet passes", desc: "Design Apple & Google passes per organisation — barcodes, artwork and fields, platform-accurate.", icon: "pass" },
   { title: "Kitchen & printing", desc: "KDS routing, ESC/POS chits and receipts, and a compliant electronic journal for every sale.", icon: "printer" },
   { title: "Events & cloakroom", desc: "Ticketing, invoices and QR cloakroom tags — the extras a members' club runs on.", icon: "ticket" },
+  { title: "Email & SMS automations", desc: "Booking and ticket confirmations, reminders the day before, and journeys you draw — wait, branch, follow up if unopened.", icon: "mail" },
+  { title: "Audiences & campaigns", desc: "Segments that keep themselves current — VIPs not seen in a month, everyone booked this week — and campaigns from your own designed templates.", icon: "flow" },
+  { title: "Consent & deliverability", desc: "Opt-ins recorded with their wording, one-click unsubscribe and STOP, quiet hours, and sending from your own domain.", icon: "consent" },
 ];
 
 const PAYMENTS = ["Visa", "Mastercard", "Amex", "Apple Pay", "Google Pay", "Card-present"];
@@ -197,6 +201,9 @@ function Icon({ name, className = "h-6 w-6" }: { name: string; className?: strin
     case "member": return <svg {...p}><circle cx="12" cy="8" r="3.5" /><path d="M5 20a7 7 0 0 1 14 0" /></svg>;
     case "pass": return <svg {...p}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 9h18M7 14h6M16 13v2" /></svg>;
     case "printer": return <svg {...p}><path d="M6 9V3h12v6" /><rect x="4" y="9" width="16" height="7" rx="2" /><path d="M8 16h8v5H8z" /></svg>;
+    case "mail": return <svg {...p}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>;
+    case "flow": return <svg {...p}><circle cx="5" cy="6" r="2" /><circle cx="5" cy="18" r="2" /><circle cx="19" cy="12" r="2" /><path d="M7 6h3l7 6M7 18h3l7-6" /></svg>;
+    case "consent": return <svg {...p}><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6Z" /><path d="m9 12 2 2 4-4" /></svg>;
     case "ticket": return <svg {...p}><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-4Z" /><path d="M15 6v12" strokeDasharray="2 2" /></svg>;
     case "bolt": return <svg {...p}><path d="M13 2 4 14h7l-1 8 9-12h-7Z" /></svg>;
     case "shield": return <svg {...p}><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6Z" /><path d="m9 12 2 2 4-4" /></svg>;
@@ -418,7 +425,7 @@ export default function Home() {
         <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-[var(--ink)]">…and it&apos;s modular within each.</p>
-            <p className="mt-1 text-sm text-[var(--muted)]">Switch floor plans, kitchen display, bookings, loyalty or passes on per venue — the configurator gates the rest until they&apos;re ready.</p>
+            <p className="mt-1 text-sm text-[var(--muted)]">Switch floor plans, kitchen display, bookings, loyalty, passes or marketing on per venue — the configurator gates the rest until they&apos;re ready.</p>
           </div>
           <ButtonGhost href="#solutions">See what your venue needs</ButtonGhost>
         </div>
@@ -628,7 +635,7 @@ export default function Home() {
       </section>
 
       {/* feature grid */}
-      <section className="mx-auto max-w-6xl px-5 py-28">
+      <section id="features" className="mx-auto max-w-6xl px-5 py-28">
         <div className="max-w-2xl">
           <Eyebrow>Everything a venue runs on</Eyebrow>
           <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Native, not bolted on</h2>
