@@ -40,6 +40,9 @@ export function FlowIcon({ name, className = "h-4 w-4" }: { name: string; classN
     case "track": return <svg {...p}><path d="M3 3v18h18" /><path d="M7 14l3-4 3 3 5-7" /></svg>;
     case "bolt": return <svg {...p}><path d="M13 2 4 14h7l-1 8 9-12h-7Z" /></svg>;
     case "calendar": return <svg {...p}><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>;
+    case "floor": return <svg {...p}><path d="M3 7l9-4 9 4-9 4Z" /><path d="m3 12 9 4 9-4M3 17l9 4 9-4" /></svg>;
+    case "table": return <svg {...p}><ellipse cx="12" cy="9" rx="8" ry="3" /><path d="M12 12v8M8 20h8" /></svg>;
+    case "ticket": return <svg {...p}><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-4Z" /><path d="M15 6v12" strokeDasharray="2 2" /></svg>;
     case "send": return <svg {...p}><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z" /></svg>;
     case "tick": return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="m8 12 3 3 5-6" /></svg>;
     case "mail": return <svg {...p}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>;
@@ -372,6 +375,140 @@ export function MemberJourney() {
             <div className="mt-2 flex justify-between text-[10px] text-[var(--muted)]">
               <span>each bar = one visit</span>
               <span className="tabular-nums">latest {fmt(stat.spends[stat.spends.length - 1]!)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------ 3. member → booking · event · floor · table --------------- */
+
+// One member, and every record the platform ties them to. The same member id
+// sits on the booking, the event ticket, the check-in at the door and the
+// check on the table — so the floor plan can say who is sitting where.
+const TRAIL_STAGES: Stage[] = [
+  { key: "booking", label: "Booking", icon: "calendar" },
+  { key: "event", label: "Event", icon: "ticket" },
+  { key: "floor", label: "Floor", icon: "floor" },
+  { key: "table", label: "Table", icon: "table" },
+];
+
+// Events and prices from the seed; Gold members hold the wine tasting.
+const MEMBER_EVENT: Record<string, { title: string; tickets: number; price: string }> = {
+  "SF-0001": { title: "Wine Tasting — Rhône", tickets: 2, price: "£65" },
+  "SF-0002": { title: "Jazz in the Walled Garden", tickets: 4, price: "£30" },
+  "SF-0003": { title: "Wine Tasting — Rhône", tickets: 1, price: "£65" },
+  "SF-0004": { title: "Jazz in the Walled Garden", tickets: 2, price: "£30" },
+};
+const TRAIL_REF: Record<string, string> = { "SF-0001": "BK-3F9Q2M", "SF-0002": "BK-7H2KX4", "SF-0003": "BK-Q8D1RW", "SF-0004": "BK-M5T6PA" };
+const TRAIL_SERVER: Record<string, string> = { "SF-0001": "Ada Admin", "SF-0002": "Wendy Waiter", "SF-0003": "Ada Admin", "SF-0004": "Wendy Waiter" };
+
+/** "Window 4" → { area: "Window", number: "4" } — the seed's areas and numbers. */
+function seatOf(ref: string) {
+  const s = MEMBER_TABLE[ref]!;
+  const [area, number] = s.table.split(" ");
+  return { area: area!, number: area === "Bar" ? `B${number}` : number!, time: s.time };
+}
+
+export function MemberTrail() {
+  const [ref, inView] = useInView<HTMLDivElement>(0.3);
+  const reduced = useReducedMotion();
+  const run = inView && !reduced;
+  const tick = useTick(1500, run);
+
+  const stage = run ? tick % TRAIL_STAGES.length : TRAIL_STAGES.length - 1;
+  const memberIdx = run ? Math.floor(tick / TRAIL_STAGES.length) % MEMBERS.length : 0;
+  const member: Member = MEMBERS[memberIdx]!;
+  const plan = PLANS[member.plan];
+  const seat = seatOf(member.ref);
+  const ev = MEMBER_EVENT[member.ref]!;
+  const order = orderForMember(member.ref);
+  const t = checkTotals(order.lines, DISCOUNTS[order.discount]);
+  const arrived = (() => {
+    const [h, m] = seat.time.split(":").map(Number);
+    const mins = h! * 60 + m! - 6;
+    return `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(mins % 60).padStart(2, "0")}`;
+  })();
+
+  const links = [
+    { k: "Booking", v: `${TRAIL_REF[member.ref]} · ${seat.time}` },
+    { k: "Event", v: `${ev.tickets} × ${ev.title}` },
+    { k: "Floor", v: `Main Floor · in ${arrived}` },
+    { k: "Table", v: `Table ${seat.number} · ${seat.area}` },
+  ];
+
+  return (
+    <div ref={ref} className="bg-white">
+      <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
+          <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[var(--brand-soft)] text-[10px] font-bold text-[var(--brand-strong)]">{initials(member)}</span>
+          {memberName(member)}
+          <span className="rounded-full bg-[var(--brand)] px-2 py-0.5 text-[10px] font-bold text-white">{plan.name}</span>
+        </div>
+        <span className="text-xs tabular-nums text-[var(--muted)]">{member.ref}</span>
+      </div>
+
+      <div className="px-5 py-5">
+        <Pipeline stages={TRAIL_STAGES} active={stage} run={run} />
+
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <StageStack active={stage} panels={[
+              <StageBody title="Booking" icon="calendar">
+                <Row k="Reference" v={TRAIL_REF[member.ref]!} />
+                <Row k="When" v={`Fri · ${seat.time}`} />
+                <Row k="Table" v={`${seat.number} · ${seat.area}`} muted />
+                <Row k="Booked by" v={memberName(member)} muted />
+              </StageBody>
+            ,
+              <StageBody title="Event tickets" icon="ticket">
+                <Row k="Event" v={ev.title} />
+                <Row k="Tickets" v={`${ev.tickets} × ${ev.price}`} />
+                <Row k="Paid" v="Card on file" muted />
+                <Row k="Holder" v={memberName(member)} muted />
+              </StageBody>
+            ,
+              <StageBody title="Checked in" icon="floor">
+                <Row k="Venue" v="Ashgrove House" />
+                <Row k="Floor" v="Main Floor" />
+                <Row k="Arrived" v={arrived} muted />
+                <Row k="Booking" v={`${TRAIL_REF[member.ref]} found`} muted />
+              </StageBody>
+            ,
+              <StageBody title="Seated" icon="table">
+                <div className="mb-2 rounded-lg border border-[var(--border)] bg-white p-3">
+                  <div className="text-[10px] text-[var(--muted)]">Floor plan · Table {seat.number} · {seat.area}</div>
+                  <div className="mt-0.5 text-sm font-semibold text-[var(--ink)]">{memberName(member)}</div>
+                  <div className="mt-0.5 text-[11px] text-[var(--muted)]">Seated · {TRAIL_SERVER[member.ref]} · {fmt(t.totalMinor)}</div>
+                </div>
+                <Row k="Server" v={TRAIL_SERVER[member.ref]!} muted />
+              </StageBody>
+            ,
+          ]} />
+
+          {/* the member record, gaining a link at every stage */}
+          <div className="rounded-xl border border-[var(--border)] bg-white p-4">
+            <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">On {member.first}&apos;s record</div>
+            <ul className="space-y-2.5">
+              {links.map((l, i) => {
+                const on = i <= stage;
+                return (
+                  <li key={l.k} className="flex items-center gap-3 text-xs transition-opacity duration-500" style={{ opacity: on ? 1 : 0.3 }}>
+                    <span
+                      className="flex h-7 w-7 flex-none items-center justify-center rounded-lg transition-colors duration-300"
+                      style={{ background: on ? "var(--brand)" : "var(--surface-2)", color: on ? "#fff" : "var(--muted)" }}
+                    >
+                      <FlowIcon name={TRAIL_STAGES[i]!.icon} className="h-3.5 w-3.5" />
+                    </span>
+                    <span className="w-14 flex-none font-semibold text-[var(--ink)]">{l.k}</span>
+                    <span className="min-w-0 flex-1 truncate text-[var(--muted)]">{l.v}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="mt-4 border-t border-[var(--border)] pt-3 text-[10px] leading-relaxed text-[var(--muted)]">
+              One member id on every record — reception, the floor plan and the bill all see the same person.
             </div>
           </div>
         </div>

@@ -8,7 +8,7 @@ import { DemoModal } from "./demo-modal";
 import { VenueConfigurator } from "./venue-configurator";
 import { Reveal } from "./reveal";
 import { HeroNetwork, SyncFlow, FloorPlanLive, TillLive, Frame } from "./anim";
-import { RevenueFlow, MemberJourney } from "./flows";
+import { RevenueFlow, MemberJourney, MemberTrail } from "./flows";
 import { MarketingShowcase } from "./marketing";
 
 /* ---------------------------------- data --------------------------------- */
@@ -680,6 +680,14 @@ export default function Home() {
               </Frame>
             </Reveal>
             <figcaption className="mt-3 text-sm text-[var(--muted)]">Member check-in → order → tracking — visits, spend and loyalty credit update on the member's profile as they're served.</figcaption>
+          </figure>
+          <figure className="mx-auto mt-10 max-w-4xl">
+            <Reveal delayMs={100}>
+              <Frame>
+                <MemberTrail />
+              </Frame>
+            </Reveal>
+            <figcaption className="mt-3 text-sm text-[var(--muted)]">Track the member — to the booking, to the event, to the floor and to the table. One record, so the floor plan shows who is sitting where.</figcaption>
           </figure>
         </div>
       </section>
