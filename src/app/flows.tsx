@@ -39,6 +39,15 @@ export function FlowIcon({ name, className = "h-4 w-4" }: { name: string; classN
     case "checkin": return <svg {...p}><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><path d="M10 17l5-5-5-5M15 12H3" /></svg>;
     case "track": return <svg {...p}><path d="M3 3v18h18" /><path d="M7 14l3-4 3 3 5-7" /></svg>;
     case "bolt": return <svg {...p}><path d="M13 2 4 14h7l-1 8 9-12h-7Z" /></svg>;
+    case "po": return <svg {...p}><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 3v2h6V3M9 11h6M9 15h4" /></svg>;
+    case "approve": return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="m8.5 12.5 2.5 2.5 5-5" /></svg>;
+    case "send": return <svg {...p}><path d="M21 3 10 14M21 3l-7 18-4-7-7-4Z" /></svg>;
+    case "truck": return <svg {...p}><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" /><circle cx="7" cy="18" r="1.6" /><circle cx="17" cy="18" r="1.6" /></svg>;
+    case "invoice": return <svg {...p}><path d="M6 2h12v20l-3-2-3 2-3-2-3 2Z" /><path d="M9 7h6M9 11h6M9 15h3" /></svg>;
+    case "match": return <svg {...p}><path d="M4 9h16M4 15h16" /><path d="m9 5-4 4 4 4M15 11l4 4-4 4" /></svg>;
+    case "day": return <svg {...p}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>;
+    case "journal": return <svg {...p}><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>;
+    case "ledger": return <svg {...p}><path d="M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4Z" /><path d="M20 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8Z" /></svg>;
     case "calendar": return <svg {...p}><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>;
     case "floor": return <svg {...p}><path d="M3 7l9-4 9 4-9 4Z" /><path d="m3 12 9 4 9-4M3 17l9 4 9-4" /></svg>;
     case "table": return <svg {...p}><ellipse cx="12" cy="9" rx="8" ry="3" /><path d="M12 12v8M8 20h8" /></svg>;

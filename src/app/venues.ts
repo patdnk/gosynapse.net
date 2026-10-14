@@ -17,6 +17,7 @@ export type ModuleKey =
   | "members"
   | "loyalty"
   | "inventory"
+  | "procurement"
   | "payments"
   | "reports"
   | "integrations";
@@ -31,6 +32,7 @@ export const MODULES: { key: ModuleKey; label: string; blurb: string }[] = [
   { key: "members", label: "Membership & CRM", blurb: "Applications, dues and member records" },
   { key: "loyalty", label: "Loyalty", blurb: "Points, credit and rewards" },
   { key: "inventory", label: "Stock & reordering", blurb: "Live stock with predictive reorder points" },
+  { key: "procurement", label: "Purchasing & suppliers", blurb: "Purchase orders, deliveries and supplier invoices" },
   { key: "payments", label: "Payments", blurb: "Card-present, online and payouts" },
   { key: "reports", label: "Insights", blurb: "Sales, covers and retention analytics" },
   { key: "integrations", label: "Integrations", blurb: "SevenRooms, wallets, accounting" },
@@ -55,7 +57,7 @@ export const VENUES: Venue[] = [
     label: "Restaurants",
     icon: "utensils",
     summary: "Table service, covers and a kitchen to keep in step.",
-    recommended: [...ALWAYS, "floorplan", "routing", "kds", "inventory", "bookings"],
+    recommended: [...ALWAYS, "floorplan", "routing", "kds", "inventory", "procurement", "bookings"],
     skipped: [
       { key: "members", why: "Guests pay per visit — no membership to administer" },
       { key: "loyalty", why: "Optional; most restaurants start without it" },
@@ -67,7 +69,7 @@ export const VENUES: Venue[] = [
     label: "Bars",
     icon: "glass",
     summary: "Fast counter trade, walk-ins and tabs — rarely a table plan.",
-    recommended: [...ALWAYS, "routing", "inventory"],
+    recommended: [...ALWAYS, "routing", "inventory", "procurement"],
     skipped: [
       { key: "floorplan", why: "Served at the bar, so there's no table to assign" },
       { key: "bookings", why: "Walk-in trade — nothing to reserve" },
@@ -82,7 +84,7 @@ export const VENUES: Venue[] = [
     label: "Members' clubs",
     icon: "crm",
     summary: "Membership, dues and house rules on top of full service.",
-    recommended: [...ALWAYS, "floorplan", "routing", "kds", "bookings", "members", "loyalty", "inventory", "integrations"],
+    recommended: [...ALWAYS, "floorplan", "routing", "kds", "bookings", "members", "loyalty", "inventory", "procurement", "integrations"],
     skipped: [],
   },
   {
@@ -90,7 +92,7 @@ export const VENUES: Venue[] = [
     label: "Hotels",
     icon: "bed",
     summary: "Several F&B outlets, plus charges that land on the room.",
-    recommended: [...ALWAYS, "floorplan", "routing", "kds", "bookings", "members", "inventory", "integrations"],
+    recommended: [...ALWAYS, "floorplan", "routing", "kds", "bookings", "members", "inventory", "procurement", "integrations"],
     skipped: [{ key: "loyalty", why: "Usually run by the hotel group's own scheme" }],
   },
   {
@@ -105,6 +107,7 @@ export const VENUES: Venue[] = [
       { key: "members", why: "Ticket holders, not members" },
       { key: "loyalty", why: "Little repeat trade within one event" },
       { key: "integrations", why: "Add for ticketing platforms" },
+      { key: "procurement", why: "Stock is bought in once for the run" },
     ],
   },
   {
@@ -118,6 +121,7 @@ export const VENUES: Venue[] = [
       { key: "routing", why: "Nothing to send to a prep station" },
       { key: "floorplan", why: "Treatment rooms are booked, not seated" },
       { key: "integrations", why: "Add for spa-management systems" },
+      { key: "procurement", why: "Retail stock is bought ad hoc" },
     ],
   },
   {
@@ -133,6 +137,7 @@ export const VENUES: Venue[] = [
       { key: "members", why: "Ticketing rather than membership" },
       { key: "loyalty", why: "Optional — works well for supporters" },
       { key: "integrations", why: "Add for ticketing" },
+      { key: "procurement", why: "A café's worth of stock, ordered by hand" },
     ],
   },
   {
@@ -140,7 +145,7 @@ export const VENUES: Venue[] = [
     label: "Cinemas",
     icon: "film",
     summary: "Concessions against showtimes — throughput is everything.",
-    recommended: [...ALWAYS, "routing", "inventory", "loyalty", "bookings"],
+    recommended: [...ALWAYS, "routing", "inventory", "procurement", "loyalty", "bookings"],
     skipped: [
       { key: "floorplan", why: "Seats belong to the screening, not the till" },
       { key: "kds", why: "Concessions are prepared at the counter" },
@@ -159,6 +164,7 @@ export const VENUES: Venue[] = [
       { key: "floorplan", why: "Nothing to seat" },
       { key: "routing", why: "Served straight from the counter" },
       { key: "integrations", why: "Add for class or access systems" },
+      { key: "procurement", why: "A café's worth of stock, ordered by hand" },
     ],
   },
   {
@@ -166,7 +172,7 @@ export const VENUES: Venue[] = [
     label: "Stadia",
     icon: "flag",
     summary: "Dozens of kiosks, enormous peaks, unforgiving windows.",
-    recommended: [...ALWAYS, "routing", "inventory"],
+    recommended: [...ALWAYS, "routing", "inventory", "procurement"],
     skipped: [
       { key: "bookings", why: "The ticket is the reservation" },
       { key: "floorplan", why: "Kiosk service" },

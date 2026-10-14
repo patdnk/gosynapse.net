@@ -1,15 +1,16 @@
 "use client";
 
 // The API section: data in from the systems a venue already runs, data out to
-// whatever it builds next. Live and coming are labelled honestly — REST, the
-// check feeds and signed webhooks run today; the partner plane and GraphQL are
-// on the roadmap (docs/public-api.md in the synapse repo). Code samples use the
+// whatever it builds next. Live, in progress and coming are labelled honestly —
+// REST, the check feeds and signed webhooks run today; the partner plane and
+// GraphQL are being built (docs/superpowers/specs/2026-10-12-public-api-platform-design.md
+// in the synapse repo). Code samples use the
 // real endpoints, fields and headers.
 
 import { useState } from "react";
 import { useInView, useReducedMotion } from "./motion";
 
-type Status = "live" | "coming";
+type Status = "live" | "building" | "coming";
 type Link = { name: string; what: string; status: Status };
 
 const INBOUND: Link[] = [
@@ -22,8 +23,8 @@ const OUTBOUND: Link[] = [
   { name: "REST API", what: "Every module — members, bookings, events, checks, menus, reports — versioned, with an OpenAPI reference.", status: "live" },
   { name: "Webhooks & events", what: "Signed callbacks when a check opens, changes or closes; a domain-event outbox behind every booking, ticket and member.", status: "live" },
   { name: "POS feeds", what: "Checks and reservations as Oracle Simphony-shaped documents, so anything that reads a POS feed reads ours.", status: "live" },
-  { name: "GraphQL", what: "A read plane for composed views — a check with its table, member and totals in one query.", status: "coming" },
-  { name: "Partner API", what: "/public/v1 with scoped keys, OAuth for installed apps, idempotency and cursor pagination.", status: "coming" },
+  { name: "GraphQL", what: "A read plane for composed views — a check with its table, member and totals in one query.", status: "building" },
+  { name: "Partner API", what: "/public/v1 with scoped keys, idempotency, cursor pagination and per-key rate limits — the foundation is built, resources are rolling out, OAuth for installed apps follows.", status: "building" },
 ];
 
 const SAMPLES = {
@@ -69,7 +70,7 @@ x-pos-signature: 9f2c…  # HMAC-SHA256 of the body
   },
   graphql: {
     label: "GraphQL",
-    note: "Coming — preview",
+    note: "In progress — preview",
     code: `query {
   check(id: "chk_…") {
     checkNumber
@@ -83,6 +84,8 @@ x-pos-signature: 9f2c…  # HMAC-SHA256 of the body
 type SampleKey = keyof typeof SAMPLES;
 
 function Badge({ status }: { status: Status }) {
+  if (status === "building")
+    return <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">In progress</span>;
   return status === "live" ? (
     <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">Live</span>
   ) : (

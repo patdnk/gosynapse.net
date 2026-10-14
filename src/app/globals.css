@@ -199,3 +199,59 @@ th,
     animation: none !important;
   }
 }
+
+/* ----------------------------------------------------------------------------
+   Hero system map (sysmap.tsx): a blueprint drawing. Grid, orthogonal links
+   with a travelling dash, joint dots, a dark hub listing the modules, and
+   hover tracing that dims everything the hovered box doesn't talk to. */
+.sysmap {
+  --m-ink: var(--ink);
+  --m-line: #c9ced8;
+  --m-grid: #f1f3f7;
+  --m-grid-major: #e3e7ee;
+  --m-tag: var(--muted);
+  --m-node: #ffffff;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--m-node);
+  text-align: left;
+}
+.sysmap svg { display: block; width: 100%; height: auto; }
+.sysmap .sysmap-tall { display: none; }
+.sysmap figcaption { font-size: 12px; color: var(--m-tag); padding: 8px 14px; border-top: 1px solid var(--border); }
+.sysmap .grid-minor { stroke: var(--m-grid); stroke-width: 1; }
+.sysmap .grid-major { stroke: var(--m-grid-major); stroke-width: 1; }
+.sysmap .link { fill: none; stroke: var(--m-line); stroke-width: 1.5; transition: stroke 0.2s, opacity 0.2s; }
+.sysmap .flow { fill: none; stroke: var(--brand); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 6 90; animation: sysflow 3.2s linear infinite; transition: opacity 0.2s; }
+.sysmap .flow.slow { animation-duration: 4.4s; }
+.sysmap .joint { fill: var(--m-line); }
+.sysmap text { font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; fill: var(--m-ink); text-anchor: middle; }
+.sysmap .tag { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; fill: var(--m-tag); text-anchor: start; }
+.sysmap .node, .sysmap .hub { cursor: pointer; outline: none; }
+.sysmap .node rect { fill: var(--m-node); stroke: var(--m-ink); stroke-width: 1.5; transition: stroke-width 0.2s; }
+.sysmap .node.future rect { stroke-dasharray: 5 4; stroke: var(--m-tag); }
+.sysmap .node.future text:not(.tag) { fill: var(--m-tag); }
+.sysmap .hub rect { fill: var(--ink-900); }
+.sysmap .hub .core { fill: var(--brand); opacity: 0.9; }
+.sysmap .hub .title { fill: var(--m-node); letter-spacing: 0.24em; font-size: 15px; }
+.sysmap .hub .rule { stroke: rgba(255, 255, 255, 0.18); stroke-width: 1; }
+.sysmap .hub .module text { fill: rgba(255, 255, 255, 0.82); font-weight: 500; letter-spacing: 0.02em; text-anchor: start; }
+.sysmap .hub .module circle { fill: var(--accent); }
+.sysmap.tracing .link, .sysmap.tracing .flow { opacity: 0.18; }
+.sysmap.tracing .link.lit { opacity: 1; stroke: var(--m-ink); }
+.sysmap.tracing .flow.lit { opacity: 1; }
+.sysmap .node.lit rect, .sysmap .node:focus-visible rect { stroke-width: 3; }
+.sysmap .hub:focus-visible rect:first-child { stroke: var(--brand); stroke-width: 3; }
+@keyframes sysflow { to { stroke-dashoffset: -96; } }
+@media (max-width: 640px) {
+  .sysmap .sysmap-wide { display: none; }
+  .sysmap .sysmap-tall { display: block; }
+  .sysmap .tag { font-size: 9px; letter-spacing: 0.08em; }
+  .sysmap text { font-size: 11px; }
+  .sysmap .sysmap-tall .node text:not(.tag) { font-size: 9.5px; letter-spacing: 0.04em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sysmap .flow { display: none; }
+}

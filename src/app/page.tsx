@@ -8,6 +8,8 @@ import { DemoModal } from "./demo-modal";
 import { VenueConfigurator } from "./venue-configurator";
 import { Reveal } from "./reveal";
 import { HeroNetwork, SyncFlow, FloorPlanLive, TillLive, Frame } from "./anim";
+import { ProcurementFlow, LedgerFlow } from "./backoffice";
+import { SystemMap } from "./sysmap";
 import { RevenueFlow, MemberJourney, MemberTrail } from "./flows";
 import { MarketingShowcase } from "./marketing";
 import { ApiSection } from "./api";
@@ -18,9 +20,11 @@ const NAV = [
   { label: "Platform", href: "#platform" },
   { label: "Modules", href: "#products" },
   { label: "Marketing", href: "#marketing" },
+  { label: "Back office", href: "#backoffice" },
   { label: "API", href: "#api" },
   { label: "Solutions", href: "#solutions" },
   { label: "Security", href: "#security" },
+  { label: "Roadmap", href: "#roadmap" },
 ];
 
 // Footer links resolve to real sections on the page — no dead "#" anchors.
@@ -33,6 +37,8 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
       { label: "Till", href: "#products" },
       { label: "Kitchen display", href: "#products" },
       { label: "Marketing & messaging", href: "#marketing" },
+      { label: "Procurement", href: "#backoffice" },
+      { label: "Accounting & house accounts", href: "#backoffice" },
       { label: "Payments & insights", href: "#products" },
     ],
   },
@@ -83,7 +89,7 @@ const PRODUCT_LINES: {
     parts: [
       { name: "Members", desc: "Applications and vetting, plans and recurring dues, member records and cases.", icon: "member" },
       { name: "Reception", desc: "The front-of-house app on the door: who's in, check-in by NFC tap or QR scan, one-tap check-out, guests and cloakroom.", icon: "frame" },
-      { name: "Engagement", desc: "Bookings, events and tickets, Apple & Google wallet passes, loyalty credit — and the emails and texts that follow up on all of it.", icon: "pass" },
+      { name: "Engagement", desc: "Bookings, events and tickets, Apple & Google wallet passes, loyalty credit — and the emails, texts and WhatsApp messages that follow up on all of it.", icon: "pass" },
     ],
     includes: ["Card-on-file billing", "Email & SMS journeys", "Salesforce, SevenRooms, PeopleVine", "CRM reporting: growth, attendance, churn"],
   },
@@ -94,9 +100,9 @@ const PRODUCT_LINES: {
     desc: "One system to configure, a till to take the order, a screen to cook it. Pair it with CRM or run it alongside whichever modules the venue needs.",
     icon: "pos",
     parts: [
-      { name: "System", desc: "The back office: catalogue, recipes and stock, floor plans and revenue centres, routing, discounts, reports.", icon: "sliders" },
+      { name: "System", desc: "The back office: catalogue, recipes, stock and purchasing, floor plans and revenue centres, routing, discounts, reports.", icon: "sliders" },
       { name: "Till", desc: "The iPad on the floor: checks, splits, discounts, tips and card-present payments — online first, with an offline option.", icon: "pos" },
-      { name: "KDS", desc: "The kitchen display at the pass: a screen per station, registered like a till, bumped when food leaves.", icon: "printer" },
+      { name: "KDS", desc: "The kitchen display at the pass: a screen per station with course pacing, hold-and-fire and an expo view, paired like a till, bumped when food leaves.", icon: "printer" },
     ],
     includes: ["Card-present terminals", "Stripe & Adyen, marketplace payouts", "Sales insights: covers, spend, service"],
   },
@@ -116,27 +122,50 @@ const FEATURES = [
   { title: "Wallet passes", desc: "Design Apple & Google passes per organisation — barcodes, artwork and fields, platform-accurate.", icon: "pass" },
   { title: "Kitchen & printing", desc: "KDS routing, ESC/POS chits and receipts, and a compliant electronic journal for every sale.", icon: "printer" },
   { title: "Events & cloakroom", desc: "Ticketing, invoices and QR cloakroom tags — the extras a members' club runs on.", icon: "ticket" },
-  { title: "Email & SMS automations", desc: "Booking and ticket confirmations, reminders the day before, and journeys you draw — wait, branch, follow up if unopened.", icon: "mail" },
+  { title: "Email, SMS & WhatsApp", desc: "Booking and ticket confirmations, reminders the day before, and journeys you draw — wait, branch, follow up if unopened.", icon: "mail" },
   { title: "Audiences & campaigns", desc: "Segments that keep themselves current — VIPs not seen in a month, everyone booked this week — and campaigns from your own designed templates.", icon: "flow" },
   { title: "Consent & deliverability", desc: "Opt-ins recorded with their wording, one-click unsubscribe and STOP, quiet hours, and sending from your own domain.", icon: "consent" },
+  { title: "Purchasing & suppliers", desc: "Stock per site, supplier pack catalogues, purchase orders with an approval policy, receiving, and invoices matched line by line.", icon: "catalogue" },
+  { title: "Accounting export", desc: "Signed sales records by sales group and VAT, a daily journal, and connectors for Xero and QuickBooks with your own account mapping.", icon: "insights" },
+  { title: "House accounts", desc: "A ledger per member: credit limits, charges and payments, with Direct Debit collection on the way.", icon: "payments" },
+];
+
+const BACKOFFICE_POINTS = [
+  { title: "Procurement", desc: "Stock per site and a pack catalogue per supplier. Purchase orders go through your approval policy and straight to the supplier; deliveries update stock on signature; invoices match line by line, with credits tracked and a Xero CSV ready.", icon: "catalogue" },
+  { title: "Accounting export", desc: "Every sale is a signed, append-only record by sales group and VAT treatment, on the trading day it belongs to. Connect Xero or QuickBooks, map your accounts once, and journals post automatically after a grace period.", icon: "insights" },
+  { title: "House accounts", desc: "A ledger per member with a credit limit, charges and payments, so a tab at the bar and a ticket for Friday land in one place. Direct Debit mandates and statements are next.", icon: "payments" },
 ];
 
 const MARKETING_POINTS = [
   { title: "Templates you design", desc: "Drag-and-drop email in your own branding, SMS with a live character count, merge fields from the member record.", icon: "mail" },
   { title: "Audiences that keep up", desc: "VIPs not seen in a month, everyone with a ticket for Friday — segments update themselves as members visit, book and buy.", icon: "member" },
-  { title: "Journeys with a plan B", desc: "Wait, branch and split. Follow up by text if the email goes unopened, or fall back to SMS when an address bounces.", icon: "flow" },
+  { title: "Journeys with a plan B", desc: "Wait, branch and split. Follow up by text if the email goes unopened, send the wallet pass by WhatsApp and fall back to SMS without an opt-in.", icon: "flow" },
 ];
 
-const SHIPPED = ["Marketing & messaging: email and SMS", "Journeys, audiences and campaigns", "Event outbox and webhooks"];
+// What landed on main most recently, newest first. Trim from the bottom.
+const SHIPPED = [
+  "Xero and QuickBooks connectors",
+  "House-account ledger with credit limits",
+  "WhatsApp as a messaging channel",
+  "Supplier invoices matched to deliveries",
+  "Purchase orders, approval and receiving",
+  "Public API foundation: keys, scopes, idempotency",
+  "Kitchen display pacing and expo",
+  "Device pairing for tills and kitchen screens",
+];
 
-const ROADMAP: { phase: string; why: string; items: { title: string; desc: string }[] }[] = [
+// Each item says where it stands: shipped, being built now, or planned (no status).
+type RoadmapStatus = "shipped" | "building";
+
+const ROADMAP: { phase: string; why: string; items: { title: string; desc: string; status?: RoadmapStatus }[] }[] = [
   {
     phase: "Foundations",
     why: "Reach members without a staff member holding the phone.",
     items: [
-      { title: "WhatsApp and pass delivery", desc: "Passes sent by SMS, WhatsApp and email; bulk issue to a whole plan." },
-      { title: "Billing adjustments", desc: "Pro-rata, freezes, upgrades and downgrades, with credit notes." },
-      { title: "Accounting export", desc: "Sales, VAT and journals into Xero and QuickBooks." },
+      { title: "WhatsApp and pass delivery", desc: "WhatsApp is live as a channel. Next: a link per holder that opens the right wallet, then bulk issue to a whole plan.", status: "building" },
+      { title: "Billing adjustments", desc: "VAT invoice lines, credit notes and refunds, plan changes now or at renewal, freezes with holding fees — built, in review.", status: "building" },
+      { title: "Accounting export", desc: "Xero and QuickBooks connectors and account mapping are live. Daily journals, supplier bills and card payouts follow.", status: "building" },
+      { title: "Procurement", desc: "Per-site stock, supplier packs, purchase orders with approval, receiving, invoice matching and a needs-attention queue.", status: "shipped" },
     ],
   },
   {
@@ -145,7 +174,8 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     items: [
       { title: "Member portal", desc: "Book, buy tickets, see the bill and top up credit — a web app, no app store." },
       { title: "Passwordless sign-in", desc: "A magic link by SMS or email." },
-      { title: "Bookings & events API v2", desc: "Holds, waitlists, deposits and no-show fees, ticket tiers." },
+      { title: "Bookings & events v2", desc: "Ticket tiers, holds, waitlists, deposits and no-show fees. The services layer is in; tiers are next.", status: "building" },
+      { title: "Member accounts & Direct Debit", desc: "The house-account ledger is live. Mandates, collections and statements follow, then charging dues and bookings to the account.", status: "building" },
       { title: "Tap to Pay", desc: "Any staff phone as a card terminal; pay at the table." },
     ],
   },
@@ -153,9 +183,9 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Developer-facing",
     why: "Partners and a venue's own apps build on the same data.",
     items: [
-      { title: "Public REST API", desc: "/public/v1 with scoped keys, OAuth and rate limits per key." },
-      { title: "GraphQL read plane", desc: "Member 360, a booking with its spend, an event with its tickets — one query." },
-      { title: "Webhooks v2", desc: "Many endpoints per club, signed envelopes, retries and replay." },
+      { title: "Public REST API", desc: "/public/v1 foundation built — scoped keys, idempotency, cursor paging and rate limits per key. Members, bookings, events and checks next.", status: "building" },
+      { title: "GraphQL read plane", desc: "Member 360, a booking with its spend, an event with its tickets — one query.", status: "building" },
+      { title: "Webhooks v2", desc: "Many endpoints per club, signed envelopes, retries and replay.", status: "building" },
       { title: "Docs, sandbox, SDKs", desc: "Everything a partner needs to ship without a call." },
     ],
   },
@@ -164,8 +194,7 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     why: "Answers from the venue's own data, and the certificates buyers ask for.",
     items: [
       { title: "AI insights", desc: "Questions in plain language, automatic reports and forecasts." },
-      { title: "Kitchen display", desc: "Course pacing, hold-and-fire and an expo view." },
-      { title: "Procurement", desc: "Purchase orders and invoice capture matched to deliveries." },
+      { title: "Kitchen display", desc: "Course pacing, hold-and-fire and an expo view.", status: "shipped" },
       { title: "SOC 2 Type II, then ISO 27001", desc: "Most controls already exist in code; the programme does the rest." },
     ],
   },
@@ -235,6 +264,8 @@ const TIMELINE = [
 
 const SECURITY = [
   "MFA / OAuth2 secure authentication",
+  "Device pairing with instant revocation",
+  "Append-only, signed sales records",
   "AES-256-GCM secrets at rest",
   "SOC 2 audit trail",
   "GDPR data-subject tooling",
@@ -364,6 +395,14 @@ function IntegrationCard({
   );
 }
 
+function RoadmapBadge({ status }: { status: RoadmapStatus }) {
+  return status === "shipped" ? (
+    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">Shipped</span>
+  ) : (
+    <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">In progress</span>
+  );
+}
+
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand)]">{children}</p>;
 }
@@ -402,11 +441,7 @@ export default function Home() {
           <HeroNetwork className="absolute left-1/2 top-[4%] h-[340px] w-[340px] -translate-x-1/2 opacity-[0.13]" />
         </div>
         <div className="mx-auto max-w-6xl px-5 pt-24 pb-16 text-center sm:pt-32">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white/70 px-3 py-1 text-xs font-medium text-[var(--muted)] backdrop-blur">
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand)]" />
-            One platform · real-time everywhere · built to scale
-          </span>
-          <h1 className="mx-auto mt-7 max-w-4xl text-5xl font-bold leading-[0.98] tracking-[-0.03em] sm:text-7xl">
+          <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[0.98] tracking-[-0.03em] sm:text-7xl">
             Run your whole venue on{" "}
             <span className="bg-gradient-to-r from-[var(--brand)] to-[var(--accent)] bg-clip-text text-transparent">one platform</span>
           </h1>
@@ -420,9 +455,10 @@ export default function Home() {
             <ButtonPrimary href="#demo">Get started</ButtonPrimary>
             <ButtonGhost href="#platform">Explore the platform</ButtonGhost>
           </div>
-          <div className="relative mx-auto mt-16 max-w-4xl">
+          {/* The system map: every surface, module and connection on one sheet. */}
+          <div className="relative mx-auto mt-16 max-w-5xl">
             <Reveal>
-              <HeroMock />
+              <SystemMap />
             </Reveal>
           </div>
         </div>
@@ -494,7 +530,7 @@ export default function Home() {
             <Eyebrow>Marketing &amp; messaging</Eyebrow>
             <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Messages that know your members</h2>
             <p className="mt-5 text-lg text-[var(--muted)]">
-              Email and SMS built on the same member record as the door and the till. A confirmation
+              Email, SMS and WhatsApp built on the same member record as the door and the till. A confirmation
               the moment a table is booked, a reminder the day before, and journeys you draw yourself.
               Consent, unsubscribes and quiet hours are handled for you.
             </p>
@@ -552,6 +588,50 @@ export default function Home() {
               </Reveal>
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Templates — drag-and-drop email with merge fields, versioned so a live journey never changes mid-flight.</figcaption>
             </figure>
+          </div>
+        </div>
+      </section>
+
+      {/* back office — purchasing and the books */}
+      <section id="backoffice" className="border-t border-[var(--border)]">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <div className="max-w-2xl">
+            <Eyebrow>Back office</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Purchasing and the books, on the same record as the till</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              A purchase order becomes stock when it is signed for and a cost when the invoice matches
+              it. Every sale is written once, signed, and rolled into a daily journal your accountant
+              can trust. No spreadsheets in between.
+            </p>
+          </div>
+          <div className="mt-14 grid gap-8 lg:grid-cols-2">
+            <figure>
+              <Reveal>
+                <Frame>
+                  <ProcurementFlow />
+                </Frame>
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Order → approve → send → receive → invoice → match — the seeded order to Fernhollow Cellars, with the 60p-a-case difference caught and credited.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={100}>
+                <Frame>
+                  <LedgerFlow />
+                </Frame>
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Sale → sales record → trading day → journal → ledger — the check at Window 4, split by sales group with VAT extracted, balanced and posted.</figcaption>
+            </figure>
+          </div>
+          <div className="mx-auto mt-12 grid gap-4 sm:grid-cols-3">
+            {BACKOFFICE_POINTS.map((m) => (
+              <div key={m.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
+                  <Icon name={m.icon} className="h-5 w-5" />
+                </div>
+                <h3 className="mt-3 font-bold tracking-tight">{m.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{m.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -940,7 +1020,13 @@ export default function Home() {
             <p className="mt-5 text-lg text-[var(--muted)]">
               From a complete venue platform to a member-facing, developer-facing, certified product.
               Sequenced by dependency, so every phase ships something a venue or a partner can use.
+              Each item says where it stands; anything without a badge is planned, not promised.
             </p>
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-[var(--muted)]">
+            <span className="flex items-center gap-1.5"><RoadmapBadge status="shipped" /> on main</span>
+            <span className="flex items-center gap-1.5"><RoadmapBadge status="building" /> being built now</span>
+            <span>no badge · planned</span>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">Recently shipped</span>
@@ -957,7 +1043,10 @@ export default function Home() {
                 <ul className="mt-4 space-y-2.5">
                   {p.items.map((it) => (
                     <li key={it.title} className="text-sm">
-                      <span className="font-semibold text-[var(--ink)]">{it.title}</span>
+                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span className="font-semibold text-[var(--ink)]">{it.title}</span>
+                        {it.status && <RoadmapBadge status={it.status} />}
+                      </span>
                       <span className="block text-[var(--muted)]">{it.desc}</span>
                     </li>
                   ))}
@@ -1081,6 +1170,3 @@ function TabletShot({ src, alt, w, h }: { src: string; alt: string; w: number; h
   );
 }
 
-function HeroMock() {
-  return <Shot src="/screenshots/members.png" alt="synapse admin — members list" w={2880} h={1800} />;
-}
