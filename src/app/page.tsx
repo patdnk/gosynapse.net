@@ -17,9 +17,9 @@ import { ApiSection } from "./api";
 /* ---------------------------------- data --------------------------------- */
 
 const NAV = [
-  { label: "Platform", href: "#platform" },
   { label: "Modules", href: "#products" },
   { label: "Marketing", href: "#marketing" },
+  { label: "Billing", href: "#billing" },
   { label: "Back office", href: "#backoffice" },
   { label: "API", href: "#api" },
   { label: "Solutions", href: "#solutions" },
@@ -37,6 +37,8 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
       { label: "Till", href: "#products" },
       { label: "Kitchen display", href: "#products" },
       { label: "Marketing & messaging", href: "#marketing" },
+      { label: "Membership billing", href: "#billing" },
+      { label: "Wallet passes", href: "#passes" },
       { label: "Procurement", href: "#backoffice" },
       { label: "Accounting & house accounts", href: "#backoffice" },
       { label: "Payments & insights", href: "#products" },
@@ -91,7 +93,7 @@ const PRODUCT_LINES: {
       { name: "Reception", desc: "The front-of-house app on the door: who's in, check-in by NFC tap or QR scan, one-tap check-out, guests and cloakroom.", icon: "frame" },
       { name: "Engagement", desc: "Bookings, events and tickets, Apple & Google wallet passes, loyalty credit — and the emails, texts and WhatsApp messages that follow up on all of it.", icon: "pass" },
     ],
-    includes: ["Card-on-file billing", "Email & SMS journeys", "Salesforce, SevenRooms, PeopleVine", "CRM reporting: growth, attendance, churn"],
+    includes: ["Billing with credit notes & freezes", "Direct Debit house accounts", "Email & SMS journeys", "Salesforce, SevenRooms, PeopleVine", "CRM reporting: growth, attendance, churn"],
   },
   {
     key: "pos",
@@ -118,8 +120,8 @@ const OPERATIONS = [
 const FEATURES = [
   { title: "Floor plans & table service", desc: "Design rooms, route orders by station, move tables and follow service in real time.", icon: "floor" },
   { title: "Bookings & availability", desc: "Member → table → date with live availability, covers and spend on every reservation.", icon: "calendar" },
-  { title: "Membership & billing", desc: "Plans, recurring dues, applications and vetting — member status driven by payment state.", icon: "member" },
-  { title: "Wallet passes", desc: "Design Apple & Google passes per organisation — barcodes, artwork and fields, platform-accurate.", icon: "pass" },
+  { title: "Membership & billing", desc: "Plans and recurring dues with VAT invoices, credit notes, plan changes and freezes — member status driven by payment state.", icon: "member" },
+  { title: "Wallet passes", desc: "Design Apple & Google passes per organisation, then send each holder one link that opens the right wallet.", icon: "pass" },
   { title: "Kitchen & printing", desc: "KDS routing, ESC/POS chits and receipts, and a compliant electronic journal for every sale.", icon: "printer" },
   { title: "Events & cloakroom", desc: "Ticketing, invoices and QR cloakroom tags — the extras a members' club runs on.", icon: "ticket" },
   { title: "Email, SMS & WhatsApp", desc: "Booking and ticket confirmations, reminders the day before, and journeys you draw — wait, branch, follow up if unopened.", icon: "mail" },
@@ -127,13 +129,13 @@ const FEATURES = [
   { title: "Consent & deliverability", desc: "Opt-ins recorded with their wording, one-click unsubscribe and STOP, quiet hours, and sending from your own domain.", icon: "consent" },
   { title: "Purchasing & suppliers", desc: "Stock per site, supplier pack catalogues, purchase orders with an approval policy, receiving, and invoices matched line by line.", icon: "catalogue" },
   { title: "Accounting export", desc: "Signed sales records by sales group and VAT, a daily journal, and connectors for Xero and QuickBooks with your own account mapping.", icon: "insights" },
-  { title: "House accounts", desc: "A ledger per member: credit limits, charges and payments, with Direct Debit collection on the way.", icon: "payments" },
+  { title: "House accounts", desc: "A ledger per member: credit limits, charges and payments, with GoCardless Direct Debit mandates set up by link or at reception.", icon: "payments" },
 ];
 
 const BACKOFFICE_POINTS = [
   { title: "Procurement", desc: "Stock per site and a pack catalogue per supplier. Purchase orders go through your approval policy and straight to the supplier; deliveries update stock on signature; invoices match line by line, with credits tracked and a Xero CSV ready.", icon: "catalogue" },
   { title: "Accounting export", desc: "Every sale is a signed, append-only record by sales group and VAT treatment, on the trading day it belongs to. Connect Xero or QuickBooks, map your accounts once, and journals post automatically after a grace period.", icon: "insights" },
-  { title: "House accounts", desc: "A ledger per member with a credit limit, charges and payments, so a tab at the bar and a ticket for Friday land in one place. Direct Debit mandates and statements are next.", icon: "payments" },
+  { title: "House accounts", desc: "A ledger per member with a credit limit, charges and payments, so a tab at the bar and a ticket for Friday land in one place. Direct Debit mandates run through GoCardless; collections and statements are next.", icon: "payments" },
 ];
 
 const MARKETING_POINTS = [
@@ -142,16 +144,34 @@ const MARKETING_POINTS = [
   { title: "Journeys with a plan B", desc: "Wait, branch and split. Follow up by text if the email goes unopened, send the wallet pass by WhatsApp and fall back to SMS without an opt-in.", icon: "flow" },
 ];
 
+// Membership billing: what the screenshots in #billing show, in the order a
+// finance team meets it. All of it is on main except where a line says next.
+const BILLING_POINTS = [
+  { title: "VAT on every line", desc: "Plans and events carry their own VAT treatment and rate, so an invoice that mixes them still adds up for your accountant.", icon: "insights" },
+  { title: "Credit notes and refunds", desc: "Credit any part of a paid invoice back to the card that paid it or to the member's account, with a numbered PDF.", icon: "payments" },
+  { title: "Plan changes", desc: "Now, with the unused days credited and the new plan charged pro rata, or at renewal with nothing to work out.", icon: "flow" },
+  { title: "Freezes", desc: "A date range or until resumed, an optional holding fee, a maximum per plan. Billing restarts on its own.", icon: "calendar" },
+  { title: "House accounts", desc: "One ledger per member with a credit limit: dues, bar tabs and bookings signed to it, payments and credits against it.", icon: "member" },
+  { title: "Direct Debit", desc: "GoCardless mandates set up from a link or a QR at reception. Collections and statements are next.", icon: "consent" },
+];
+
+const PASS_POINTS = [
+  { title: "One design per pass type", desc: "Membership, loyalty card, day pass and guest pass, each previewed as Apple and Google will draw it." },
+  { title: "One link per holder", desc: "The same URL opens the .pkpass on an iPhone and Google's save flow on Android. A desktop shows a QR to scan." },
+  { title: "Expiring, revocable links", desc: "Links last seven days and can be revoked; erasing a member revokes theirs." },
+  { title: "Kept up to date", desc: "Tier and loyalty credit change on the pass when they change on the record; the barcode checks the member in at the door." },
+];
+
 // What landed on main most recently, newest first. Trim from the bottom.
 const SHIPPED = [
+  "Direct Debit mandates through GoCardless",
+  "Credit notes, refunds, plan changes and freezes",
+  "Daily sales and billing journals",
+  "Pass links that open the right wallet",
   "Xero and QuickBooks connectors",
   "House-account ledger with credit limits",
   "WhatsApp as a messaging channel",
   "Supplier invoices matched to deliveries",
-  "Purchase orders, approval and receiving",
-  "Public API foundation: keys, scopes, idempotency",
-  "Kitchen display pacing and expo",
-  "Device pairing for tills and kitchen screens",
 ];
 
 // Each item says where it stands: shipped, being built now, or planned (no status).
@@ -162,9 +182,9 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Foundations",
     why: "Reach members without a staff member holding the phone.",
     items: [
-      { title: "WhatsApp and pass delivery", desc: "WhatsApp is live as a channel. Next: a link per holder that opens the right wallet, then bulk issue to a whole plan.", status: "building" },
-      { title: "Billing adjustments", desc: "VAT invoice lines, credit notes and refunds, plan changes now or at renewal, freezes with holding fees — built, in review.", status: "building" },
-      { title: "Accounting export", desc: "Xero and QuickBooks connectors and account mapping are live. Daily journals, supplier bills and card payouts follow.", status: "building" },
+      { title: "WhatsApp and pass delivery", desc: "WhatsApp is live as a channel, and each holder gets a link that opens the right wallet. Next: sending it from the profile with a WhatsApp → SMS → email fallback, then issuing to a whole plan.", status: "building" },
+      { title: "Billing adjustments", desc: "VAT invoice lines, credit notes and refunds, plan changes now or at renewal, and freezes with holding fees are live. Next: a fixed billing day per plan.", status: "building" },
+      { title: "Accounting export", desc: "Xero and QuickBooks connectors, account mapping and the daily sales and billing journals are live, with VAT reported by treatment. Supplier bills and card payouts follow.", status: "building" },
       { title: "Procurement", desc: "Per-site stock, supplier packs, purchase orders with approval, receiving, invoice matching and a needs-attention queue.", status: "shipped" },
     ],
   },
@@ -175,7 +195,7 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
       { title: "Member portal", desc: "Book, buy tickets, see the bill and top up credit — a web app, no app store." },
       { title: "Passwordless sign-in", desc: "A magic link by SMS or email." },
       { title: "Bookings & events v2", desc: "Ticket tiers, holds, waitlists, deposits and no-show fees. The services layer is in; tiers are next.", status: "building" },
-      { title: "Member accounts & Direct Debit", desc: "The house-account ledger is live. Mandates, collections and statements follow, then charging dues and bookings to the account.", status: "building" },
+      { title: "Member accounts & Direct Debit", desc: "The house-account ledger and GoCardless mandates are live — set up from a link or a QR at reception. Collections and statements follow, then dues and bookings charged to the account.", status: "building" },
       { title: "Tap to Pay", desc: "Any staff phone as a card terminal; pay at the table." },
     ],
   },
@@ -230,6 +250,11 @@ const PARTNER_INTEGRATIONS = [
     detail: "An extensive, versioned REST API with webhooks on every change, so your own desktop and mobile apps — and any upstream system — build on the same data the tills run on.",
   },
   {
+    name: "Salesforce",
+    status: "live" as const,
+    detail: "Members and applicants both ways, mapped onto your own objects.",
+  },
+  {
     name: "SevenRooms",
     status: "live" as const,
     detail: "Checks export in an Oracle Simphony-shaped document, with webhooks on every change.",
@@ -245,14 +270,24 @@ const PARTNER_INTEGRATIONS = [
     detail: "Secure sign-in built on current standards — OAuth2, OpenID Connect and enforced MFA — with SSO for your team.",
   },
   {
+    name: "Xero & QuickBooks",
+    status: "live" as const,
+    detail: "Daily sales and billing journals posted to your own account mapping, or as a file.",
+  },
+  {
+    name: "GoCardless",
+    status: "live" as const,
+    detail: "Direct Debit mandates for house accounts, set up from a link or a QR at reception.",
+  },
+  {
+    name: "Email, SMS & WhatsApp",
+    status: "live" as const,
+    detail: "Amazon SES for email, Twilio for SMS and WhatsApp — from your own domain and number.",
+  },
+  {
     name: "Tripleseat",
     status: "roadmap" as const,
     detail: "Events and banqueting — same check-export shape as SevenRooms.",
-  },
-  {
-    name: "Accounting",
-    status: "roadmap" as const,
-    detail: "Xero and QuickBooks from the sales and journal exports.",
   },
 ];
 
@@ -419,7 +454,7 @@ export default function Home() {
             <Logo />
             <span className="text-lg font-bold tracking-tight">synapse</span>
           </a>
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-5 whitespace-nowrap lg:flex xl:gap-8">
             {NAV.map((n) => (
               <a key={n.href} href={n.href} className="text-sm text-[var(--muted)] transition-colors hover:text-[var(--ink)]">{n.label}</a>
             ))}
@@ -592,6 +627,101 @@ export default function Home() {
         </div>
       </section>
 
+      {/* membership billing — dues, credits, freezes and the house account */}
+      <section id="billing" className="border-t border-[var(--border)]">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <div className="max-w-2xl">
+            <Eyebrow>Membership billing</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Dues that handle the awkward cases</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              Members upgrade mid-month, go abroad for a season and get charged twice by mistake.
+              synapse prices each of those before you confirm it, writes a VAT-correct invoice or
+              credit note, and keeps one balance per member that Direct Debit settles.
+            </p>
+          </div>
+          <div className="mt-14 grid gap-6 lg:grid-cols-2">
+            <figure>
+              <Reveal>
+                <Shot src="/screenshots/billing-subscription.png" alt="synapse admin — a member's subscription, card on file and paid dues invoices with VAT" w={2272} h={876} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Membership — the plan, the next bill, and every dues invoice with its VAT, period and PDF.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={100}>
+                <Shot src="/screenshots/house-account.png" alt="synapse admin — a member's house account with balance, credit limit and an active Direct Debit" w={2272} h={888} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">House account — what the member owes, what they can still sign for, and the mandate that collects it.</figcaption>
+            </figure>
+          </div>
+          {/* Columns sized by each dialog's aspect ratio, so the three shots stand the same height. */}
+          <div className="mt-6 grid items-start gap-6 md:grid-cols-[1.05fr_0.86fr_1.67fr]">
+            <figure>
+              <Reveal delayMs={40}>
+                <Shot src="/screenshots/billing-change-plan.png" alt="synapse admin — change plan dialog, switching at renewal with no proration" w={1008} h={962} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Change plan — now, pro rata, or at renewal. The dialog says what will be charged before you confirm.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={120}>
+                <Shot src="/screenshots/billing-freeze.png" alt="synapse admin — freeze membership dialog crediting the unused days" w={1008} h={1178} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Freeze — the unused days come back as credit, and billing resumes on the date you set.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={200}>
+                <Shot src="/screenshots/billing-credit.png" alt="synapse admin — issuing a credit note against a paid invoice" w={1648} h={984} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Credit note — any part of a paid invoice, VAT split out, to the card or the account.</figcaption>
+            </figure>
+          </div>
+          <div className="mx-auto mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {BILLING_POINTS.map((m) => (
+              <div key={m.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
+                  <Icon name={m.icon} className="h-5 w-5" />
+                </div>
+                <h3 className="mt-3 font-bold tracking-tight">{m.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{m.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* wallet passes — designed once, delivered as one link */}
+      <section id="passes" className="border-t border-[var(--border)] bg-[var(--surface-2)]">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 py-28 lg:grid-cols-[1fr_1.15fr]">
+          <div>
+            <Eyebrow>Wallet passes</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">The membership card is in their phone</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              Design Apple and Google Wallet passes in the admin, issue them from the member&apos;s
+              profile, and send one link that works on any phone. Sending it automatically by
+              WhatsApp, SMS or email is being built now.
+            </p>
+            <ul className="mt-8 space-y-4">
+              {PASS_POINTS.map((p) => (
+                <li key={p.title} className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-[var(--brand)] text-white">
+                    <Icon name="pass" className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="text-sm">
+                    <span className="font-semibold text-[var(--ink)]">{p.title}.</span>{" "}
+                    <span className="text-[var(--muted)]">{p.desc}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <figure>
+            <Reveal>
+              <Shot src="/screenshots/pass-designer.png" alt="synapse admin — wallet pass designer with live Apple and Google Wallet previews" w={1850} h={1490} />
+            </Reveal>
+            <figcaption className="mt-3 text-sm text-[var(--muted)]">Pass designer — colours, barcode and fields, with the Apple and Google versions drawn side by side.</figcaption>
+          </figure>
+        </div>
+      </section>
+
       {/* back office — purchasing and the books */}
       <section id="backoffice" className="border-t border-[var(--border)]">
         <div className="mx-auto max-w-6xl px-5 py-28">
@@ -622,6 +752,12 @@ export default function Home() {
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Sale → sales record → trading day → journal → ledger — the check at Window 4, split by sales group with VAT extracted, balanced and posted.</figcaption>
             </figure>
           </div>
+          <figure className="mx-auto mt-10 max-w-4xl">
+            <Reveal>
+              <Shot src="/screenshots/procurement-attention.png" alt="synapse admin — procurement needs-attention queue with orders and invoices to approve" w={2880} h={1800} />
+            </Reveal>
+            <figcaption className="mt-3 text-sm text-[var(--muted)]">Needs attention — orders waiting for approval, invoices with differences to decide, and deliveries that arrived without an order.</figcaption>
+          </figure>
           <div className="mx-auto mt-12 grid gap-4 sm:grid-cols-3">
             {BACKOFFICE_POINTS.map((m) => (
               <div key={m.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
@@ -646,9 +782,9 @@ export default function Home() {
           </div>
           <figure className="mx-auto mt-14 max-w-3xl">
             <Reveal>
-              <Shot src="/screenshots/floor-plan.png" alt="synapse admin — live service floor plan" w={1608} h={1566} />
+              <Shot src="/screenshots/floor-plan.png" alt="synapse admin — live service floor plan with seated tables and each server's covers" w={2220} h={1190} />
             </Reveal>
-            <figcaption className="mt-3 text-sm text-[var(--muted)]">Floor plan — tables coloured by live occupancy, with covers, seats and upcoming reservations, updating in real time.</figcaption>
+            <figcaption className="mt-3 text-sm text-[var(--muted)]">Floor plan — every seated table with its covers, member and server, and each server's tables and takings, updating in real time.</figcaption>
           </figure>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
             <figure>
@@ -703,15 +839,15 @@ export default function Home() {
                 <h3 className="text-3xl font-bold tracking-[-0.02em] sm:text-4xl">The kitchen display</h3>
                 <p className="mt-5 text-lg text-[var(--muted)]">
                   Any screen on the wall becomes a pass: registered once, then it comes back on its own.
-                  Tickets, not loose lines — aged by colour, bumped when the food leaves.
+                  Tickets, not loose lines — aged by colour, paced by course, bumped when the food leaves.
                 </p>
               </div>
               <figure className="mt-8 lg:mt-0">
                 <Reveal>
-                  <TabletShot src="/screenshots/kds-pass.png" alt="synapse kitchen display — tickets on the pass, aged by colour" w={3200} h={2000} />
+                  <TabletShot src="/screenshots/kds-expo.png" alt="synapse kitchen display — the expo view, each table's courses with pass, hold and fire" w={3200} h={2000} />
                 </Reveal>
                 <figcaption className="mt-4 text-sm text-[var(--muted)]">
-                  The pass — one screen for the whole kitchen, or one per station, with the notes the till sent.
+                  Expo — every table's courses side by side: pass what's ready, hold or fire the next, with the notes the till sent.
                 </figcaption>
               </figure>
             </div>
