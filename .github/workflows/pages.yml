@@ -2,6 +2,7 @@ name: Deploy to GitHub Pages
 
 # Builds the site as a static export and publishes it to GitHub Pages
 # (gosynapse.net).
+# The docs (docs/, Astro Starlight) are built in the same job and served at /docs.
 #
 # Repository variables (Settings → Secrets and variables → Actions → Variables):
 #   WEB3FORMS_KEY      access key from web3forms.com (public by design; it maps
@@ -39,6 +40,9 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            docs/pnpm-lock.yaml
 
       - name: Install
         run: pnpm install --frozen-lockfile
@@ -52,6 +56,26 @@ jobs:
           NEXT_TELEMETRY_DISABLED: '1'
           NEXT_PUBLIC_WEB3FORMS_KEY: ${{ vars.WEB3FORMS_KEY }}
           NEXT_PUBLIC_TOUR_CODE_SHA256: ${{ vars.TOUR_CODE_SHA256 }}
+
+      - name: Install docs
+        run: pnpm --dir docs install --frozen-lockfile
+
+      # Types and content schema, unit tests, then a build that generates the
+      # error pages and refuses a dist/ with leaks or broken links.
+      - name: Check, test and build docs
+        run: |
+          pnpm --dir docs check
+          pnpm --dir docs test
+          pnpm --dir docs build
+
+      - name: Add docs at /docs
+        run: |
+          if [ -e out/docs ]; then
+            echo "::error::The marketing site built its own out/docs; /docs belongs to docs/."
+            exit 1
+          fi
+          cp -R docs/dist out/docs
+          test -f out/docs/developers/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5

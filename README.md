@@ -30,3 +30,7 @@ Settings → Pages → Source: **GitHub Actions**, custom domain `gosynapse.net`
 The illustrations use real product data: `src/app/data.ts` mirrors the demo
 seed in the synapse repo — update it when the seed's menu, members or plans
 change.
+
+## Docs (/docs)
+
+`docs/` is a separate Astro Starlight project served at https://gosynapse.net/docs. The same Pages workflow builds and deploys it. See `docs/README.md`.
