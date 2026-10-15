@@ -164,8 +164,8 @@ const PASS_POINTS = [
   { title: "Kept up to date", desc: "Tier and loyalty credit change on the pass when they change on the record; the barcode checks the member in at the door." },
 ];
 
-// Devices synapse runs on. synapse does not sell hardware: these are what we
-// advise, each true to the code — the till is an Expo app, the kitchen display
+// Devices synapse runs on. synapse does not sell hardware (it can broker it
+// on request): these are what we advise, each true to the code — the till is an Expo app, the kitchen display
 // and front of house are web apps, printers speak ESC/POS over the network,
 // card readers pair through Stripe Terminal or Adyen's Terminal API, and the
 // door reads NFC wallet passes through a keyboard-mode VTAP reader.
@@ -954,9 +954,10 @@ export default function Home() {
                 <p className="text-lg font-bold tracking-tight">We don&apos;t sell hardware.</p>
               </div>
               <p className="mt-4 text-sm leading-relaxed text-white/70">
-                No bundles, no lock-in, no markup on a tablet. We advise on what works best with
-                synapse for your rooms and your service, you buy it from your usual supplier — and if a
-                venue needs something we don&apos;t support yet, we build the integration.
+                No bundles and no lock-in. We advise on what works best with synapse for your rooms
+                and your service, and you buy it from your usual supplier. Rather not source it
+                yourself? We can broker it for you. And if a venue needs something we don&apos;t
+                support yet, we build the integration.
               </p>
             </div>
           </div>
@@ -985,7 +986,8 @@ export default function Home() {
               <p className="text-sm font-semibold text-[var(--ink)]">Something else on the floor?</p>
               <p className="mt-1 text-sm text-[var(--muted)]">
                 Label printers, customer-facing displays, a reader your acquirer insists on, kit you already
-                own — tell us what you run and we&apos;ll tell you what works, or scope a custom integration.
+                own — tell us what you run and we&apos;ll tell you what works, broker what&apos;s missing, or
+                scope a custom integration.
               </p>
             </div>
             <div className="shrink-0">
