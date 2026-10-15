@@ -1,0 +1,2 @@
+# Same supply-chain rule as synapse: never resolve a version younger than a week.
+minimumReleaseAge: 10080

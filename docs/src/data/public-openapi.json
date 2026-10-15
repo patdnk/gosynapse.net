@@ -1,0 +1,377 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Synapse Public API",
+    "version": "v1",
+    "description": "The Synapse public API, for partners and a venue's own developers.\n\n**Auth.** `Authorization: Bearer syn_live_…` — an API key created in Settings → API keys.\nEach key carries scopes; a call without the scope it needs is 403 `insufficient_scope`.\n\n**Errors** are RFC 9457 `application/problem+json`. Branch on `code`, never on `detail`.\n\n**Lists** are cursor-paginated: `limit` (≤200) and `cursor`, answered with\n`{ data, has_more, next_cursor }`. Syncable lists take `updated_since`.\n\n**Idempotency.** Creates and money-moving calls take an `Idempotency-Key` header; a retry\nwith the same key and body returns the original response with `Idempotency-Replayed: true`.\n\n**Rate limits.** 50-request burst, 1,000 an hour per key. See the `RateLimit-*` headers;\na 429 carries `Retry-After`.\n\n**Money** is `{ minor, currency }`. Instants are RFC 3339 UTC."
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "syn_live_…"
+      }
+    },
+    "schemas": {}
+  },
+  "paths": {
+    "/public/v1/me": {
+      "get": {
+        "operationId": "getMe",
+        "summary": "Get the calling key",
+        "tags": [
+          "me"
+        ],
+        "description": "Returns the key that made the call: its ID, organisation, scopes, the venues it is limited to (empty means all) and whether it is a live or test key. Any valid key can call it, whatever its scopes, so use it to check a key works.",
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "api_key",
+                        "installation"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "org_id": {
+                      "type": "string"
+                    },
+                    "scopes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "venue_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "live",
+                        "test"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "id",
+                    "org_id",
+                    "scopes",
+                    "venue_ids",
+                    "mode"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.gosynapse.net"
+    }
+  ],
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
+  "x-error-codes": {
+    "bad_request": {
+      "status": 400,
+      "title": "Bad request",
+      "explanation": "The request could not be read: malformed JSON, a body on a call that takes none, or a similar problem with its shape.",
+      "fix": "Check the request against the reference for this endpoint. The detail field says what was wrong."
+    },
+    "validation_failed": {
+      "status": 400,
+      "title": "Validation failed",
+      "explanation": "The request was readable but did not match the endpoint's schema. The response carries an errors array, one entry per problem, each with a JSON-pointer-style path and a message.",
+      "fix": "Fix each field named in errors[].path and send the request again."
+    },
+    "invalid_cursor": {
+      "status": 400,
+      "title": "Invalid cursor",
+      "explanation": "The cursor parameter is not one this API issued, or it was changed.",
+      "fix": "Pass next_cursor back exactly as the previous page returned it. To start from the beginning, leave cursor out."
+    },
+    "idempotency_key_required": {
+      "status": 400,
+      "title": "Idempotency-Key required",
+      "explanation": "This endpoint creates something or moves money, so it only runs with an Idempotency-Key header.",
+      "fix": "Send a unique Idempotency-Key header (a UUID is ideal) and reuse it only when retrying the same request."
+    },
+    "invalid_idempotency_key": {
+      "status": 400,
+      "title": "Invalid Idempotency-Key",
+      "explanation": "The Idempotency-Key header is longer than 255 characters.",
+      "fix": "Use a shorter key. A UUID is 36 characters."
+    },
+    "unauthorized": {
+      "status": 401,
+      "title": "Unauthorized",
+      "explanation": "The request was not authenticated.",
+      "fix": "Send your API key as Authorization: Bearer followed by the key."
+    },
+    "invalid_api_key": {
+      "status": 401,
+      "title": "Invalid API key",
+      "explanation": "The Authorization header is missing, is not a Synapse key, or names a key that is unknown, revoked or expired, or belongs to an archived organisation. All of these return the same response on purpose.",
+      "fix": "Check the key in Settings → API keys. If it was revoked or has expired, create a new one."
+    },
+    "forbidden": {
+      "status": 403,
+      "title": "Forbidden",
+      "explanation": "The key is valid but this request is not allowed.",
+      "fix": "Check the detail field. If it is unclear, contact support with the instance value from the response."
+    },
+    "insufficient_scope": {
+      "status": 403,
+      "title": "Insufficient scope",
+      "explanation": "The key does not carry every scope this endpoint needs. The response lists the scopes the call needs in required and the ones the key lacks in missing.",
+      "fix": "Create a key with the missing scopes in Settings → API keys. Keys cannot be edited, so replace the old one."
+    },
+    "product_not_licensed": {
+      "status": 403,
+      "title": "Product not licensed",
+      "explanation": "The endpoint belongs to a Synapse product the organisation does not subscribe to.",
+      "fix": "Ask the venue to enable the product, or stop calling this endpoint for that organisation."
+    },
+    "module_not_licensed": {
+      "status": 403,
+      "title": "Module not licensed",
+      "explanation": "The endpoint belongs to a module that is not enabled for the organisation.",
+      "fix": "Ask the venue to enable the module, or stop calling this endpoint for that organisation."
+    },
+    "not_found": {
+      "status": 404,
+      "title": "Not found",
+      "explanation": "No record with that ID exists in the key's organisation. An ID with the wrong prefix, such as a reservation ID passed where a member ID is expected, is also not found.",
+      "fix": "Check the ID and its prefix. IDs from another organisation are never visible."
+    },
+    "route_not_found": {
+      "status": 404,
+      "title": "Route not found",
+      "explanation": "No endpoint exists at this method and path.",
+      "fix": "Check the path against the reference. Every path starts with /public/v1/."
+    },
+    "method_not_allowed": {
+      "status": 405,
+      "title": "Method not allowed",
+      "explanation": "The path exists but does not accept this HTTP method.",
+      "fix": "Use the method shown for this path in the reference."
+    },
+    "conflict": {
+      "status": 409,
+      "title": "Conflict",
+      "explanation": "The request conflicts with the current state of the record.",
+      "fix": "Fetch the record again, then decide whether to retry."
+    },
+    "idempotency_in_flight": {
+      "status": 409,
+      "title": "Request in progress",
+      "explanation": "A request with the same Idempotency-Key is still running.",
+      "fix": "Wait a moment and retry with the same key. You will get the original response once it finishes."
+    },
+    "payload_too_large": {
+      "status": 413,
+      "title": "Payload too large",
+      "explanation": "The request body is larger than the API accepts.",
+      "fix": "Send a smaller body. Split bulk work into several requests."
+    },
+    "unsupported_media_type": {
+      "status": 415,
+      "title": "Unsupported media type",
+      "explanation": "The Content-Type header is not one this endpoint reads.",
+      "fix": "Send JSON with Content-Type: application/json."
+    },
+    "unprocessable": {
+      "status": 422,
+      "title": "Unprocessable",
+      "explanation": "The request was valid but could not be carried out.",
+      "fix": "Read the detail field for the reason."
+    },
+    "idempotency_key_reused": {
+      "status": 422,
+      "title": "Idempotency-Key reused",
+      "explanation": "This Idempotency-Key was already used in the last 24 hours with a different method, path or body.",
+      "fix": "Use a new key for a new request. Reuse a key only to retry exactly the same request."
+    },
+    "rate_limited": {
+      "status": 429,
+      "title": "Rate limit exceeded",
+      "explanation": "The key has used its request budget: a burst of 50, refilled at 1,000 an hour. The Retry-After header says how many seconds to wait.",
+      "fix": "Wait for Retry-After seconds, then retry. Watch RateLimit-Remaining to slow down before you hit the limit."
+    },
+    "too_many_failed_attempts": {
+      "status": 429,
+      "title": "Too many failed attempts",
+      "explanation": "Too many requests from this address failed authentication: more than 30 in a minute. Requests are refused until the window passes, even with a valid key.",
+      "fix": "Fix the key your client sends, then wait for Retry-After seconds."
+    },
+    "internal_error": {
+      "status": 500,
+      "title": "Internal error",
+      "explanation": "Something went wrong on our side. The request may or may not have taken effect.",
+      "fix": "Retry with the same Idempotency-Key if the call takes one. If it keeps happening, contact support with the instance value."
+    }
+  },
+  "x-scopes": [
+    {
+      "scope": "members:read",
+      "group": "Members",
+      "label": "Read members"
+    },
+    {
+      "scope": "members:write",
+      "group": "Members",
+      "label": "Create and update members"
+    },
+    {
+      "scope": "members:merge",
+      "group": "Members",
+      "label": "Merge duplicate members"
+    },
+    {
+      "scope": "members:sensitive",
+      "group": "Members",
+      "label": "See allergies, access needs and case detail"
+    },
+    {
+      "scope": "applicants:read",
+      "group": "Applicants",
+      "label": "Read applicants"
+    },
+    {
+      "scope": "applicants:write",
+      "group": "Applicants",
+      "label": "Create, update and decide applicants"
+    },
+    {
+      "scope": "reservations:read",
+      "group": "Reservations",
+      "label": "Read reservations and availability"
+    },
+    {
+      "scope": "reservations:write",
+      "group": "Reservations",
+      "label": "Create, change, seat and cancel reservations"
+    },
+    {
+      "scope": "events:read",
+      "group": "Events",
+      "label": "Read events"
+    },
+    {
+      "scope": "events:write",
+      "group": "Events",
+      "label": "Create and update events"
+    },
+    {
+      "scope": "tickets:read",
+      "group": "Events",
+      "label": "Read tickets"
+    },
+    {
+      "scope": "tickets:write",
+      "group": "Events",
+      "label": "Issue, check in and cancel tickets"
+    },
+    {
+      "scope": "checkins:read",
+      "group": "Door",
+      "label": "Read check-ins and guest passes"
+    },
+    {
+      "scope": "checkins:write",
+      "group": "Door",
+      "label": "Check people in and issue guest passes"
+    },
+    {
+      "scope": "cloakroom:read",
+      "group": "Door",
+      "label": "Read cloakroom tickets"
+    },
+    {
+      "scope": "cloakroom:write",
+      "group": "Door",
+      "label": "Store and return cloakroom items"
+    },
+    {
+      "scope": "loyalty:read",
+      "group": "Loyalty and passes",
+      "label": "Read loyalty balances and ledgers"
+    },
+    {
+      "scope": "loyalty:write",
+      "group": "Loyalty and passes",
+      "label": "Top up and adjust loyalty balances"
+    },
+    {
+      "scope": "passes:read",
+      "group": "Loyalty and passes",
+      "label": "Read wallet passes"
+    },
+    {
+      "scope": "passes:issue",
+      "group": "Loyalty and passes",
+      "label": "Issue wallet passes"
+    },
+    {
+      "scope": "passes:revoke",
+      "group": "Loyalty and passes",
+      "label": "Revoke wallet passes"
+    },
+    {
+      "scope": "billing:read",
+      "group": "Billing and cases",
+      "label": "Read plans, subscriptions and invoices"
+    },
+    {
+      "scope": "cases:read",
+      "group": "Billing and cases",
+      "label": "Read member cases"
+    },
+    {
+      "scope": "cases:write",
+      "group": "Billing and cases",
+      "label": "Open and update member cases"
+    },
+    {
+      "scope": "checks:read",
+      "group": "Point of sale",
+      "label": "Read checks and their lines"
+    },
+    {
+      "scope": "payments:read",
+      "group": "Point of sale",
+      "label": "Read payments"
+    },
+    {
+      "scope": "webhooks:manage",
+      "group": "Platform",
+      "label": "Manage webhook endpoints"
+    },
+    {
+      "scope": "event_log:read",
+      "group": "Platform",
+      "label": "Read the event log"
+    }
+  ]
+}

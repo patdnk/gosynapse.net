@@ -9,3 +9,9 @@ next-env.d.ts
 
 # Local launch configs for the Claude desktop app
 .claude/
+
+# Docs (docs/): build output and pages generated from src/data/public-openapi.json
+docs/dist/
+docs/.astro/
+docs/src/content/docs/developers/errors/*.mdx
+!docs/src/content/docs/developers/errors/index.mdx

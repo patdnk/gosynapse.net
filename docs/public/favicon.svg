@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+<rect x="2" y="2" width="124" height="124" rx="24" ry="24" fill="#ffffff" stroke="#111111" stroke-width="4"/>
+<g transform="translate(17.25,8.75) scale(0.85)">
+<g stroke="#111111" stroke-linecap="round" stroke-linejoin="round" fill="none">
+<line x1="55.00" y1="60.00" x2="55.00" y2="38.90" stroke-width="4.25"/>
+<line x1="65.00" y1="70.00" x2="88.10" y2="70.00" stroke-width="4.25"/>
+<line x1="45.00" y1="70.00" x2="21.90" y2="70.00" stroke-width="4.25"/>
+<line x1="62.07" y1="62.93" x2="78.12" y2="46.88" stroke-width="4.25" stroke-dasharray="7.8 8.2"/>
+<line x1="47.93" y1="62.93" x2="31.88" y2="46.88" stroke-width="4.25" stroke-dasharray="7.8 8.2"/>
+<line x1="62.07" y1="77.07" x2="78.12" y2="93.12" stroke-width="4.25" stroke-dasharray="7.8 8.2"/>
+<line x1="47.93" y1="77.07" x2="31.88" y2="93.12" stroke-width="4.25" stroke-dasharray="7.8 8.2"/>
+</g>
+<circle cx="55" cy="70" r="8.5" fill="#111111"/>
+<circle cx="55" cy="32" r="5.4" fill="white" stroke="#111111" stroke-width="4"/>
+<circle cx="95" cy="70" r="5.4" fill="white" stroke="#111111" stroke-width="4"/>
+<circle cx="15" cy="70" r="5.4" fill="white" stroke="#111111" stroke-width="4"/>
+<circle cx="83" cy="42" r="5.4" fill="#111111"/>
+<circle cx="27" cy="42" r="5.4" fill="#111111"/>
+<circle cx="83" cy="98" r="5.4" fill="#111111"/>
+<circle cx="27" cy="98" r="5.4" fill="#111111"/>
+</g>
+</svg>

@@ -1,0 +1,8 @@
+---
+import Default from "@astrojs/starlight/components/Footer.astro";
+---
+<Default {...Astro.props}><slot /></Default>
+<p class="need-help">Need more help? Email <a href="mailto:support@gosynapse.net">support@gosynapse.net</a>.</p>
+<style>
+  .need-help { margin-top: 2rem; font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
+</style>
