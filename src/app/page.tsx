@@ -21,6 +21,7 @@ const NAV = [
   { label: "Marketing", href: "#marketing" },
   { label: "Billing", href: "#billing" },
   { label: "Back office", href: "#backoffice" },
+  { label: "Hardware", href: "#hardware" },
   { label: "API", href: "#api" },
   { label: "Solutions", href: "#solutions" },
   { label: "Security", href: "#security" },
@@ -39,6 +40,7 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
       { label: "Marketing & messaging", href: "#marketing" },
       { label: "Membership billing", href: "#billing" },
       { label: "Wallet passes", href: "#passes" },
+      { label: "Hardware", href: "#hardware" },
       { label: "Procurement", href: "#backoffice" },
       { label: "Accounting & house accounts", href: "#backoffice" },
       { label: "Payments & insights", href: "#products" },
@@ -160,6 +162,56 @@ const PASS_POINTS = [
   { title: "One link per holder", desc: "The same URL opens the .pkpass on an iPhone and Google's save flow on Android. A desktop shows a QR to scan." },
   { title: "Expiring, revocable links", desc: "Links last seven days and can be revoked; erasing a member revokes theirs." },
   { title: "Kept up to date", desc: "Tier and loyalty credit change on the pass when they change on the record; the barcode checks the member in at the door." },
+];
+
+// Devices synapse runs on. synapse does not sell hardware: these are what we
+// advise, each true to the code — the till is an Expo app, the kitchen display
+// and front of house are web apps, printers speak ESC/POS over the network,
+// card readers pair through Stripe Terminal or Adyen's Terminal API, and the
+// door reads NFC wallet passes through a keyboard-mode VTAP reader.
+const HARDWARE: { title: string; icon: string; runs: string; desc: string; picks: string[] }[] = [
+  {
+    title: "Till",
+    icon: "tablet",
+    runs: "iPad · Android tablet",
+    desc: "A native app built with Expo, so the same till runs on an iPad or an Android tablet. Landscape, full screen, paired to its venue with a one-time code.",
+    picks: ["Any recent iPad", "Android tablets, 10\" and up", "A stand or enclosure that suits the bar"],
+  },
+  {
+    title: "Kitchen display",
+    icon: "monitor",
+    runs: "Any screen with a browser",
+    desc: "A web app, so any screen with a browser becomes a pass: a wall-mounted TV with a mini PC, a touchscreen, or a tablet. Paired once, then it comes back on its own.",
+    picks: ["Touchscreens for bumping", "TV + mini PC for the wall", "Tablets for small sections"],
+  },
+  {
+    title: "Front of house",
+    icon: "frame",
+    runs: "Tablet · laptop",
+    desc: "The door board runs in a browser on whatever sits on the desk. The device's own camera scans QR passes; no extra kit needed to start.",
+    picks: ["iPad or Android tablet", "Any laptop at reception"],
+  },
+  {
+    title: "Door readers",
+    icon: "nfc",
+    runs: "NFC · QR",
+    desc: "Members tap their Apple or Google Wallet pass on an NFC reader that types the code into the door board — USB on a laptop, Bluetooth on a tablet, no drivers. Any keyboard-mode scanner works the same way.",
+    picks: ["VTAP NFC readers", "USB or Bluetooth QR scanners"],
+  },
+  {
+    title: "Printers & cash drawers",
+    icon: "printer",
+    runs: "Network ESC/POS",
+    desc: "Receipts and kitchen chits go to thermal printers on the venue network, routed by station. The cash drawer opens through the receipt printer.",
+    picks: ["Epson TM and Bixolon SRP series", "80 mm or 58 mm paper", "Ethernet or Wi-Fi"],
+  },
+  {
+    title: "Card readers",
+    icon: "reader",
+    runs: "Stripe · Adyen",
+    desc: "Card-present payments on smart readers paired from the admin and driven from the till — chip, contactless, Apple Pay and Google Pay, with the tip added on the till first.",
+    picks: ["Stripe: WisePOS E, Reader S700", "Adyen: V400m, S1F2 and other terminals"],
+  },
 ];
 
 // What landed on main most recently, newest first. Trim from the bottom.
@@ -339,6 +391,11 @@ function Icon({ name, className = "h-6 w-6" }: { name: string; className?: strin
     case "film": return <svg {...p}><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M7 4v16M17 4v16M3 9h4m10 0h4M3 15h4m10 0h4" /></svg>;
     case "dumbbell": return <svg {...p}><path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12" /></svg>;
     case "flag": return <svg {...p}><path d="M5 21V4m0 1 6-1 4 2 4-1v9l-4 1-4-2-6 1" /></svg>;
+    case "tablet": return <svg {...p}><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M18.5 12h.01" /></svg>;
+    case "monitor": return <svg {...p}><rect x="2" y="4" width="20" height="12" rx="1.5" /><path d="M8 20h8M12 16v4" /></svg>;
+    case "reader": return <svg {...p}><rect x="6" y="2" width="12" height="20" rx="2" /><rect x="8.5" y="5" width="7" height="5" rx="1" /><path d="M9 14h.01M12 14h.01M15 14h.01M9 17h.01M12 17h.01M15 17h.01" /></svg>;
+    case "nfc": return <svg {...p}><path d="M6 8.5a5 5 0 0 1 0 7M9.5 6a9 9 0 0 1 0 12M13 3.5a13 13 0 0 1 0 17" /><circle cx="3" cy="12" r="1" fill="currentColor" /></svg>;
+    case "wrench": return <svg {...p}><path d="M14.5 5.5a4 4 0 0 0 5 5L21 12l-9 9-3-3 9-9-1.5-1.5a4 4 0 0 1-1-2Z" /><path d="M10 7 7 4 4 7l3 3" /></svg>;
     default: return <svg {...p}><circle cx="12" cy="12" r="8" /></svg>;
   }
 }
@@ -454,7 +511,7 @@ export default function Home() {
             <Logo />
             <span className="text-lg font-bold tracking-tight">synapse</span>
           </a>
-          <nav className="hidden items-center gap-5 whitespace-nowrap lg:flex xl:gap-8">
+          <nav className="hidden items-center gap-4 whitespace-nowrap lg:flex xl:gap-8">
             {NAV.map((n) => (
               <a key={n.href} href={n.href} className="text-sm text-[var(--muted)] transition-colors hover:text-[var(--ink)]">{n.label}</a>
             ))}
@@ -870,6 +927,69 @@ export default function Home() {
                   The door — arrivals as they happen, assistance flagged before the guest reaches the desk.
                 </figcaption>
               </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* hardware — what synapse runs on, and what we advise */}
+      <section id="hardware" className="border-t border-[var(--border)]">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <div className="grid items-end gap-10 lg:grid-cols-[1.2fr_1fr]">
+            <div>
+              <Eyebrow>Hardware</Eyebrow>
+              <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Runs on the devices you choose</h2>
+              <p className="mt-5 text-lg text-[var(--muted)]">
+                Tills on iPads or Android tablets, the kitchen display and the door on any screen with a
+                browser, printers and card readers that venues already know. Keep what works, replace
+                only what doesn&apos;t.
+              </p>
+            </div>
+            {/* The point to land: advice, not a hardware bundle. */}
+            <div className="rounded-3xl bg-[var(--ink-900)] p-7 text-white sm:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-white/10">
+                  <Icon name="wrench" className="h-5 w-5" />
+                </span>
+                <p className="text-lg font-bold tracking-tight">We don&apos;t sell hardware.</p>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-white/70">
+                No bundles, no lock-in, no markup on a tablet. We advise on what works best with
+                synapse for your rooms and your service, you buy it from your usual supplier — and if a
+                venue needs something we don&apos;t support yet, we build the integration.
+              </p>
+            </div>
+          </div>
+          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {HARDWARE.map((h) => (
+              <div key={h.title} className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
+                    <Icon name={h.icon} className="h-5 w-5" />
+                  </div>
+                  <span className="rounded-full bg-[var(--surface-2)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--muted)]">{h.runs}</span>
+                </div>
+                <h3 className="mt-4 text-lg font-bold tracking-tight">{h.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{h.desc}</p>
+                <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">We recommend</p>
+                <ul className="mt-2 flex flex-wrap gap-1.5">
+                  {h.picks.map((x) => (
+                    <li key={x} className="rounded-full border border-[var(--border)] px-2.5 py-1 text-xs font-medium text-[var(--ink)]">{x}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 flex flex-col gap-4 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-[var(--ink)]">Something else on the floor?</p>
+              <p className="mt-1 text-sm text-[var(--muted)]">
+                Label printers, customer-facing displays, a reader your acquirer insists on, kit you already
+                own — tell us what you run and we&apos;ll tell you what works, or scope a custom integration.
+              </p>
+            </div>
+            <div className="shrink-0">
+              <ButtonGhost href="#demo">Ask about your setup</ButtonGhost>
             </div>
           </div>
         </div>
