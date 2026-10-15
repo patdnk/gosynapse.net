@@ -70,8 +70,9 @@ jobs:
 
       - name: Add docs at /docs
         run: |
-          if [ -e out/docs ]; then
-            echo "::error::The marketing site built its own out/docs; /docs belongs to docs/."
+          # Next exports a /docs page as out/docs.html (+ .txt), not out/docs/.
+          if [ -e out/docs ] || [ -e out/docs.html ] || [ -e out/docs.txt ]; then
+            echo "::error::The marketing site built its own /docs page; /docs belongs to docs/."
             exit 1
           fi
           cp -R docs/dist out/docs

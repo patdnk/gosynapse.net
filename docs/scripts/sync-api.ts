@@ -1,18 +1,20 @@
 /**
- * Copies synapse's public API contract into this repo. Synapse is private and
- * is the source of truth; run this after an API change there, then commit.
+ * Copies synapse's released public API contract into this repo. Synapse is
+ * private and is the source of truth. This reads the file as committed at
+ * SYNAPSE_REF (default origin/main), never the checkout's working tree, so an
+ * unreleased feature branch cannot leak into this public repo.
  *
- *   pnpm --dir docs sync-api            (expects ../synapse beside this repo)
- *   SYNAPSE_DIR=/path/to/synapse pnpm --dir docs sync-api
+ *   git -C ../synapse fetch && pnpm --dir docs sync-api
+ *   SYNAPSE_DIR=/path/to/synapse SYNAPSE_REF=origin/main pnpm --dir docs sync-api
  */
 import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { checkOpenApi } from "../src/lib/sync.ts";
+import { resolve } from "node:path";
+import { checkOpenApi, readSynapseExport } from "../src/lib/sync.ts";
 import { OPENAPI_PATH } from "../src/lib/paths.ts";
 
-const synapse = process.env.SYNAPSE_DIR ?? join(process.cwd(), "../../synapse");
-const source = join(synapse, "docs/public-openapi.json");
-const json = readFileSync(source, "utf8");
+const dir = resolve(process.env.SYNAPSE_DIR ?? "../../synapse");
+const ref = process.env.SYNAPSE_REF ?? "origin/main";
+const { json, commit } = readSynapseExport(dir, ref);
 checkOpenApi(json);
 const before = (() => {
   try {
@@ -22,4 +24,8 @@ const before = (() => {
   }
 })();
 writeFileSync(OPENAPI_PATH, json);
-console.log(before === json ? "sync-api: already up to date" : `sync-api: updated from ${source} — review and commit src/data/public-openapi.json`);
+console.log(
+  before === json
+    ? `sync-api: already up to date with synapse ${ref} @ ${commit}`
+    : `sync-api: updated from synapse ${ref} @ ${commit} — review and commit src/data/public-openapi.json`,
+);

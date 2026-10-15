@@ -36,7 +36,7 @@ Each endpoint needs one or more scopes. A call made with a key that lacks one ge
 
 A missing, malformed, unknown, revoked or expired key gets `401` [`invalid_api_key`](/docs/developers/errors/invalid_api_key/). So does a key for an archived organisation. These cases share one response on purpose, so a probe cannot tell them apart.
 
-After 30 failed attempts in a minute from one address returns `429` [`too_many_failed_attempts`](/docs/developers/errors/too_many_failed_attempts/) until the minute is up, even for a valid key. If you see this, fix the key your client sends first.
+After 30 failed attempts in a minute from one address, requests from it get `429` [`too_many_failed_attempts`](/docs/developers/errors/too_many_failed_attempts/) until the minute is up, even with a valid key. If you see this, fix the key your client sends first.
 
 ## Keep keys secret
 
