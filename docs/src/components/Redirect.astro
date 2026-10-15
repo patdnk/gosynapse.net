@@ -1,0 +1,20 @@
+---
+/**
+ * A redirect that works on static hosting with JavaScript off.
+ * `to` is a site path that already includes the base (use withBase).
+ */
+import { SITE_URL } from "../lib/site.ts";
+interface Props { to: string }
+const { to } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${to}`} />
+    <link rel="canonical" href={`${SITE_URL}${to}`} />
+    <meta name="robots" content="noindex" />
+    <title>Synapse Docs</title>
+  </head>
+  <body><p>This page has moved to <a href={to}>{to}</a>.</p></body>
+</html>

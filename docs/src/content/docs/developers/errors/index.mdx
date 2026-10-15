@@ -1,0 +1,37 @@
+---
+title: Errors
+description: Every error is an RFC 9457 problem with a stable code to branch on.
+sidebar:
+  label: Overview
+  order: 0
+---
+
+Every error from `/public/v1` has the content type `application/problem+json` and this shape:
+
+```json
+{
+  "type": "https://gosynapse.net/docs/errors/insufficient_scope",
+  "title": "Insufficient scope",
+  "status": 403,
+  "detail": "This call needs members:read.",
+  "instance": "req-7f3a…",
+  "code": "insufficient_scope",
+  "required": ["members:read"],
+  "missing": ["members:read"]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `code` | What went wrong. **Branch on this.** Codes are stable for the life of `v1`. |
+| `status` | The HTTP status, repeated in the body. |
+| `title` | A short, fixed label for the code. |
+| `detail` | A human-readable explanation of this occurrence. It may change wording at any time, so never parse it. |
+| `type` | A link to the page for the code on this site. |
+| `instance` | The request ID. Quote it when you contact support. |
+
+Some codes add fields. `validation_failed` adds `errors: [{ path, message }]`, and `insufficient_scope` adds `required` and `missing`.
+
+## All codes
+
+{/* <ErrorCodeTable /> */}

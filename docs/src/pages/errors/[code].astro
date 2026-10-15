@@ -1,0 +1,12 @@
+---
+/** The API's problem `type` is https://gosynapse.net/docs/errors/<code>; send it on to the full page. */
+import Redirect from "../../components/Redirect.astro";
+import { loadErrorCodes } from "../../lib/error-codes.ts";
+import { withBase } from "../../lib/site.ts";
+
+export function getStaticPaths() {
+  return Object.keys(loadErrorCodes()).map((code) => ({ params: { code } }));
+}
+const { code } = Astro.params;
+---
+<Redirect to={withBase(`/developers/errors/${code}/`)} />
