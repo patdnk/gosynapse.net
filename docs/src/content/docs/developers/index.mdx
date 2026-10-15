@@ -1,6 +1,47 @@
 ---
 title: Introduction
-description: The Synapse public API.
+description: Connect your systems to Synapse with the public REST API.
 ---
 
-The Synapse public API.
+The Synapse public API lets a venue's own developers and approved partners read data from Synapse and act on it. Today it is in early access: the foundation (keys, scopes, errors, limits) is live, and the [reference](/docs/developers/reference/operations/getme/) lists every endpoint you can call now. New endpoints appear there as they ship.
+
+## Base URL
+
+```
+https://api.gosynapse.net/public/v1
+```
+
+Every request goes over HTTPS and every path starts with `/public/v1/`.
+
+## Your first call
+
+Create a key (see [Authentication](/docs/developers/authentication/)), then check it works:
+
+```bash
+curl https://api.gosynapse.net/public/v1/me \
+  -H "Authorization: Bearer $SYNAPSE_API_KEY"
+```
+
+```json
+{
+  "kind": "api_key",
+  "id": "key_…",
+  "org_id": "org_…",
+  "scopes": ["members:read"],
+  "venue_ids": [],
+  "mode": "live"
+}
+```
+
+An empty `venue_ids` means the key can see every venue in the organisation.
+
+## Live and test keys
+
+Live keys start `syn_live_…` and act on a venue's real data. Test keys start `syn_test_…` and are issued only in sandbox organisations, so you can build against Synapse without touching real members or money; email support@gosynapse.net to get one.
+
+## What to read next
+
+- [Authentication](/docs/developers/authentication/): creating keys and choosing scopes
+- [Errors](/docs/developers/errors/): the problem format and every code
+- [Pagination](/docs/developers/pagination/), [Idempotency](/docs/developers/idempotency/) and [Rate limits](/docs/developers/rate-limits/)
+- [Conventions](/docs/developers/conventions/): IDs, money and time

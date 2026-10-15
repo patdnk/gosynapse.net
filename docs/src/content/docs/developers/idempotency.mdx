@@ -1,0 +1,24 @@
+---
+title: Idempotency
+description: Retry safely without creating something twice.
+---
+
+Calls that create something or move money accept an `Idempotency-Key` header, and some require it. If a network error leaves you unsure whether a call worked, send it again with the same key. Synapse runs it once.
+
+```bash
+curl -X POST https://api.gosynapse.net/public/v1/… \
+  -H "Authorization: Bearer $SYNAPSE_API_KEY" \
+  -H "Idempotency-Key: 4f6c1a52-8a3e-4d7e-9f1b-2b7c9d0e6a13" \
+  -H "Content-Type: application/json" \
+  -d '{ … }'
+```
+
+## Rules
+
+- Use a new, unique value for each new request. A UUID is ideal. Keys can be up to 255 characters.
+- Synapse remembers a key for 24 hours, per API key.
+- A retry with the same key, method, path and body returns the original response, status included, with the header `Idempotency-Replayed: true`.
+- The same key with a different request gets `422` [`idempotency_key_reused`](/docs/developers/errors/idempotency_key_reused/).
+- A retry while the first request is still running gets `409` [`idempotency_in_flight`](/docs/developers/errors/idempotency_in_flight/). Wait a moment and retry.
+- If the first attempt failed with a `5xx`, the key is released, so your retry runs again for real.
+- An endpoint that requires a key returns `400` [`idempotency_key_required`](/docs/developers/errors/idempotency_key_required/) without one.

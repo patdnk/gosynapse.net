@@ -23,7 +23,16 @@ export default defineConfig({
       sidebar: [
         {
           label: "Developers",
-          items: ["developers", { label: "Errors", items: [{ autogenerate: { directory: "developers/errors" } }] }],
+          items: [
+            "developers",
+            "developers/authentication",
+            { label: "Errors", items: [{ autogenerate: { directory: "developers/errors" } }] },
+            "developers/pagination",
+            "developers/idempotency",
+            "developers/rate-limits",
+            "developers/conventions",
+            "developers/webhooks",
+          ],
         },
         ...openAPISidebarGroups,
       ],

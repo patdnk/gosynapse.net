@@ -1,0 +1,39 @@
+---
+title: Conventions
+description: IDs, money, time and naming across the API.
+---
+
+## IDs
+
+Every ID carries a prefix that says what it names, such as `mbr_…` for a member or `rsv_…` for a reservation. Treat IDs as opaque strings: store them whole and compare them exactly. An ID with the wrong prefix for an endpoint is `404` [`not_found`](/docs/developers/errors/not_found/).
+
+| Prefix | Names |
+|---|---|
+| `org_` | Organisation |
+| `ven_` | Venue |
+| `key_` | API key |
+| `mbr_` | Member |
+| `apl_` | Applicant |
+| `rsv_` | Reservation |
+| `fn_` | Event (a function: a party, a tasting, a private hire) |
+| `tkt_` | Ticket |
+| `chk_` | Check (a bill) |
+| `pay_` | Payment |
+
+## Money
+
+Amounts are an object with an integer number of minor units (pence, cents) and an ISO 4217 currency:
+
+```json
+{ "minor": 1250, "currency": "GBP" }
+```
+
+That is £12.50. Never use floating point for money.
+
+## Time
+
+Instants are RFC 3339 in UTC, for example `2026-10-15T19:30:00Z`.
+
+## Names
+
+The API says **reservations** for table and room bookings, and **events** for functions such as parties and tastings, whose IDs start `fn_`.

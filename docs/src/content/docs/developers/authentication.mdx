@@ -1,0 +1,43 @@
+---
+title: Authentication
+description: API keys, scopes and what to do when a key is refused.
+---
+
+import ScopeTable from '../../../components/ScopeTable.astro';
+
+Every request carries an API key as a bearer token:
+
+```
+Authorization: Bearer syn_live_…
+```
+
+## Create a key
+
+An admin creates keys in the Synapse admin under **Settings → API keys → New key**:
+
+1. Give the key a name that says what uses it, such as "Website bookings sync".
+2. Tick the scopes it needs, and no more.
+3. Optionally limit it to some venues, and set an expiry date.
+4. Select **Create key** and copy it straight away. Synapse stores only a hash, so the full key is shown once and never again.
+
+Give each integration its own key. You can then revoke one integration without breaking the others.
+
+## Revoke a key
+
+Revoke a key from the same page. It stops working at once. Keys cannot be edited: to change a key's scopes or venues, create a new key, move your integration to it, then revoke the old one.
+
+## Scopes
+
+Each endpoint needs one or more scopes. A call made with a key that lacks one gets `403` [`insufficient_scope`](/docs/developers/errors/insufficient_scope/). The response says which scopes the call needs (`required`) and which ones the key is missing (`missing`). [`GET /me`](/docs/developers/reference/operations/getme/) works with any valid key.
+
+<ScopeTable />
+
+## When a key is refused
+
+A missing, malformed, unknown, revoked or expired key gets `401` [`invalid_api_key`](/docs/developers/errors/invalid_api_key/). So does a key for an archived organisation. These cases share one response on purpose, so a probe cannot tell them apart.
+
+After 30 failed attempts in a minute from one address returns `429` [`too_many_failed_attempts`](/docs/developers/errors/too_many_failed_attempts/) until the minute is up, even for a valid key. If you see this, fix the key your client sends first.
+
+## Keep keys secret
+
+Keep keys in a secret store or environment variable on your server. Never put one in a mobile app, a browser or a public repository. If a key leaks, revoke it and create a new one.

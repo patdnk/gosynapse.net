@@ -1,0 +1,12 @@
+---
+title: Webhooks
+description: Coming soon. Synapse will push events to your endpoint.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="note" title="Coming soon">
+Webhooks are not available yet. Until they are, poll list endpoints with `updated_since` (see [Pagination](/docs/developers/pagination/)).
+</Aside>
+
+When webhooks ship, you will register an HTTPS endpoint and choose which events it receives, such as a reservation being created or a member checking in. Each delivery will be signed so you can check it came from Synapse, and failed deliveries will be retried. This page will list every event and show how to verify a signature.

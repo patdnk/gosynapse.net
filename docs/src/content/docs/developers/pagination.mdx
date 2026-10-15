@@ -1,0 +1,28 @@
+---
+title: Pagination
+description: Cursor pagination for every list endpoint.
+---
+
+List endpoints return one page at a time:
+
+```json
+{
+  "data": [ … ],
+  "has_more": true,
+  "next_cursor": "eyJrIjoi…"
+}
+```
+
+| Parameter | Meaning |
+|---|---|
+| `limit` | Items per page, from 1 to 200. Default 50. |
+| `cursor` | Where to continue. Pass the previous page's `next_cursor` exactly as you received it. |
+| `updated_since` | On syncable lists, only items changed since this instant (RFC 3339, e.g. `2026-10-15T09:00:00Z`). |
+
+To read everything, keep requesting with `cursor` set to the last `next_cursor` until `has_more` is `false`. `next_cursor` is then `null`.
+
+Cursors are opaque. Do not build or change them yourself: a cursor we did not issue may be rejected with `400` [`invalid_cursor`](/docs/developers/errors/invalid_cursor/).
+
+## Keeping in sync
+
+To mirror Synapse into your own system, page through once to load everything, and note when you started. After that, call again with `updated_since` set to that time, page through the changes, and repeat.

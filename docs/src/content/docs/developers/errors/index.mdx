@@ -6,6 +6,8 @@ sidebar:
   order: 0
 ---
 
+import ErrorCodeTable from '../../../../components/ErrorCodeTable.astro';
+
 Every error from `/public/v1` has the content type `application/problem+json` and this shape:
 
 ```json
@@ -34,4 +36,4 @@ Some codes add fields. `validation_failed` adds `errors: [{ path, message }]`, a
 
 ## All codes
 
-{/* <ErrorCodeTable /> */}
+<ErrorCodeTable />

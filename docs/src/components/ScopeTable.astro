@@ -1,0 +1,14 @@
+---
+/** The scope catalogue as synapse's admin shows it (x-scopes, from PUBLIC_SCOPES). */
+import { readFileSync } from "node:fs";
+import { OPENAPI_PATH } from "../lib/paths.ts";
+const scopes = (JSON.parse(readFileSync(OPENAPI_PATH, "utf8")) as { "x-scopes": { scope: string; group: string; label: string }[] })["x-scopes"];
+---
+<table>
+  <thead><tr><th>Scope</th><th>Area</th><th>Allows</th></tr></thead>
+  <tbody>
+    {scopes.map((s) => (
+      <tr><td><code>{s.scope}</code></td><td>{s.group}</td><td>{s.label}</td></tr>
+    ))}
+  </tbody>
+</table>

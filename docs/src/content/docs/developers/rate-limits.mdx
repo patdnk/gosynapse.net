@@ -1,0 +1,24 @@
+---
+title: Rate limits
+description: How many requests a key can make, and how to stay inside the limit.
+---
+
+Each API key has its own budget: a burst of **50 requests**, refilled steadily at **1,000 requests an hour**. Separate keys do not share a budget.
+
+Every authenticated response says where you stand:
+
+| Header | Meaning |
+|---|---|
+| `RateLimit-Limit` | The burst size: 50. |
+| `RateLimit-Remaining` | Requests you can make right now. |
+| `RateLimit-Reset` | Seconds until the budget is full again. |
+
+When the budget runs out you get `429` [`rate_limited`](/docs/developers/errors/rate_limited/) with a `Retry-After` header in seconds. Wait that long, then continue.
+
+## Staying inside the limit
+
+- Slow down when `RateLimit-Remaining` gets low, rather than waiting for a 429.
+- Use `limit=200` and `updated_since` to sync with fewer calls. See [Pagination](/docs/developers/pagination/).
+- Give each integration its own key, so one busy job cannot starve another.
+
+If you need a higher limit, email support@gosynapse.net with what you are building.

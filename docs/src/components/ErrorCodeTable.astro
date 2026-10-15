@@ -1,0 +1,17 @@
+---
+import { loadErrorCodes } from "../lib/error-codes.ts";
+import { withBase } from "../lib/site.ts";
+const codes = Object.entries(loadErrorCodes()).sort(([a, x], [b, y]) => x.status - y.status || a.localeCompare(b));
+---
+<table>
+  <thead><tr><th>Status</th><th>code</th><th>Meaning</th></tr></thead>
+  <tbody>
+    {codes.map(([code, e]) => (
+      <tr>
+        <td>{e.status}</td>
+        <td><a href={withBase(`/developers/errors/${code}/`)}><code>{code}</code></a></td>
+        <td>{e.title}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
