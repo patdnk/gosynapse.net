@@ -1,0 +1,46 @@
+---
+title: Check members in and out
+description: Find a member at the door, check them in, and check them out when they leave.
+roles: [WAITER, MANAGER, ADMIN]
+module: reception
+sidebar:
+  order: 2
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+When a member arrives, find them on the front-of-house (FOH) screen and check them in. The board then shows them in the house, and staff see their allergies and notes.
+
+## Check a member in
+
+1. Select the search box, **Search a member, or type a code…**, and type part of their name.
+2. Select the member in the results.
+
+   ![Searching for a member on the FOH screen](/docs/screenshots/reception/search-member.png)
+
+3. Select **Check in**. Or select **Open details** first to see their profile.
+
+The screen confirms it, for example "✓ Imogen Ashworth · Checked in · 22:42", with any allergy flagged.
+
+**Other ways in:**
+
+- Type a guest-pass code into the search box and choose **Check in with code**.
+- Select **Member Check-in** and scan the member's wallet pass on the pass reader.
+
+## Their page
+
+Select a member's tile on the board to open their page. It shows their membership, allergies, notes for the room, bookings, tonight's guests and recent visits.
+
+![A member's page on the FOH screen](/docs/screenshots/reception/member-page.png)
+
+## Check a member out
+
+On the member's page, select **Checked in — check out**. They move to **Departed** on the board.
+
+<Aside type="caution">
+Selecting a **guest's** tile on the board checks that guest out straight away. There's no confirmation.
+</Aside>
+
+## From the Synapse dashboard
+
+**Reception** in the Synapse dashboard does the same job on a computer: search under **Check in** and select a member to check them in at once, or use **Scan / enter code**. **Today's arrivals** lists everyone in, with **Check out** next to each.
