@@ -14,7 +14,7 @@ export default defineConfig({
       title: "Synapse Docs",
       favicon: "/favicon.svg",
       social: [{ icon: "external", label: "gosynapse.net", href: "https://gosynapse.net" }],
-      components: { Footer: "./src/components/Footer.astro" },
+      components: { Footer: "./src/components/Footer.astro", PageTitle: "./src/components/PageTitle.astro" },
       plugins: [
         starlightOpenAPI([
           { base: "developers/reference", schema: "./src/data/public-openapi.json", sidebar: { label: "API reference" } },

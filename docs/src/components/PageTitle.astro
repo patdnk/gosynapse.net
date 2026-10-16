@@ -1,0 +1,32 @@
+---
+/**
+ * Starlight's title, then "Who can do this" and "Requires" for help articles.
+ * Throws while prerendering, so a help article without roles fails the build.
+ */
+import Default from "@astrojs/starlight/components/PageTitle.astro";
+import { isHelpArticle, requirements } from "../lib/help.ts";
+
+const { entry } = Astro.locals.starlightRoute;
+if (isHelpArticle(entry.id) && !entry.data.roles?.length) {
+  throw new Error(`${entry.filePath}: help articles need roles: [...] in their frontmatter`);
+}
+const { who, requires } = requirements(entry.data);
+---
+
+<Default><slot /></Default>
+{
+  (who || requires) && (
+    <dl class="requirements">
+      {who && (<div><dt>Who can do this:</dt> <dd>{who}</dd></div>)}
+      {requires && (<div><dt>Requires:</dt> <dd>{requires}</dd></div>)}
+    </dl>
+  )
+}
+
+<style>
+  .requirements { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; font-size: var(--sl-text-sm); }
+  .requirements div { border: 1px solid var(--sl-color-gray-5); border-radius: 999px; padding: 0.15rem 0.75rem; }
+  .requirements dt, .requirements dd { display: inline; margin: 0; }
+  .requirements dt { font-weight: 600; }
+  .requirements dd { color: var(--sl-color-gray-2); }
+</style>
