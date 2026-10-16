@@ -1,0 +1,28 @@
+---
+title: Register a card reader
+description: Add a card terminal to a location and make it the default.
+roles: [ADMIN]
+product: pos
+sidebar:
+  order: 2
+---
+
+Card readers take card-present payments: the guest taps or inserts a card on the reader. Synapse works with Stripe and Adyen readers. Each location has a default reader, which the till uses when staff choose a card-reader payment.
+
+## Before you start
+
+Your Stripe or Adyen account must be connected. See [Connect a payment processor](/docs/help/payments-and-tipping/connect-a-payment-processor/). The reader needs to be switched on and showing its registration code.
+
+## Register the reader
+
+1. Go to **Settings** and find **Card readers (terminals)**.
+2. Select **Register reader**.
+3. Choose the **Location** the reader is in and its **Provider**.
+4. Give it a **Label** staff will recognise, such as "Front counter".
+5. Enter the **Registration code** the reader shows.
+6. Tick **Default reader for this location** if the till should use this reader.
+7. Select **Register**.
+
+![The Register reader dialog](/docs/screenshots/payments-and-tipping/register-reader.png)
+
+The reader appears in the list with its location and status. To retire a reader, select **Delete** next to it.

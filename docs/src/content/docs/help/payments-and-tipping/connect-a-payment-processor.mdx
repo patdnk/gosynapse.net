@@ -1,0 +1,26 @@
+---
+title: Connect a payment processor
+description: Add your Stripe, Adyen or GoCardless account so Synapse can take payments.
+roles: [ADMIN]
+product: payments
+sidebar:
+  order: 3
+---
+
+A payment processor is the account card payments and Direct Debit collections go through. Connect yours once, and Synapse uses it for the till, card readers and member billing.
+
+1. Go to **Settings** and find **Payment processors**.
+2. Select **Add processor**.
+3. Choose the **Provider**: Stripe, Adyen, or GoCardless (Direct Debit).
+4. Choose the **Mode**: **TEST** while you try things out, **LIVE** to take real payments.
+5. Give it a **Label**, such as "Stripe (UK)".
+6. Paste in the keys your provider gave you. The fields depend on the provider, for example **Secret key** and **Webhook secret** for Stripe.
+7. Tick **Default processor** if this is the account Synapse should use by default.
+8. Select **Save**.
+
+![The Add payment processor dialog](/docs/screenshots/payments-and-tipping/add-processor.png)
+
+## Good to know
+
+- Keys are never shown again once saved. The list only says which keys are configured.
+- Select **Edit** to change the label, keys or default, or untick **Active** to stop using a processor.

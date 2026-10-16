@@ -1,0 +1,32 @@
+---
+title: Create an API key
+description: Give an integration its own key with only the access it needs.
+roles: [ADMIN]
+sidebar:
+  order: 3
+---
+
+API keys let your own developers, or a partner you work with, connect another system to Synapse through the public API. Give each integration its own key, with only the access it needs.
+
+1. Go to **Settings**, then **API keys**.
+2. Select **New key**.
+3. Fill in the key's details:
+   - **Name**: what the key is for, such as "Salesforce sync".
+   - **Access**: tick only what the integration needs. **Read-only everything** ticks every read permission at once.
+   - **Venues**: tick the venues it may see, or leave them all unticked for the whole organisation.
+   - **Expires (optional)**: a date after which the key stops working.
+
+   ![The New API key dialog](/docs/screenshots/settings/new-api-key.png)
+
+4. Select **Create key**.
+5. Select **Copy** and send the key to whoever will use it through a secure channel. Synapse shows it only once: "Copy this key now — it will not be shown again."
+6. Select **Done**.
+
+## Revoke a key
+
+When an integration is retired, or a key may have leaked, select **Revoke** next to it and confirm. Anything using it stops working immediately. Create a new key if the integration still needs one.
+
+## Good to know
+
+- Keys from this screen are live keys and work on your real data.
+- Developers will find everything else they need in the [developer documentation](/docs/developers/), starting with [Authentication](/docs/developers/authentication/).
