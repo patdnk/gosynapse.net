@@ -1,6 +1,10 @@
 import type { Finding, OutFile } from "./leaks.ts";
 
 const ATTR = /\s(?:href|src)="(\/[^"]*)"/g;
+/** Every href/src, to catch relative ones: ATTR only sees root-relative URLs. */
+const ANY_ATTR = /\s(?:href|src)="([^"]*)"/g;
+/** Root-relative, fragment-only, or with a scheme (https:, mailto:, data:). Anything else resolves against the page's URL. */
+const NOT_RELATIVE = /^(?:\/|#|[a-zA-Z][a-zA-Z0-9+.-]*:)/;
 
 /**
  * Files in dist/ that would serve a URL on GitHub Pages, most likely first.
@@ -15,7 +19,8 @@ export function toOutPaths(url: string): string[] {
 /**
  * Internal links that would 404 once dist/ is served under basePath. A link
  * outside basePath points into the marketing site, which this build cannot
- * see — usually a markdown link written without /docs.
+ * see — usually a markdown link written without /docs. A relative href or src
+ * resolves against the page's own URL, so it is refused outright.
  */
 export function findBrokenLinks(files: OutFile[], exists: (path: string) => boolean, basePath = ""): Finding[] {
   const out: Finding[] = [];
@@ -36,6 +41,13 @@ export function findBrokenLinks(files: OutFile[], exists: (path: string) => bool
         local = url.slice(basePath.length) || "/";
       }
       if (!toOutPaths(local).some(exists)) out.push({ file: f.path, rule: "broken-link", match: url });
+    }
+    const relative = new Set<string>();
+    for (const m of f.text.matchAll(ANY_ATTR)) {
+      const url = m[1]!;
+      if (NOT_RELATIVE.test(url) || relative.has(url)) continue;
+      relative.add(url);
+      out.push({ file: f.path, rule: "relative-link", match: url });
     }
   }
   return out;

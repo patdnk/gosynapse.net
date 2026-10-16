@@ -39,4 +39,18 @@ describe("findLeaks", () => {
       ["a/index.html", "build-path"],
     ]);
   });
+  it("flags the demo device tokens anywhere, including JS", () => {
+    const leaks = findLeaks([
+      { path: "help/settings/pair-a-device/index.html", text: "token dev_demo_ashgrove_expo" },
+      { path: "_astro/k.js", text: '"dev_demo_ashgrove_hot_pass"' },
+    ]);
+    expect(leaks).toEqual([
+      { file: "help/settings/pair-a-device/index.html", rule: "device-token", match: "dev_demo_ashgrove_expo" },
+      { file: "_astro/k.js", rule: "device-token", match: "dev_demo_ashgrove_hot_pass" },
+    ]);
+  });
+
+  it("does not mistake the bare words for a token", () => {
+    expect(findLeaks([{ path: "a.html", text: "a dev demo, dev_demo_ alone" }])).toEqual([]);
+  });
 });

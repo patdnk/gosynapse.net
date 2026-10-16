@@ -20,6 +20,18 @@ describe("findBrokenLinks under /docs", () => {
     ]);
   });
 
+  it("flags relative links and images, which resolve against the page's own URL", () => {
+    const html =
+      '<a href="pagination/">x</a><img src="screenshots/a.png"><a href="../errors/">y</a><a href="">z</a>' +
+      '<a href="/docs/developers/">ok</a><a href="#top">ok</a><a href="https://gosynapse.net/">ok</a><a href="mailto:a@b.c">ok</a><img src="data:image/png;base64,AA">';
+    expect(findBrokenLinks([{ path: "a.html", text: html }], exists, "/docs")).toEqual([
+      { file: "a.html", rule: "relative-link", match: "pagination/" },
+      { file: "a.html", rule: "relative-link", match: "screenshots/a.png" },
+      { file: "a.html", rule: "relative-link", match: "../errors/" },
+      { file: "a.html", rule: "relative-link", match: "" },
+    ]);
+  });
+
   it("only reads HTML files", () => {
     expect(findBrokenLinks([{ path: "a.js", text: 'href="/nope/"' }], exists, "/docs")).toEqual([]);
   });
