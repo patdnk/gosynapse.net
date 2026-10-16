@@ -1,0 +1,33 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { getCollection } from "astro:content";
+import { articleCount, helpTiles } from "../../lib/help.ts";
+import { withBase } from "../../lib/site.ts";
+
+const groups = helpTiles(await getCollection("docs"));
+---
+
+<StarlightPage
+  frontmatter={{
+    title: "Help Centre",
+    description: "Step-by-step guides for setting up and running your venue on Synapse. Pick a topic, or search.",
+  }}
+>
+  {
+    groups.map((g) => (
+      <section class="help-group">
+        {g.title && <h2>{g.title}</h2>}
+        <CardGrid>
+          {g.tiles.map((t) => (
+            <LinkCard title={t.title} description={`${t.description} · ${articleCount(t.articles)}`} href={withBase(`/help/${t.slug}/`)} />
+          ))}
+        </CardGrid>
+      </section>
+    ))
+  }
+</StarlightPage>
+
+<style>
+  .help-group + .help-group { margin-top: 2.5rem; }
+</style>

@@ -6,7 +6,8 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { loadErrorCodes } from "../src/lib/error-codes.ts";
-import { DIST_DIR } from "../src/lib/paths.ts";
+import { HELP_GROUPS } from "../src/lib/help.ts";
+import { DIST_DIR, HELP_DIR } from "../src/lib/paths.ts";
 import { BASE_PATH } from "../src/lib/site.ts";
 import { findLeaks, type Finding, type OutFile } from "../src/lib/verify/leaks.ts";
 import { findBrokenLinks, missingPages } from "../src/lib/verify/links.ts";
@@ -27,7 +28,14 @@ const files: OutFile[] = walk(DIST_DIR)
   .map((p) => ({ path: p, text: readFileSync(join(DIST_DIR, p), "utf8") }));
 const exists = (p: string) => existsSync(join(DIST_DIR, p)) && statSync(join(DIST_DIR, p)).isFile();
 
+const helpCategoriesWithArticles = HELP_GROUPS.flatMap((g) => g.categories)
+  .map((c) => c.slug)
+  .filter((slug) => existsSync(join(HELP_DIR, slug)) && readdirSync(join(HELP_DIR, slug)).some((f) => f.endsWith(".mdx")));
+
 const required = [
+  "/",
+  "/help/",
+  ...helpCategoriesWithArticles.map((slug) => `/help/${slug}/`),
   "/developers/",
   "/developers/authentication/",
   "/developers/errors/",

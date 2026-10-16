@@ -151,3 +151,70 @@ export function requirements(data: { roles?: readonly Role[]; module?: ModuleKey
 export function isHelpArticle(id: string): boolean {
   return id.startsWith("help/") && id.split("/").length === 3;
 }
+
+/** The parts of a docs collection entry the help pages read. */
+export interface HelpEntry {
+  id: string;
+  data: { title: string; description?: string; sidebar: { order?: number } };
+}
+
+/** A category's articles, in sidebar order, then by title. */
+export function articlesOf<E extends HelpEntry>(entries: readonly E[], slug: string): E[] {
+  return entries
+    .filter((e) => isHelpArticle(e.id) && e.id.startsWith(`help/${slug}/`))
+    .sort((a, b) => (a.data.sidebar.order ?? Infinity) - (b.data.sidebar.order ?? Infinity) || a.data.title.localeCompare(b.data.title));
+}
+
+export interface HelpTileGroup {
+  title: string | null;
+  tiles: { slug: string; title: string; description: string; articles: number }[];
+}
+
+/** The /help/ grid: categories with articles, under their group; empty groups dropped. */
+export function helpTiles(entries: readonly HelpEntry[]): HelpTileGroup[] {
+  return HELP_GROUPS.map((g) => ({
+    title: g.title,
+    tiles: g.categories
+      .map((c) => ({ ...c, articles: articlesOf(entries, c.slug).length }))
+      .filter((t) => t.articles > 0),
+  })).filter((g) => g.tiles.length > 0);
+}
+
+/** The slice of Starlight's sidebar config that helpSidebar produces. */
+type SidebarEntry =
+  | { label: string; link: string }
+  | { autogenerate: { directory: string } }
+  | SidebarGroup;
+interface SidebarGroup {
+  label: string;
+  collapsed?: boolean;
+  items: SidebarEntry[];
+}
+
+/**
+ * The Help Centre sidebar, for astro.config.mjs. Starlight adds the base to
+ * `link`. Only categories with articles appear, since an autogenerate group
+ * over an empty folder would be an empty heading.
+ */
+export function helpSidebar(hasArticles: (slug: string) => boolean): SidebarGroup[] {
+  const group = (c: HelpCategory, collapsed: boolean): SidebarGroup => ({
+    label: c.title,
+    collapsed,
+    items: [{ autogenerate: { directory: `help/${c.slug}` } }],
+  });
+  return [
+    {
+      label: "Help Centre",
+      items: [
+        { label: "All topics", link: "/help/" },
+        ...HELP_GROUPS.flatMap((g): SidebarGroup[] => {
+          const cats = g.categories.filter((c) => hasArticles(c.slug));
+          if (cats.length === 0) return [];
+          return g.title === null ? cats.map((c) => group(c, false)) : [{ label: g.title, items: cats.map((c) => group(c, true)) }];
+        }),
+      ],
+    },
+  ];
+}
+
+export const articleCount = (n: number) => `${n} ${n === 1 ? "article" : "articles"}`;

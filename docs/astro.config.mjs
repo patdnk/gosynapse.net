@@ -1,7 +1,17 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import { existsSync, readdirSync } from "node:fs";
 import starlight from "@astrojs/starlight";
+import { helpSidebar } from "./src/lib/help.ts";
 import starlightOpenAPI, { openAPISidebarGroups } from "starlight-openapi";
+
+// A help category is listed once its folder has an article.
+const helpDir = new URL("./src/content/docs/help/", import.meta.url);
+/** @param {string} slug */
+const hasArticles = (slug) => {
+  const dir = new URL(`${slug}/`, helpDir);
+  return existsSync(dir) && readdirSync(dir).some((f) => f.endsWith(".mdx"));
+};
 
 // Served at https://gosynapse.net/docs: pages.yml copies dist/ into the marketing
 // site's out/docs/. Keep `base` in step with BASE_PATH in src/lib/site.ts.
@@ -21,6 +31,7 @@ export default defineConfig({
         ]),
       ],
       sidebar: [
+        ...helpSidebar(hasArticles),
         {
           label: "Developers",
           items: [

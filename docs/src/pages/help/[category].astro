@@ -1,0 +1,26 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { LinkCard } from "@astrojs/starlight/components";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { HELP_GROUPS, articlesOf, type HelpCategory } from "../../lib/help.ts";
+import { withBase } from "../../lib/site.ts";
+
+/** One page per category that has articles, so there are no empty category pages. */
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+  return HELP_GROUPS.flatMap((g) => g.categories)
+    .map((category) => ({ category, articles: articlesOf(docs, category.slug) }))
+    .filter((c) => c.articles.length > 0)
+    .map(({ category, articles }) => ({ params: { category: category.slug }, props: { category, articles } }));
+}
+
+interface Props {
+  category: HelpCategory;
+  articles: CollectionEntry<"docs">[];
+}
+const { category, articles } = Astro.props;
+---
+
+<StarlightPage frontmatter={{ title: category.title, description: category.description }}>
+  {articles.map((a) => <LinkCard title={a.data.title} description={a.data.description} href={withBase(`/${a.id}/`)} />)}
+</StarlightPage>
