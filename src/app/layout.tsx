@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Mona_Sans, Space_Grotesk } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
+
+// Google Analytics 4 property for gosynapse.net.
+const GA_ID = "G-KKTBB4B4KM";
 
 // Bundled at build time and served from this origin — the same letterforms on
 // every visitor's machine. Mona Sans is the platform face; Space Grotesk is for
@@ -28,6 +32,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${monaSans.variable} ${spaceGrotesk.variable}`}>
       <body className="bg-[var(--surface-1)] text-[var(--ink)] antialiased">
         {children}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`}
+        </Script>
       </body>
     </html>
   );
