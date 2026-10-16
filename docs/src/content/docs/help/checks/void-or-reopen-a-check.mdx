@@ -1,0 +1,32 @@
+---
+title: Void or reopen a check
+description: Void a check with a reason, or reopen a voided or settled one.
+roles: [MANAGER, ADMIN]
+product: pos
+sidebar:
+  order: 3
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Void a check when it shouldn't count at all: it was rung in by mistake, or it was a test. Every void needs a reason, which stays on the check.
+
+## Void a check
+
+1. Go to **Checks** and open the check.
+2. Select **Void check**.
+3. Choose a **Reason**, such as "Customer changed mind" or "Re-ring". If you choose **Other**, the note is required.
+4. Optionally add a **Note (optional)**.
+5. Select **Void check**.
+
+![The Void check dialog](/docs/screenshots/checks/void.png)
+
+The check shows **VOIDED** and its void reason.
+
+## Reopen a check
+
+**Reopen** appears on voided and settled checks. Select it and the check is open again, so the till can carry on with it.
+
+<Aside type="caution">
+A check with a card payment already taken can't be reopened. Synapse says "Check has captured payments — refund them before reopening". The dashboard can't refund a payment yet, so email support@gosynapse.net with the check number.
+</Aside>
