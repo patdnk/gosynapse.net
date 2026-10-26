@@ -152,6 +152,12 @@ const MEMBERS_POINTS = [
   { title: "Open an account yourself", desc: "Clubs set themselves up: choose modules and a plan, accept pricing, add venues and locations, then a guided setup walks each module to ready before anyone reaches a half-configured screen. Self-service sign-up opens with the first production club.", icon: "sliders" },
 ];
 
+const ENTERPRISE_POINTS: { title: string; desc: string; icon: string; planned?: boolean }[] = [
+  { title: "Multi-venue", desc: "Several houses under one organisation. Organisation admins and venue admins; staff scoped to their venues see their own visits and spend, while billing, accounting and data erasure stay organisation-wide. A membership covers every house or specific ones.", icon: "crm" },
+  { title: "Multi-location", desc: "Within a house, each bar, restaurant, terrace and room is a location with its own floor plan, revenue centre, menus, tills and kitchen screens, and its own stock and purchasing. Reports roll up to the venue and the group.", icon: "floor" },
+  { title: "Embassy mode", desc: "A club that travels: a villa or a house taken for a week or a month, run as a temporary venue for a chosen set of members. Their passes, house accounts and bookings come with them, and the books post back to the group.", icon: "pass", planned: true },
+];
+
 const MARKETING_POINTS = [
   { title: "Templates you design", desc: "Drag-and-drop email in your own branding, SMS with a live character count, merge fields from the member record.", icon: "mail" },
   { title: "Audiences that keep up", desc: "VIPs not seen in a month, everyone with a ticket for Friday — segments update themselves as members visit, book and buy.", icon: "member" },
@@ -282,6 +288,7 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
       { title: "AI insights", desc: "Questions in plain language, automatic reports and forecasts." },
       { title: "Self-service and onboarding", desc: "Sign up with a card and terms or request access, choose modules and a plan, then a guided setup per module on first login. Stripe Connect per organisation, with an optional commission.", status: "shipped" },
       { title: "Multi-venue", desc: "Organisation admins and venue admins, staff scoped to their venues. Next: the venue switcher and plans that cover specific houses.", status: "building" },
+      { title: "Embassy mode", desc: "A temporary venue for a week or a month, with a chosen set of members, their passes and accounts, and the books posting back to the group." },
       { title: "Kitchen display", desc: "Course pacing, hold-and-fire and an expo view.", status: "shipped" },
       { title: "SOC 2 Type II, then ISO 27001", desc: "Most controls already exist in code; the programme does the rest." },
     ],
@@ -553,7 +560,8 @@ export default function Home() {
         </div>
         <div className="mx-auto max-w-6xl px-5 pt-24 pb-16 text-center sm:pt-32">
           <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[0.98] tracking-[-0.03em] sm:text-7xl">
-            <span className="bg-gradient-to-r from-[var(--brand)] to-[var(--accent)] bg-clip-text text-transparent">One platform</span>{" "}
+            <span className="bg-gradient-to-r from-[var(--brand)] to-[var(--accent)] bg-clip-text text-transparent">One platform</span>
+            <br />
             for whole venue
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)] sm:text-xl">
@@ -1289,6 +1297,29 @@ export default function Home() {
           </div>
           <div className="mt-14">
             <VenueConfigurator />
+          </div>
+
+          {/* groups: several houses, several sites, and a club that travels */}
+          <div className="mx-auto mt-24 max-w-2xl">
+            <Eyebrow>Enterprise</Eyebrow>
+            <h3 className="text-3xl font-bold tracking-[-0.02em] sm:text-4xl">For groups with more than one house</h3>
+            <p className="mt-4 text-base text-[var(--muted)]">
+              One organisation, as many venues and locations as you run, and one membership that travels between them.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            {ENTERPRISE_POINTS.map((e) => (
+              <div key={e.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
+                    <Icon name={e.icon} className="h-5 w-5" />
+                  </div>
+                  {e.planned && <span className="rounded-full bg-[var(--surface-3)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--muted)]">Planned</span>}
+                </div>
+                <h3 className="mt-3 font-bold tracking-tight">{e.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{e.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
