@@ -1,0 +1,69 @@
+---
+title: Plan & billing
+description: See your plan, switch modules on and off, upgrade, downgrade or cancel, and update your card.
+roles: [ADMIN]
+sidebar:
+  order: 2
+---
+
+**Plan & billing** is where your club manages its own Synapse subscription. You don't need to email anyone for most changes.
+
+Select **Plan & billing** in the sidebar, under **Admin**.
+
+Only admins for the whole organisation see it.
+
+{/* TODO(screenshot): the Plan & billing page, status card and module switches */}
+
+## What you'll find there
+
+- **The plan card** shows your plan, its price, and the date it renews or ends. It also shows the terms you accepted.
+- **Modules** are grouped by product. Each switch saves as soon as you change it.
+- **Change plan** has **Upgrade** and **Downgrade**.
+- **Cancel subscription** ends your subscription at the end of the period you've paid for.
+- **Manage billing** opens Stripe's billing page for your card and invoices.
+
+A module shows **Switched off by Synapse** if Synapse turned it off, and you can't switch it on. A module shows **Not part of your plan** if your plan doesn't include its product. To get one of those, upgrade, or ask Synapse.
+
+## Switch modules on and off
+
+Use the switch beside the module. A switched-off module disappears from everyone's navigation. Nothing is deleted, so switching it back on restores it.
+
+## Upgrade
+
+1. Under **Change plan**, select **Upgrade** on the higher plan.
+2. Check **Due now**. Stripe works out the difference for the rest of your period.
+3. Tick the box to accept the terms.
+4. Select **Upgrade to** the new plan.
+
+The new plan starts once the payment clears. If the payment fails, your plan stays as it was.
+
+## Downgrade
+
+1. Under **Change plan**, select **Downgrade** on the lower plan.
+2. Read which modules switch off, and when.
+3. Select **Downgrade on** the date shown.
+
+A downgrade starts at the end of your current period, so you keep what you've paid for until then. Until it starts, select **Undo** to keep your current plan.
+
+## Cancel
+
+1. Select **Cancel subscription**.
+2. Confirm in the box that opens.
+
+Your subscription runs to the end of the period you've paid for. Then your account is suspended, and a week later it locks. See [Missed payments, suspension and lock](/docs/help/account/missed-payments-suspension-and-lock/). Select **Undo cancel** at any point before then to keep going.
+
+You can't upgrade or downgrade while a cancel is pending. Undo the cancel first.
+
+## Update your card and see invoices
+
+Select **Manage billing**. It opens Stripe's billing page, where you can change your card, download invoices and add tax IDs. Plan changes and cancelling aren't there. Use **Plan & billing** for those.
+
+## Request a change
+
+If you're on Enterprise, or Synapse invoices you directly rather than charging a card, the buttons say **Request change** instead.
+
+1. Select **Request change**.
+2. Say what you'd like to change.
+3. Select **Send request**.
+
+Synapse replies by email. Plan changes are only in your hands when your plan is paid by card and the subscription is live.

@@ -126,6 +126,7 @@ export const HELP_GROUPS: readonly HelpGroup[] = [
   {
     title: "Admin",
     categories: [
+      { slug: "account", title: "Account & billing", description: "Sign up, manage your plan, set up card payments and know what happens if a payment is missed." },
       { slug: "staff", title: "Staff", description: "Roles, passwords and till PINs, and removing someone who has left." },
       { slug: "settings", title: "Settings", description: "Your plan and connectors, paired tills and kitchen screens, and API keys." },
       { slug: "payments-and-tipping", title: "Payments & tipping", description: "Tipping on card payments, card readers and payment processors." },

@@ -1,0 +1,66 @@
+---
+title: Card payments through Synapse
+description: Set up your club's own Stripe account so you can take card payments, and see the commission Synapse takes.
+roles: [ADMIN]
+product: payments
+sidebar:
+  order: 3
+---
+
+Synapse sets up a Stripe account for your club. Card payments from the till, card readers and booking pages then go straight to that account. You don't need to copy any keys.
+
+Synapse takes a small commission on each card payment. This is separate from your monthly plan.
+
+## Set up card payments
+
+1. Go to **Settings**, then **Payments**.
+2. Select **Set up card payments**.
+3. Follow Stripe's pages. Stripe asks for your business details, a bank account for payouts, and ID for the people who run the business.
+4. When you finish, Stripe sends you back to Synapse.
+
+{/* TODO(screenshot): the card payments card on Settings > Payments, in the "not set up" state */}
+
+You can do this while your account is still [under review](/docs/help/account/sign-up-for-synapse/). Card payments switch on once you're approved and Stripe is happy.
+
+## What the card says
+
+The card on **Settings > Payments** shows where you are.
+
+| What it says | What it means | What to do |
+| --- | --- | --- |
+| **Card payments aren't set up yet** | You haven't started. | Select **Set up card payments**. |
+| **Card payment setup isn't finished** | You started but Stripe needs more. A line starts "Stripe needs:" and lists what. | Select **Continue setup**. |
+| **Stripe needs a little more** | Stripe is checking your details or wants something extra. | Select **Continue setup**. Card payments switch on once Stripe has everything. |
+| **Card payments are on** | You can take cards. | Nothing. Select **Open Stripe Dashboard** for payouts, disputes and reports. |
+| **New card payments are switched off.** | Someone switched the connection off in the list below. | Turn "Stripe (card payments)" back on in the list. |
+
+Stripe's links expire after a few minutes. If you come back to an expired link, Synapse asks for a fresh one for you.
+
+If Stripe later needs more information, we email your admins.
+
+## The commission
+
+The card shows your rate, for example "Card commission 1.5% + £0.20". That is a percentage plus a fixed amount on each card payment. Tips count as part of the payment. Your plan sets the rate, and we email your admins if it changes. A change only applies to payments from then on.
+
+Only card payments taken through your Synapse Stripe account carry commission. Cash, house account, gift cards, Direct Debit and saving a card don't.
+
+Under the rate, **This month** and **Last month** show the commission taken, the card payments it was taken on, and any refunds. For example: "£28.72 commission on £1,234.50 of card payments with commission, £50.00 refunded".
+
+**Reports > Sales** has a **Card commission** column too. It won't match the figures on **Settings > Payments** to the penny. The sales report puts the commission on the day of the sale and counts till payments only. Those figures count every source, by the month the commission was recorded.
+
+## Refunds
+
+When you refund a card payment in Synapse, the commission on that payment goes back to you in proportion. Refund half the payment and you get half the commission back.
+
+If you refund from your own Stripe Dashboard instead, Stripe doesn't return the commission unless you ask it to. Refund in Synapse where you can.
+
+## Pasted keys are switched off for new clubs
+
+New clubs can't paste in their own Stripe or Adyen keys. If you try to add one under **Add processor**, those providers aren't offered. Use Synapse's card payments instead. GoCardless for Direct Debit is still available. See [Connect a payment processor](/docs/help/payments-and-tipping/connect-a-payment-processor/).
+
+Clubs that already used their own keys carry on as before. They keep working and pay no commission. If you need pasted keys, email support@gosynapse.net.
+
+## Good to know
+
+- You can't remove the Synapse card connection. You can only switch it off. Cards saved through it, and refunds, still work.
+- Card payments can't be taken until your account is approved and Stripe has switched charges on. Till and booking screens say so when they can't.

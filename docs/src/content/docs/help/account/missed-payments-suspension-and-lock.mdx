@@ -1,0 +1,71 @@
+---
+title: Missed payments, suspension and lock
+description: What happens when a payment fails or your subscription ends, what stops, and how to restart.
+roles: [ADMIN]
+sidebar:
+  order: 4
+---
+
+A failed payment never switches your club off. Only an ended subscription does, and even then you get a week first. Nothing is deleted at any point.
+
+## A payment fails
+
+If a monthly payment doesn't go through, your subscription shows as past due.
+
+- Admins see a banner on every page: "Payment failed on 3 Nov — update your card". It links to **Manage billing**.
+- Synapse emails admins when it happens, then again three and seven days later.
+- Everything keeps working. Tills, bookings and your members carry on as usual.
+
+To fix it, select **Manage billing** in the banner and update your card. Once a payment goes through, the banner and the emails stop. See [Plan & billing](/docs/help/account/plan-and-billing/).
+
+{/* TODO(screenshot): the past-due banner */}
+
+## Suspended: one week to restart
+
+Your account is suspended when your subscription ends. That happens at the end of the period after you cancel. Synapse can also suspend an account by hand.
+
+For the next week, everything works as normal. What changes:
+
+- Admins see a banner: "Your subscription has ended. Synapse locks on Fri 6 Nov, 05:00."
+- Staff see "Your subscription has ended. Tell your manager."
+- Synapse emails admins when you're suspended, again on day 5, and again just before the lock.
+
+The lock time is the start of your next trading day after seven days. The banner shows it in your browser's time zone. The email shows it in your first venue's time zone, so they can differ.
+
+## Locked: what stops
+
+When the week is up, your account locks within 15 minutes. After that:
+
+- **Admins** can sign in. They see only **Plan & billing**, with a message and a button to restart.
+- **Everyone else** can sign in, but sees only a message to contact their manager.
+- **Tills, kitchen screens and front of house** show "This venue's subscription has ended" and stop selling.
+- **API keys and the member portal** stop working.
+- **Public pages** such as booking pages, pass links and Direct Debit set-up say "This page is unavailable".
+- **Scheduled work stops.** Nothing is sent or billed on your behalf. Synapse sends no more email for your club.
+
+What keeps working: unsubscribe links in your emails, and refunds you already owe to guests and members.
+
+{/* TODO(screenshot): the locked Plan & billing page */}
+
+## Restart your subscription
+
+Any admin can restart, from the banner or from the locked page.
+
+1. Open **Plan & billing**. A locked account lands there.
+2. Select **Restart subscription**.
+3. Accept the terms and pay on Stripe's secure page. There's no trial this time.
+
+When Stripe confirms the payment, your club is active again. The page checks for up to about 16 seconds, then you're back in. Everyone else is back in without signing in again.
+
+If you're invoiced directly, or Synapse suspended your account while your subscription was still being billed, **Restart** sends Synapse a note and we'll get your account back on.
+
+## Nothing is lost
+
+All your data stays exactly as it was: members, checks, menus, floor plans, bookings and settings. When you come back:
+
+- **Payments that cleared during the lock** are recorded when you restart. Stripe and other providers keep telling Synapse, and Synapse replays what it held.
+- **Membership renewals and holding fees** that fell due during the lock aren't billed. They move on to the next period, so your members aren't charged for the time you were locked.
+- **Campaigns** that were due to send during the lock go back to draft, with a note. Schedule them again to send.
+- **Paired tills and keys** keep working. You don't need to pair or create them again.
+
+If you restart before the lock, nothing changes at all. It's the same account.
