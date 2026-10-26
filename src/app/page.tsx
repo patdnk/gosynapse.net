@@ -234,13 +234,13 @@ const HARDWARE: { title: string; icon: string; runs: string; desc: string; picks
 
 // What landed on main most recently, newest first. Trim from the bottom.
 const SHIPPED = [
+  "Event tickets booked from the member portal",
+  "Booking messages per moment, owned by Bookings",
   "Guided setup per module on first login",
   "Self-service sign-up, plans and platform billing",
   "Online applications with card capture and approval",
   "Member portal: home, calendar, guests and Me",
   "Rooms, day use and hourly reservations",
-  "Holds, deposits and no-show policies",
-  "Venue-scoped staff across an organisation",
   "Help centre and developer docs",
 ];
 
@@ -253,9 +253,10 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     why: "Reach members without a staff member holding the phone.",
     items: [
       { title: "WhatsApp and pass delivery", desc: "WhatsApp is live as a channel, and each holder gets a link that opens the right wallet. Next: sending it from the profile with a WhatsApp → SMS → email fallback, then issuing to a whole plan.", status: "building" },
-      { title: "Billing adjustments", desc: "VAT invoice lines, credit notes and refunds, plan changes now or at renewal, and freezes with holding fees are live. Next: a fixed billing day per plan.", status: "building" },
+      { title: "Billing adjustments", desc: "VAT invoice lines, credit notes and refunds to card or account, plan changes now or at renewal, and freezes with holding fees.", status: "shipped" },
+      { title: "Booking messages", desc: "Confirmations, changes, cancellations and room emails as moments owned by Bookings, each with its own editable copy, in a Communications area kept apart from Marketing.", status: "shipped" },
       { title: "Accounting export", desc: "Xero and QuickBooks connectors, account mapping and the daily sales and billing journals are live, with VAT reported by treatment. Supplier bills and card payouts follow.", status: "building" },
-      { title: "Sending domains", desc: "A club sends from its own domain once it proves it in DNS; without one, from a Synapse mailer address with guardrails. Next: the full record set, a status page and branded hosts.", status: "building" },
+      { title: "Sending domains", desc: "A club sends from its own domain: DKIM and DMARC records generated for it, proved in DNS, managed on the Channels page. Without one, a Synapse mailer address with guardrails. Next: a status page and branded hosts.", status: "building" },
       { title: "Procurement", desc: "Per-site stock, supplier packs, purchase orders with approval, receiving, invoice matching and a needs-attention queue.", status: "shipped" },
     ],
   },
@@ -263,7 +264,7 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Member-facing",
     why: "A home for the member, deep-linked from their wallet pass.",
     items: [
-      { title: "Member portal", desc: "News and notices, the calendar with cancellations, guests, statements and invoice PDFs, credit, card on file and Direct Debit — a web app, no app store, signed in with a one-time email code. Next: booking tables, events and rooms from it.", status: "building" },
+      { title: "Member portal", desc: "News and notices, the calendar with cancellations, guests, event tickets, statements and invoice PDFs, credit, card on file and Direct Debit — on a phone or a desktop, signed in with a one-time email code. Next: booking tables and rooms from it.", status: "building" },
       { title: "Applications", desc: "A public page per house, the application form composed in admin, photos, card capture in the form through Stripe or Adyen, managers' ratings, and the joining fee charged on approval.", status: "shipped" },
       { title: "Rooms & reservations", desc: "Overnight, day-use and hourly rooms on the same reservation spine as tables and events: ten-minute holds, hosted payment links, deposits and no-show policies. SynXis two-way sync is built and waits on a partner agreement.", status: "shipped" },
       { title: "Bookings & events v2", desc: "Ticket tiers, waitlists and walk-ins at the door are what remain now holds, deposits and policies live on the reservation spine.", status: "building" },
@@ -275,8 +276,8 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Developer-facing",
     why: "Partners and a venue's own apps build on the same data.",
     items: [
-      { title: "Public REST API", desc: "/public/v1 foundation built — scoped keys, idempotency, cursor paging and rate limits per key. Members, bookings, events and checks next.", status: "building" },
-      { title: "GraphQL read plane", desc: "Member 360, a booking with its spend, an event with its tickets — one query.", status: "building" },
+      { title: "Public REST API", desc: "/public/v1 with scoped keys, idempotency, cursor paging and rate limits per key; venues, rooms, room reservations and the caller's own record are live. Members, events and checks next.", status: "building" },
+      { title: "GraphQL read plane", desc: "Member 360, a booking with its spend, an event with its tickets — one query. After the REST resources." },
       { title: "Webhooks v2", desc: "Many endpoints per club, signed envelopes, retries and replay.", status: "building" },
       { title: "Docs, sandbox, SDKs", desc: "Developer docs and a help centre are live at gosynapse.net/docs. A sandbox and SDKs follow the public API resources.", status: "building" },
     ],

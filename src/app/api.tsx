@@ -24,8 +24,8 @@ const OUTBOUND: Link[] = [
   { name: "REST API", what: "Every module — members, bookings, events, checks, menus, reports — versioned, with an OpenAPI reference and developer docs at gosynapse.net/docs.", status: "live" },
   { name: "Webhooks & events", what: "Signed callbacks when a check opens, changes or closes; a domain-event outbox behind every booking, ticket and member.", status: "live" },
   { name: "POS feeds", what: "Checks and reservations as Oracle Simphony-shaped documents, so anything that reads a POS feed reads ours.", status: "live" },
-  { name: "GraphQL", what: "A read plane for composed views — a check with its table, member and totals in one query.", status: "building" },
-  { name: "Partner API", what: "/public/v1 with scoped keys, idempotency, cursor pagination and per-key rate limits — the foundation is built, resources are rolling out, OAuth for installed apps follows.", status: "building" },
+  { name: "GraphQL", what: "A read plane for composed views — a check with its table, member and totals in one query. After the REST resources.", status: "coming" },
+  { name: "Partner API", what: "/public/v1 with scoped keys, idempotency, cursor pagination and per-key rate limits. Venues, rooms, room reservations and the caller's own record are live; members, events and checks follow, then OAuth for installed apps.", status: "building" },
 ];
 
 const SAMPLES = {
@@ -71,7 +71,7 @@ x-pos-signature: 9f2c…  # HMAC-SHA256 of the body
   },
   graphql: {
     label: "GraphQL",
-    note: "In progress — preview",
+    note: "Coming — preview",
     code: `query {
   check(id: "chk_…") {
     checkNumber
