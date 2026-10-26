@@ -527,17 +527,19 @@ export default function Home() {
             <Logo />
             <span className="text-lg font-bold tracking-tight">synapse</span>
           </a>
-          {/* Ten stops fit from 1280 up; below that the header keeps just the two actions. */}
-          <nav className="hidden items-center gap-4 whitespace-nowrap xl:flex 2xl:gap-6">
-            {NAV.map((n) => (
-              <a key={n.href} href={n.href} className="text-sm text-[var(--muted)] transition-colors hover:text-[var(--ink)]">{n.label}</a>
-            ))}
-          </nav>
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-[var(--muted)] sm:block">EN</span>
             <DemoModal className="inline-flex items-center justify-center rounded-full bg-[var(--brand)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--brand-strong)]">Book a demo</DemoModal>
           </div>
         </div>
+        {/* The section menu on its own row, at every width: it scrolls sideways on a phone rather than hiding. */}
+        <nav aria-label="Sections" className="border-t border-[var(--border)]">
+          <div className="mx-auto flex max-w-6xl items-center gap-5 overflow-x-auto px-5 py-2.5 whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-6">
+            {NAV.map((n) => (
+              <a key={n.href} href={n.href} className="text-sm text-[var(--muted)] transition-colors hover:text-[var(--ink)]">{n.label}</a>
+            ))}
+          </div>
+        </nav>
       </header>
 
       {/* hero */}
@@ -551,8 +553,8 @@ export default function Home() {
         </div>
         <div className="mx-auto max-w-6xl px-5 pt-24 pb-16 text-center sm:pt-32">
           <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[0.98] tracking-[-0.03em] sm:text-7xl">
-            Run your whole venue on{" "}
-            <span className="bg-gradient-to-r from-[var(--brand)] to-[var(--accent)] bg-clip-text text-transparent">one platform</span>
+            <span className="bg-gradient-to-r from-[var(--brand)] to-[var(--accent)] bg-clip-text text-transparent">One platform</span>{" "}
+            for whole venue
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)] sm:text-xl">
             CRM, front of house, POS, kitchen display, bookings, membership, payments and more — one
