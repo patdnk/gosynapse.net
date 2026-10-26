@@ -366,10 +366,14 @@ const PARTNER_INTEGRATIONS = [
   },
 ];
 
+// Onboarding, promised only as far as it is true: a club signs itself up,
+// every module opens on its setup screen until its basics are in, data goes
+// in through the admin or is loaded with us, devices pair by code. No day
+// counts and no import guarantees until the integrations are tested.
 const TIMELINE = [
-  { day: "Day 1", title: "Import & configure", desc: "Load your menu, rooms and members. Switch on the modules the venue needs." },
-  { day: "Day 3", title: "Train the floor", desc: "Tills, floor plan and front-of-house board — the team is running live in a shift." },
-  { day: "Day 5", title: "Go live", desc: "Payments connected, passes issued, insights flowing. Open the doors." },
+  { day: "First", title: "Sign up and switch on", desc: "Create the organisation, choose modules and a plan, add venues and locations. Each module opens on its setup screen until its basics are in, so nobody meets a half-configured page." },
+  { day: "Then", title: "Set up, guided", desc: "Menu, rooms, plans and members go in through the admin, by hand or loaded with us from what you already have. Design the passes. Pair tills and kitchen screens with a code." },
+  { day: "When the floor is ready", title: "Go live", desc: "Train the team in a shift, connect payments, send the passes, and open the doors, with the help centre and a person a message away." },
 ];
 
 const SECURITY = [
@@ -1328,7 +1332,11 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-5 py-28">
         <div className="max-w-2xl">
           <Eyebrow>Onboarding</Eyebrow>
-          <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Live in days, not months</h2>
+          <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Guided from sign-up to service</h2>
+          <p className="mt-5 text-lg text-[var(--muted)]">
+            A guided setup per module, your data entered or loaded with us, devices paired by code.
+            You go live when the floor is ready, not when a calendar says so.
+          </p>
         </div>
         <div className="mt-14 grid gap-4 md:grid-cols-3">
           {TIMELINE.map((t, i) => (
