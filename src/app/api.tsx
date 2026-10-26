@@ -16,11 +16,12 @@ type Link = { name: string; what: string; status: Status };
 const INBOUND: Link[] = [
   { name: "Salesforce", what: "Members and applicants, both ways — OAuth, a field mapper over your own objects, and a sync engine that never echoes.", status: "live" },
   { name: "SevenRooms", what: "Venues, clients and reservations in; every check out, so spend lands on the guest profile.", status: "live" },
+  { name: "SynXis", what: "Hotel reservations in by activity date, check-ins and cancellations back — built against the published API, live once a venue's partner agreement is in place.", status: "building" },
   { name: "Tripleseat", what: "Events and banqueting in, on the same pattern as SevenRooms.", status: "coming" },
 ];
 
 const OUTBOUND: Link[] = [
-  { name: "REST API", what: "Every module — members, bookings, events, checks, menus, reports — versioned, with an OpenAPI reference.", status: "live" },
+  { name: "REST API", what: "Every module — members, bookings, events, checks, menus, reports — versioned, with an OpenAPI reference and developer docs at gosynapse.net/docs.", status: "live" },
   { name: "Webhooks & events", what: "Signed callbacks when a check opens, changes or closes; a domain-event outbox behind every booking, ticket and member.", status: "live" },
   { name: "POS feeds", what: "Checks and reservations as Oracle Simphony-shaped documents, so anything that reads a POS feed reads ours.", status: "live" },
   { name: "GraphQL", what: "A read plane for composed views — a check with its table, member and totals in one query.", status: "building" },

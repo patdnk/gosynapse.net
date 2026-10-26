@@ -20,6 +20,7 @@ const NAV = [
   { label: "Modules", href: "#products" },
   { label: "Marketing", href: "#marketing" },
   { label: "Billing", href: "#billing" },
+  { label: "Members", href: "#members" },
   { label: "Back office", href: "#backoffice" },
   { label: "Hardware", href: "#hardware" },
   { label: "API", href: "#api" },
@@ -40,6 +41,7 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
       { label: "Marketing & messaging", href: "#marketing" },
       { label: "Membership billing", href: "#billing" },
       { label: "Wallet passes", href: "#passes" },
+      { label: "Member portal & applications", href: "#members" },
       { label: "Hardware", href: "#hardware" },
       { label: "Procurement", href: "#backoffice" },
       { label: "Accounting & house accounts", href: "#backoffice" },
@@ -121,7 +123,7 @@ const OPERATIONS = [
 
 const FEATURES = [
   { title: "Floor plans & table service", desc: "Design rooms, route orders by station, move tables and follow service in real time.", icon: "floor" },
-  { title: "Bookings & availability", desc: "Member → table → date with live availability, covers and spend on every reservation.", icon: "calendar" },
+  { title: "Tables, events & rooms", desc: "One reservation spine for a table, a ticket or a room — overnight, day use or by the hour — with ten-minute holds, hosted payment links, deposits and no-show policies.", icon: "calendar" },
   { title: "Membership & billing", desc: "Plans and recurring dues with VAT invoices, credit notes, plan changes and freezes — member status driven by payment state.", icon: "member" },
   { title: "Wallet passes", desc: "Design Apple & Google passes per organisation, then send each holder one link that opens the right wallet.", icon: "pass" },
   { title: "Kitchen & printing", desc: "KDS routing, ESC/POS chits and receipts, and a compliant electronic journal for every sale.", icon: "printer" },
@@ -132,12 +134,22 @@ const FEATURES = [
   { title: "Purchasing & suppliers", desc: "Stock per site, supplier pack catalogues, purchase orders with an approval policy, receiving, and invoices matched line by line.", icon: "catalogue" },
   { title: "Accounting export", desc: "Signed sales records by sales group and VAT, a daily journal, and connectors for Xero and QuickBooks with your own account mapping.", icon: "insights" },
   { title: "House accounts", desc: "A ledger per member: credit limits, charges and payments, with GoCardless Direct Debit mandates set up by link or at reception.", icon: "payments" },
+  { title: "Member portal", desc: "News, the calendar, guests, statements and invoices, card on file and Direct Debit — on a phone or a desktop, signed in with a one-time email code.", icon: "member" },
+  { title: "Online applications", desc: "A public page per house with Apply: the form you composed in admin, photos, a card saved in the form, and the joining fee charged on approval.", icon: "consent" },
+  { title: "Self-service & setup", desc: "Sign up, pick modules and a plan, accept pricing, add venues and locations — then a guided setup per module so no screen is reached half-configured.", icon: "sliders" },
+  { title: "Multi-venue", desc: "Organisation, venues and locations. Staff scoped to their venues see their own visits and spend; billing, accounting and erasure stay organisation-wide.", icon: "floor" },
 ];
 
 const BACKOFFICE_POINTS = [
   { title: "Procurement", desc: "Stock per site and a pack catalogue per supplier. Purchase orders go through your approval policy and straight to the supplier; deliveries update stock on signature; invoices match line by line, with credits tracked and a Xero CSV ready.", icon: "catalogue" },
   { title: "Accounting export", desc: "Every sale is a signed, append-only record by sales group and VAT treatment, on the trading day it belongs to. Connect Xero or QuickBooks, map your accounts once, and journals post automatically after a grace period.", icon: "insights" },
   { title: "House accounts", desc: "A ledger per member with a credit limit, charges and payments, so a tab at the bar and a ticket for Friday land in one place. Direct Debit mandates run through GoCardless; collections and statements are next.", icon: "payments" },
+];
+
+const MEMBERS_POINTS = [
+  { title: "No password to forget", desc: "A member signs in with a six-digit code sent to their email. The page never says whether an address belongs to a member, so nothing leaks to someone guessing.", icon: "consent" },
+  { title: "Apply from the public page", desc: "Each house has a page with Apply. The form is the one you composed in admin: tiers, questions, photos, and a card saved inside the form through Stripe or Adyen. The joining fee is charged on approval.", icon: "member" },
+  { title: "Open an account yourself", desc: "Clubs set themselves up: choose modules and a plan, accept pricing, add venues and locations, then a guided setup walks each module to ready before anyone reaches a half-configured screen. Self-service sign-up opens with the first production club.", icon: "sliders" },
 ];
 
 const MARKETING_POINTS = [
@@ -216,14 +228,14 @@ const HARDWARE: { title: string; icon: string; runs: string; desc: string; picks
 
 // What landed on main most recently, newest first. Trim from the bottom.
 const SHIPPED = [
-  "Direct Debit mandates through GoCardless",
-  "Credit notes, refunds, plan changes and freezes",
-  "Daily sales and billing journals",
-  "Pass links that open the right wallet",
-  "Xero and QuickBooks connectors",
-  "House-account ledger with credit limits",
-  "WhatsApp as a messaging channel",
-  "Supplier invoices matched to deliveries",
+  "Guided setup per module on first login",
+  "Self-service sign-up, plans and platform billing",
+  "Online applications with card capture and approval",
+  "Member portal: home, calendar, guests and Me",
+  "Rooms, day use and hourly reservations",
+  "Holds, deposits and no-show policies",
+  "Venue-scoped staff across an organisation",
+  "Help centre and developer docs",
 ];
 
 // Each item says where it stands: shipped, being built now, or planned (no status).
@@ -237,6 +249,7 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
       { title: "WhatsApp and pass delivery", desc: "WhatsApp is live as a channel, and each holder gets a link that opens the right wallet. Next: sending it from the profile with a WhatsApp → SMS → email fallback, then issuing to a whole plan.", status: "building" },
       { title: "Billing adjustments", desc: "VAT invoice lines, credit notes and refunds, plan changes now or at renewal, and freezes with holding fees are live. Next: a fixed billing day per plan.", status: "building" },
       { title: "Accounting export", desc: "Xero and QuickBooks connectors, account mapping and the daily sales and billing journals are live, with VAT reported by treatment. Supplier bills and card payouts follow.", status: "building" },
+      { title: "Sending domains", desc: "A club sends from its own domain once it proves it in DNS; without one, from a Synapse mailer address with guardrails. Next: the full record set, a status page and branded hosts.", status: "building" },
       { title: "Procurement", desc: "Per-site stock, supplier packs, purchase orders with approval, receiving, invoice matching and a needs-attention queue.", status: "shipped" },
     ],
   },
@@ -244,9 +257,10 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Member-facing",
     why: "A home for the member, deep-linked from their wallet pass.",
     items: [
-      { title: "Member portal", desc: "Book, buy tickets, see the bill and top up credit — a web app, no app store." },
-      { title: "Passwordless sign-in", desc: "A magic link by SMS or email." },
-      { title: "Bookings & events v2", desc: "Ticket tiers, holds, waitlists, deposits and no-show fees. The services layer is in; tiers are next.", status: "building" },
+      { title: "Member portal", desc: "News and notices, the calendar with cancellations, guests, statements and invoice PDFs, credit, card on file and Direct Debit — a web app, no app store, signed in with a one-time email code. Next: booking tables, events and rooms from it.", status: "building" },
+      { title: "Applications", desc: "A public page per house, the application form composed in admin, photos, card capture in the form through Stripe or Adyen, managers' ratings, and the joining fee charged on approval.", status: "shipped" },
+      { title: "Rooms & reservations", desc: "Overnight, day-use and hourly rooms on the same reservation spine as tables and events: ten-minute holds, hosted payment links, deposits and no-show policies. SynXis two-way sync is built and waits on a partner agreement.", status: "shipped" },
+      { title: "Bookings & events v2", desc: "Ticket tiers, waitlists and walk-ins at the door are what remain now holds, deposits and policies live on the reservation spine.", status: "building" },
       { title: "Member accounts & Direct Debit", desc: "The house-account ledger and GoCardless mandates are live — set up from a link or a QR at reception. Collections and statements follow, then dues and bookings charged to the account.", status: "building" },
       { title: "Tap to Pay", desc: "Any staff phone as a card terminal; pay at the table." },
     ],
@@ -258,7 +272,7 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
       { title: "Public REST API", desc: "/public/v1 foundation built — scoped keys, idempotency, cursor paging and rate limits per key. Members, bookings, events and checks next.", status: "building" },
       { title: "GraphQL read plane", desc: "Member 360, a booking with its spend, an event with its tickets — one query.", status: "building" },
       { title: "Webhooks v2", desc: "Many endpoints per club, signed envelopes, retries and replay.", status: "building" },
-      { title: "Docs, sandbox, SDKs", desc: "Everything a partner needs to ship without a call." },
+      { title: "Docs, sandbox, SDKs", desc: "Developer docs and a help centre are live at gosynapse.net/docs. A sandbox and SDKs follow the public API resources.", status: "building" },
     ],
   },
   {
@@ -266,6 +280,8 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     why: "Answers from the venue's own data, and the certificates buyers ask for.",
     items: [
       { title: "AI insights", desc: "Questions in plain language, automatic reports and forecasts." },
+      { title: "Self-service and onboarding", desc: "Sign up with a card and terms or request access, choose modules and a plan, then a guided setup per module on first login. Stripe Connect per organisation, with an optional commission.", status: "shipped" },
+      { title: "Multi-venue", desc: "Organisation admins and venue admins, staff scoped to their venues. Next: the venue switcher and plans that cover specific houses.", status: "building" },
       { title: "Kitchen display", desc: "Course pacing, hold-and-fire and an expo view.", status: "shipped" },
       { title: "SOC 2 Type II, then ISO 27001", desc: "Most controls already exist in code; the programme does the rest." },
     ],
@@ -350,7 +366,7 @@ const TIMELINE = [
 ];
 
 const SECURITY = [
-  "MFA / OAuth2 secure authentication",
+  "MFA level chosen per organisation: password, email, SMS or authenticator",
   "Device pairing with instant revocation",
   "Append-only, signed sales records",
   "AES-256-GCM secrets at rest",
@@ -511,7 +527,8 @@ export default function Home() {
             <Logo />
             <span className="text-lg font-bold tracking-tight">synapse</span>
           </a>
-          <nav className="hidden items-center gap-4 whitespace-nowrap lg:flex xl:gap-8">
+          {/* Ten stops fit from 1280 up; below that the header keeps just the two actions. */}
+          <nav className="hidden items-center gap-4 whitespace-nowrap xl:flex 2xl:gap-6">
             {NAV.map((n) => (
               <a key={n.href} href={n.href} className="text-sm text-[var(--muted)] transition-colors hover:text-[var(--ink)]">{n.label}</a>
             ))}
@@ -734,6 +751,52 @@ export default function Home() {
           <div className="mx-auto mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {BILLING_POINTS.map((m) => (
               <div key={m.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
+                  <Icon name={m.icon} className="h-5 w-5" />
+                </div>
+                <h3 className="mt-3 font-bold tracking-tight">{m.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{m.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* members — the portal, before and after sign-in, and the application */}
+      <section id="members" className="border-t border-[var(--border)]">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <div className="max-w-2xl">
+            <Eyebrow>Members &amp; applications</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">A home for the member, a front door for the applicant</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              A web app, no app store: news and notices, the calendar, guests, statements and invoices,
+              card on file and Direct Debit. Before sign-in it is the club&apos;s public page, with
+              Apply. Captured from the hosted demo on a phone.
+            </p>
+          </div>
+          <div className="mx-auto mt-14 grid max-w-5xl gap-8 sm:grid-cols-3">
+            <figure>
+              <Reveal>
+                <PhoneShot src="/screenshots/portal-public.jpg" alt="synapse member portal — the club's sign-in screen: an email address and a six-digit code, no password" w={750} h={1624} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Before sign-in: an email address, a six-digit code, no password. The public page behind it carries the houses and Apply.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={80}>
+                <PhoneShot src="/screenshots/portal-apply.jpg" alt="synapse member portal — the application form, step two of nine" w={750} h={1624} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Applying: the house, then the membership and its fees, then the questions you composed. Progress is saved and resumable from a link.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={160}>
+                <PhoneShot src="/screenshots/portal-home.jpg" alt="synapse member portal — Home after sign-in: the next booking, what's on, news from the house, and the Home, Calendar and Me tabs" w={738} h={1598} />
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Signed in: Home, then Book, Calendar and Me, with the wallet pass and access card on a phone.</figcaption>
+            </figure>
+          </div>
+          <div className="mx-auto mt-12 grid max-w-5xl gap-4 sm:grid-cols-3">
+            {MEMBERS_POINTS.map((m) => (
+              <div key={m.title} className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
                   <Icon name={m.icon} className="h-5 w-5" />
                 </div>
@@ -1333,6 +1396,8 @@ export default function Home() {
             <ul className="mt-8 space-y-3">
               {[
                 "A live tour of the admin, floor plan and iPad till",
+                "Or set your club up yourself: self-service sign-up, modules and a plan, venues, guided setup",
+
                 "Your own menu and rooms loaded in, not a canned demo",
                 "Straight answers on migration, pricing and timelines",
               ].map((t) => (
@@ -1414,6 +1479,18 @@ function Shot({ src, alt, w, h }: { src: string; alt: string; w: number; h: numb
 
 // Tablet bezel for the iPad till shots — the app is landscape-locked, so the
 // frame is landscape too, with a camera dot on the long edge like a real iPad.
+// Phone bezel for member-portal shots, captured at 375 × 812 on a 2× display.
+function PhoneShot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
+  return (
+    <div className="mx-auto max-w-[300px] rounded-[34px] bg-[#1c1c1e] p-2.5 shadow-[0_40px_100px_-40px_rgba(11,18,32,0.55)] ring-1 ring-black/10">
+      <div className="overflow-hidden rounded-[26px]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={alt} width={w} height={h} className="block h-auto w-full" />
+      </div>
+    </div>
+  );
+}
+
 function TabletShot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
   return (
     <div className="rounded-[26px] bg-[#1c1c1e] p-3 shadow-[0_40px_100px_-40px_rgba(11,18,32,0.55)] ring-1 ring-black/10 sm:rounded-[34px] sm:p-4">

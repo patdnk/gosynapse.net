@@ -19,7 +19,7 @@ const SURFACES: Node[] = [
   { id: "till", label: "TILL", tag: "S-02 · iPAD POS", shortTag: "S-02", keys: ["payments", "webhooks"] },
   { id: "kds", label: "KITCHEN DISPLAY", short: "KITCHEN", tag: "S-03 · THE PASS", shortTag: "S-03", keys: [] },
   { id: "foh", label: "FRONT OF HOUSE", short: "DOOR", tag: "S-04 · THE DOOR", shortTag: "S-04", keys: ["wallets", "messaging"] },
-  { id: "portal", label: "MEMBER PORTAL", short: "PORTAL", tag: "S-05 · IN THE WORKS", shortTag: "S-05", future: true, keys: ["payments", "wallets"] },
+  { id: "portal", label: "MEMBER PORTAL", short: "PORTAL", tag: "S-05 · MEMBERS, WEB + PHONE", shortTag: "S-05", keys: ["payments", "wallets", "messaging"] },
   { id: "partner", label: "PARTNER APPS", short: "PARTNERS", tag: "S-06 · PUBLIC API, BUILDING", shortTag: "S-06", future: true, keys: ["webhooks"] },
 ];
 
@@ -39,6 +39,7 @@ const MODULES = [
   "Bookings & events",
   "POS, tills & payments",
   "Kitchen & printing",
+  "Rooms & reservations",
   "Marketing & messaging",
   "Procurement",
   "Accounting",
@@ -65,7 +66,7 @@ function wideLayout(): Layout {
   SURFACES.forEach((n, i) => (boxes[n.id] = { x: 40, y: 56 + i * 88, w: 200, h: 56 }));
   // A touch wider than the left column so the longest tag ("SALESFORCE · SEVENROOMS") fits.
   CONNECTIONS.forEach((n, i) => (boxes[n.id] = { x: 744, y: 56 + i * 88, w: 216, h: 56 }));
-  const hub: Box = { x: 385, y: 130, w: 230, h: 340 };
+  const hub: Box = { x: 385, y: 115, w: 230, h: 370 };
   const links: Link[] = [];
   SURFACES.forEach((n, i) => {
     const b = boxes[n.id]!;
@@ -89,8 +90,8 @@ function tallLayout(): Layout {
   const gapX = [121, 247, 370];
   const boxes: Record<string, Box> = {};
   SURFACES.forEach((n, i) => (boxes[n.id] = { x: cols[i % 3]!, y: i < 3 ? 44 : 120, w: W, h: H }));
-  CONNECTIONS.forEach((n, i) => (boxes[n.id] = { x: cols[i % 3]!, y: i < 3 ? 610 : 690, w: W, h: H }));
-  const hub: Box = { x: 40, y: 300, w: 300, h: 262 };
+  CONNECTIONS.forEach((n, i) => (boxes[n.id] = { x: cols[i % 3]!, y: i < 3 ? 640 : 720, w: W, h: H }));
+  const hub: Box = { x: 40, y: 300, w: 300, h: 290 };
   const links: Link[] = [];
   SURFACES.forEach((n, i) => {
     const b = boxes[n.id]!;
@@ -106,13 +107,13 @@ function tallLayout(): Layout {
     const b = boxes[n.id]!;
     const c = i % 3;
     const entryX = hub.x + 30 + i * 48;
-    const lane = 572 + i * 6;
+    const lane = 602 + i * 6;
     const d = i < 3
       ? `M${entryX} ${hub.y + hub.h} V${lane} H${mid(b).x} V${b.y}`
       : `M${entryX} ${hub.y + hub.h} V${lane} H${gapX[c]} V${mid(b).y} H${b.x + b.w}`;
     links.push({ d, keys: [n.id, ...n.keys].join(" "), slow: i % 2 === 0 });
   });
-  return { viewBox: "0 0 380 760", compact: true, boxes, hub, links, rows: { x: hub.x + 18, y: hub.y + 66, step: 22, size: 11 } };
+  return { viewBox: "0 0 380 790", compact: true, boxes, hub, links, rows: { x: hub.x + 18, y: hub.y + 66, step: 22, size: 11 } };
 }
 
 const LAYOUTS = [
@@ -200,7 +201,7 @@ export function SystemMap() {
           })}
         </svg>
       ))}
-      <figcaption>Hover a box to trace what it talks to. Dashed boxes are being built.</figcaption>
+      <figcaption>Hover a box to trace what it talks to. The dashed box is being built.</figcaption>
     </figure>
   );
 }
