@@ -49,7 +49,7 @@ What keeps working: unsubscribe links in your emails, and refunds you already ow
 
 ## Restart your subscription
 
-Any admin can restart, from the banner or from the locked page.
+An admin with access to the whole organisation can restart, from the banner or from the locked page.
 
 1. Open **Plan & billing**. A locked account lands there.
 2. Select **Restart subscription**.
@@ -65,6 +65,8 @@ All your data stays exactly as it was: members, checks, menus, floor plans, book
 
 - **Payments that cleared during the lock** are recorded when you restart. Stripe and other providers keep telling Synapse, and Synapse replays what it held.
 - **Membership renewals and holding fees** that fell due during the lock aren't billed. They move on to the next period, so your members aren't charged for the time you were locked.
+- **A freeze that ended during the lock** resumes from its end date, so its resume invoice can start inside the lock period.
+- **A new member's first payment** that fell due during the lock is taken late, once you restart.
 - **Campaigns** that were due to send during the lock go back to draft, with a note. Schedule them again to send.
 - **Paired tills and keys** keep working. You don't need to pair or create them again.
 
