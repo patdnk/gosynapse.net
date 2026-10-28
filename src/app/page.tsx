@@ -119,6 +119,7 @@ const OPERATIONS = [
   { title: "Role-based control", desc: "Owners, managers, waiters and finance each see exactly what they should.", icon: "shield" },
   { title: "Online first, offline optional", desc: "Cloud by default. An on-premises server and a sync step keep a venue trading through an outage.", icon: "cloud" },
   { title: "Configurable per venue", desc: "Turn modules, tipping, receipts and journeys on or off. The configurator gates the rest.", icon: "sliders" },
+  { title: "Light and dark", desc: "One set of theme tokens across the admin, so every screen reads the same in either, following the device or a toggle.", icon: "frame" },
 ];
 
 const FEATURES = [
@@ -234,14 +235,14 @@ const HARDWARE: { title: string; icon: string; runs: string; desc: string; picks
 
 // What landed on main most recently, newest first. Trim from the bottom.
 const SHIPPED = [
-  "Event tickets booked from the member portal",
+  "Tables, events and rooms booked from the member portal",
+  "Admin in light and dark, one theme across every screen",
+  "The bookings door: arrivals per person, tonight on the dashboard",
+  "Ticket tiers with hidden tiers and unlock codes",
   "Booking messages per moment, owned by Bookings",
   "Guided setup per module on first login",
   "Self-service sign-up, plans and platform billing",
   "Online applications with card capture and approval",
-  "Member portal: home, calendar, guests and Me",
-  "Rooms, day use and hourly reservations",
-  "Help centre and developer docs",
 ];
 
 // Each item says where it stands: shipped, being built now, or planned (no status).
@@ -264,10 +265,11 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Member-facing",
     why: "A home for the member, deep-linked from their wallet pass.",
     items: [
-      { title: "Member portal", desc: "News and notices, the calendar with cancellations, guests, event tickets, statements and invoice PDFs, credit, card on file and Direct Debit — on a phone or a desktop, signed in with a one-time email code. Next: booking tables and rooms from it.", status: "building" },
+      { title: "Member portal", desc: "News and notices, booking tables, event tickets and rooms, the calendar with cancellations, guests, statements and invoice PDFs, credit, card on file and Direct Debit — on a phone or a desktop, signed in with a one-time email code.", status: "shipped" },
       { title: "Applications", desc: "A public page per house, the application form composed in admin, photos, card capture in the form through Stripe or Adyen, managers' ratings, and the joining fee charged on approval.", status: "shipped" },
       { title: "Rooms & reservations", desc: "Overnight, day-use and hourly rooms on the same reservation spine as tables and events: ten-minute holds, hosted payment links, deposits and no-show policies. SynXis two-way sync is built and waits on a partner agreement.", status: "shipped" },
-      { title: "Bookings & events v2", desc: "Ticket tiers, waitlists and walk-ins at the door are what remain now holds, deposits and policies live on the reservation spine.", status: "building" },
+      { title: "Bookings & events v2", desc: "Ticket tiers with hidden tiers and unlock codes, and the door with arrivals per person, are live on the reservation spine. Waitlists remain.", status: "building" },
+      { title: "Guest lists & passes", desc: "The event-night toolkit: guest lists per event, passes for guests of members, and the door reading them." },
       { title: "Member accounts & Direct Debit", desc: "The house-account ledger and GoCardless mandates are live — set up from a link or a QR at reception. Collections and statements follow, then dues and bookings charged to the account.", status: "building" },
       { title: "Tap to Pay", desc: "Any staff phone as a card terminal; pay at the table." },
     ],
@@ -917,7 +919,7 @@ export default function Home() {
           </div>
           <figure className="mx-auto mt-14 max-w-3xl">
             <Reveal>
-              <Shot src="/screenshots/floor-plan.png" alt="synapse admin — live service floor plan with seated tables and each server's covers" w={2220} h={1190} />
+              <Shot src="/screenshots/floor-plan.png" alt="synapse admin — a floor plan in live service" w={2880} h={1800} />
             </Reveal>
             <figcaption className="mt-3 text-sm text-[var(--muted)]">Floor plan — every seated table with its covers, member and server, and each server's tables and takings, updating in real time.</figcaption>
           </figure>
