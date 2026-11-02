@@ -35,16 +35,16 @@ const CONNECTIONS: Node[] = [
 
 // The modules inside the hub — the whole product, in the order a venue meets it.
 const MODULES = [
-  "CRM & membership",
-  "Bookings & events",
-  "POS, tills & payments",
-  "Kitchen & printing",
-  "Rooms & reservations",
-  "Marketing & messaging",
-  "Procurement",
-  "Accounting",
-  "Passes & loyalty",
-  "Insights",
+ "CRM & membership",
+ "Bookings & events",
+ "POS, tills & payments",
+ "Kitchen & printing",
+ "Rooms & reservations",
+ "Marketing & messaging",
+ "Procurement",
+ "Accounting",
+ "Passes & loyalty",
+ "Insights",
 ];
 
 type Link = { d: string; keys: string; slow?: boolean };

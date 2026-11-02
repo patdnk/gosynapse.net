@@ -33,7 +33,7 @@ export default function TourPage() {
 
         <div className="mx-auto max-w-6xl px-5 py-16">
           <div className="max-w-2xl">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand)]">
+            <p className="mb-4 text-xs font-semibold  text-[var(--brand)]">
               Private walkthrough
             </p>
             <h1 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Take the tour</h1>

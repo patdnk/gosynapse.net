@@ -263,14 +263,14 @@ const HARDWARE: { title: string; icon: string; runs: string; desc: string; picks
 
 // What landed on main most recently, newest first. Trim from the bottom.
 const SHIPPED = [
-  "Tables, events and rooms booked from the member portal",
-  "Admin in light and dark, one theme across every screen",
-  "The bookings door: arrivals per person, tonight on the dashboard",
-  "Ticket tiers with hidden tiers and unlock codes",
-  "Booking messages per moment, owned by Bookings",
-  "Guided setup per module on first login",
-  "Self-service sign-up, plans and platform billing",
-  "Online applications with card capture and approval",
+ "Tables, events and rooms booked from the member portal",
+ "Admin in light and dark, one theme across every screen",
+ "The bookings door: arrivals per person, tonight on the dashboard",
+ "Ticket tiers with hidden tiers and unlock codes",
+ "Booking messages per moment, owned by Bookings",
+ "Guided setup per module on first login",
+ "Self-service sign-up, plans and platform billing",
+ "Online applications with card capture and approval",
 ];
 
 // Each item says where it stands: shipped, being built now, or planned (no status).
@@ -408,20 +408,20 @@ const TIMELINE = [
 ];
 
 const SECURITY = [
-  "MFA level chosen per organisation: password, email, SMS or authenticator",
-  "Device pairing with instant revocation",
-  "Append-only, signed sales records",
-  "AES-256-GCM secrets at rest",
-  "SOC 2 audit trail",
-  "GDPR data-subject tooling",
-  "Rate limiting & security headers",
-  "SCIM 2.0 provisioning",
+ "MFA level chosen per organisation: password, email, SMS or authenticator",
+ "Device pairing with instant revocation",
+ "Append-only, signed sales records",
+ "AES-256-GCM secrets at rest",
+ "SOC 2 audit trail",
+ "GDPR data-subject tooling",
+ "Rate limiting & security headers",
+ "SCIM 2.0 provisioning",
 ];
 
 /* --------------------------------- icons --------------------------------- */
 
 function Icon({ name, className = "h-6 w-6" }: { name: string; className?: string }) {
-  const p = { className, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const p = { className, "aria-hidden": true, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   switch (name) {
     case "pos": return <svg {...p}><rect x="4" y="3" width="16" height="13" rx="2" /><path d="M8 20h8M12 16v4M8 7h8M8 11h5" /></svg>;
     case "catalogue": return <svg {...p}><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" /><path d="M14 3v5h5M8 13h8M8 17h6" /></svg>;
@@ -491,7 +491,7 @@ function Logo({ className = "h-8 w-8" }: { className?: string }) {
 
 function ButtonPrimary({ children, href, dark = false }: { children: React.ReactNode; href: string; dark?: boolean }) {
   return (
-    <a href={href} className={"btn inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-colors " + (dark ? "bg-white text-[var(--ink)] hover:bg-white/90" : "bg-[var(--brand)] text-white hover:bg-[var(--brand-strong)]")}>
+    <a href={href} className={"btn inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium transition-colors " + (dark ? "bg-[var(--surface-1)] text-[var(--ink)] hover:bg-white/90" : "bg-[var(--brand)] text-white hover:bg-[var(--brand-strong)]")}>
       {children}
     </a>
   );
@@ -499,7 +499,7 @@ function ButtonPrimary({ children, href, dark = false }: { children: React.React
 
 function ButtonGhost({ children, href, dark = false }: { children: React.ReactNode; href: string; dark?: boolean }) {
   return (
-    <a href={href} className={"btn inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-colors " + (dark ? "border border-white/25 text-white hover:bg-white/10" : "border border-[var(--border)] text-[var(--ink)] hover:bg-[var(--surface-2)]")}>
+    <a href={href} className={"btn inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium transition-colors " + (dark ? "border border-white/25 text-white hover:bg-white/10" : "border border-[var(--border)] text-[var(--ink)] hover:bg-[var(--surface-2)]")}>
       {children}
     </a>
   );
@@ -520,8 +520,8 @@ function IntegrationCard({
   return (
     <div
       className={
-        "rounded-2xl border p-5 text-left " +
-        (light ? "border-[var(--border)] bg-white" : "border-white/15 bg-white/5")
+ "rounded-xl border p-5 text-left " +
+        (light ? "border-[var(--border)] bg-[var(--surface-1)]" : "border-white/15 bg-white/5")
       }
     >
       <div className="flex items-center justify-between gap-3">
@@ -529,9 +529,9 @@ function IntegrationCard({
         {/* Say plainly which of these a venue can use today. */}
         <span
           className={
-            "shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold " +
+ "shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold " +
             (live
-              ? "bg-emerald-500/15 text-emerald-600"
+              ? "bg-[var(--success)]/15 text-[var(--success)]"
               : light
                 ? "bg-[var(--surface-2)] text-[var(--muted)]"
                 : "bg-white/10 text-white/60")
@@ -547,14 +547,14 @@ function IntegrationCard({
 
 function RoadmapBadge({ status }: { status: RoadmapStatus }) {
   return status === "shipped" ? (
-    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">Shipped</span>
+    <span className="rounded-full bg-[var(--success-soft)] px-2 py-0.5 text-[10px] font-semibold  text-[var(--success)]">Shipped</span>
   ) : (
-    <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">In progress</span>
+    <span className="rounded-full bg-[var(--warn-soft)] px-2 py-0.5 text-[10px] font-semibold  text-[var(--warn)]">In progress</span>
   );
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand)]">{children}</p>;
+  return <p className="mb-4 text-sm font-semibold text-[var(--brand)]">{children}</p>;
 }
 
 /* --------------------------------- page ---------------------------------- */
@@ -563,7 +563,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* nav */}
-      <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--surface-1)]">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <a href="#top" className="flex items-center gap-2">
             <Logo />
@@ -571,7 +571,7 @@ export default function Home() {
           </a>
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-[var(--muted)] sm:block">EN</span>
-            <DemoModal className="inline-flex items-center justify-center rounded-full bg-[var(--brand)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--brand-strong)]">Book a demo</DemoModal>
+            <DemoModal className="inline-flex items-center justify-center rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--brand-strong)]">Book a demo</DemoModal>
           </div>
         </div>
         {/* The section menu on its own row, at every width: it scrolls sideways on a phone rather than hiding. */}
@@ -585,20 +585,13 @@ export default function Home() {
       </header>
 
       {/* hero */}
-      <section id="top" className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden>
-          <div className="hero-glow absolute inset-0" />
-          <div className="bg-grid absolute inset-0" />
-          <div className="orb orb-a left-[6%] top-[8%] h-72 w-72" style={{ background: "radial-gradient(circle, rgba(155,77,255,0.55), transparent 70%)" }} />
-          <div className="orb orb-b right-[4%] top-[2%] h-80 w-80" style={{ background: "radial-gradient(circle, rgba(108,43,217,0.45), transparent 70%)" }} />
-          <HeroNetwork className="absolute left-[68%] top-[2%] h-[340px] w-[340px] -translate-x-1/2 opacity-[0.13]" />
-        </div>
+      <section id="top" className="relative overflow-hidden bg-[var(--surface-2)]">
         {/* First screen: the claim on the left, the product running on the right. Both
             cards are live and built from the seed, so the page opens on data, not a slogan. */}
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pt-10 pb-14 lg:grid-cols-12 lg:gap-8 lg:pt-14 lg:pb-20">
           <div className="lg:col-span-5">
             <h1 className="text-5xl font-bold leading-[0.98] tracking-[-0.03em] sm:text-6xl">
-              <span className="bg-gradient-to-r from-[var(--brand)] to-[var(--accent)] bg-clip-text text-transparent">One platform</span>
+              <span className="text-[var(--brand)]">One platform</span>
               <br />
               <span className="whitespace-nowrap">for whole venue</span>
             </h1>
@@ -613,7 +606,7 @@ export default function Home() {
             <ul className="mt-8 flex flex-wrap gap-2">
               {HERO_LINKS.map((l) => (
                 <li key={l.href}>
-                  <a href={l.href} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/80 px-3 py-1.5 text-xs font-medium text-[var(--muted)] backdrop-blur transition-colors hover:border-[var(--brand)] hover:text-[var(--ink)]">
+                  <a href={l.href} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface-1)] px-3 py-1.5 text-xs font-medium text-[var(--muted)] transition-colors hover:border-[var(--brand)] hover:text-[var(--ink)]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand)]" aria-hidden />
                     {l.label}
                   </a>
@@ -634,7 +627,7 @@ export default function Home() {
       </section>
 
       {/* what's new — real screens from the demo, mirroring the November update */}
-      <section id="new" className="border-t border-[var(--border)] bg-[var(--surface-2)]">
+      <section id="new" className="border-t border-[var(--border)] bg-[var(--surface-1)]">
         <div className="mx-auto max-w-6xl px-5 py-24">
           <div className="max-w-2xl">
             <Eyebrow>What&apos;s new, November 2026</Eyebrow>
@@ -648,7 +641,7 @@ export default function Home() {
             {WHATS_NEW.map((w, i) => (
               <div key={w.title} className="grid items-center gap-8 lg:grid-cols-12">
                 <div className={`lg:col-span-4 ${i % 2 ? "lg:order-2" : ""}`}>
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand-strong)]">{String(i + 1).padStart(2, "0")}</p>
+                  <p className="text-xs font-semibold  text-[var(--brand-strong)]">{String(i + 1).padStart(2, "0")}</p>
                   <h3 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{w.title}</h3>
                   <p className="mt-3 text-base leading-relaxed text-[var(--muted)]">{w.desc}</p>
                   {w.next && <p className="mt-3 text-sm text-[var(--muted)]"><span className="font-semibold text-[var(--ink)]">Next: </span>{w.next}</p>}
@@ -672,7 +665,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="mt-20 rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-8">
+          <div className="mt-20 rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-6 sm:p-8">
             <h3 className="font-bold tracking-tight">Also shipped</h3>
             <ul className="mt-4 grid gap-x-8 gap-y-2 text-sm text-[var(--muted)] sm:grid-cols-2">
               {ALSO_SHIPPED.map((a) => (
@@ -700,10 +693,10 @@ export default function Home() {
         </div>
         <div className="mt-14 grid gap-5 lg:grid-cols-2">
           {PRODUCT_LINES.map((line) => (
-            <div key={line.key} className="flex flex-col rounded-3xl border border-[var(--border)] bg-white p-7 sm:p-8">
+            <div key={line.key} className="flex flex-col rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-7 sm:p-8">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand-strong)]">{line.tagline}</p>
+                  <p className="text-xs font-semibold  text-[var(--brand-strong)]">{line.tagline}</p>
                   <h3 className="mt-2 text-3xl font-bold tracking-tight">{line.name}</h3>
                 </div>
                 <div className="flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
@@ -714,12 +707,12 @@ export default function Home() {
               {/* The three pieces the module is made of — how it is installed. */}
               <ol className="mt-7 grid gap-3 sm:grid-cols-3">
                 {line.parts.map((part, i) => (
-                  <li key={part.name} className="rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-5">
+                  <li key={part.name} className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-5">
                     <div className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-[var(--brand-strong)] ring-1 ring-[var(--border)]">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--surface-1)] text-[var(--brand-strong)] ring-1 ring-[var(--border)]">
                         <Icon name={part.icon} className="h-5 w-5" />
                       </span>
-                      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">{i + 1}</span>
+                      <span className="text-xs font-semibold  text-[var(--muted)]">{i + 1}</span>
                     </div>
                     <h4 className="mt-4 text-base font-bold tracking-tight">{part.name}</h4>
                     <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{part.desc}</p>
@@ -736,7 +729,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-        <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-5 flex flex-col gap-3 rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-[var(--ink)]">…and it&apos;s modular within each.</p>
             <p className="mt-1 text-sm text-[var(--muted)]">Switch floor plans, kitchen display, bookings, loyalty, passes or marketing on per venue — the configurator gates the rest until they&apos;re ready.</p>
@@ -767,7 +760,7 @@ export default function Home() {
           </figure>
           <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-3">
             {MARKETING_POINTS.map((m) => (
-              <div key={m.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+              <div key={m.title} className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
                   <Icon name={m.icon} className="h-5 w-5" />
                 </div>
@@ -863,7 +856,7 @@ export default function Home() {
           </div>
           <div className="mx-auto mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {BILLING_POINTS.map((m) => (
-              <div key={m.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+              <div key={m.title} className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
                   <Icon name={m.icon} className="h-5 w-5" />
                 </div>
@@ -909,7 +902,7 @@ export default function Home() {
           </div>
           <div className="mx-auto mt-12 grid max-w-5xl gap-4 sm:grid-cols-3">
             {MEMBERS_POINTS.map((m) => (
-              <div key={m.title} className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-5">
+              <div key={m.title} className="flex flex-col rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
                   <Icon name={m.icon} className="h-5 w-5" />
                 </div>
@@ -993,7 +986,7 @@ export default function Home() {
           </figure>
           <div className="mx-auto mt-12 grid gap-4 sm:grid-cols-3">
             {BACKOFFICE_POINTS.map((m) => (
-              <div key={m.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+              <div key={m.title} className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
                   <Icon name={m.icon} className="h-5 w-5" />
                 </div>
@@ -1122,7 +1115,7 @@ export default function Home() {
               </p>
             </div>
             {/* The point to land: advice, not a hardware bundle. */}
-            <div className="rounded-3xl bg-[var(--ink-900)] p-7 text-white sm:p-8">
+            <div className="rounded-xl bg-[var(--ink-900)] p-7 text-white sm:p-8">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-white/10">
                   <Icon name="wrench" className="h-5 w-5" />
@@ -1139,7 +1132,7 @@ export default function Home() {
           </div>
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {HARDWARE.map((h) => (
-              <div key={h.title} className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-6">
+              <div key={h.title} className="flex flex-col rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-6">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
                     <Icon name={h.icon} className="h-5 w-5" />
@@ -1148,7 +1141,7 @@ export default function Home() {
                 </div>
                 <h3 className="mt-4 text-lg font-bold tracking-tight">{h.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{h.desc}</p>
-                <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">We recommend</p>
+                <p className="mt-5 text-[11px] font-semibold  text-[var(--muted)]">We recommend</p>
                 <ul className="mt-2 flex flex-wrap gap-1.5">
                   {h.picks.map((x) => (
                     <li key={x} className="rounded-full border border-[var(--border)] px-2.5 py-1 text-xs font-medium text-[var(--ink)]">{x}</li>
@@ -1157,7 +1150,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="mt-5 flex flex-col gap-4 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-5 flex flex-col gap-4 rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface-2)] p-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-[var(--ink)]">Something else on the floor?</p>
               <p className="mt-1 text-sm text-[var(--muted)]">
@@ -1283,7 +1276,7 @@ export default function Home() {
                 with the sticky copy instead of running well past it. */}
             <div className="grid gap-4 sm:grid-cols-2">
               {OPERATIONS.map((o) => (
-                <div key={o.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+                <div key={o.title} className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-5">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
                     <Icon name={o.icon} className="h-5 w-5" />
                   </div>
@@ -1302,9 +1295,9 @@ export default function Home() {
           <Eyebrow>Everything a venue runs on</Eyebrow>
           <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Native, not bolted on</h2>
         </div>
-        <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--border)] sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--border)] sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f) => (
-            <div key={f.title} className="bg-white p-8">
+            <div key={f.title} className="bg-[var(--surface-1)] p-8">
               <div className="text-[var(--brand-strong)]"><Icon name={f.icon} /></div>
               <h3 className="mt-5 font-bold tracking-tight">{f.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{f.desc}</p>
@@ -1326,9 +1319,9 @@ export default function Home() {
             </p>
             <ul className="mt-7 space-y-3">
               {[
-                "Edit a menu in admin → it's ringing up on the till.",
-                "Open a check on the till → the floor plan reflects it.",
-                "Change a plan or a config → every surface catches up.",
+ "Edit a menu in admin → it's ringing up on the till.",
+ "Open a check on the till → the floor plan reflects it.",
+ "Change a plan or a config → every surface catches up.",
               ].map((t) => (
                 <li key={t} className="flex items-start gap-3 text-sm font-medium text-[var(--ink)]">
                   <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-[var(--brand)] text-white">
@@ -1345,7 +1338,7 @@ export default function Home() {
 
       {/* payments + integrations */}
       <section id="integrations" className="mx-auto max-w-6xl px-5 py-24">
-        <div className="rounded-3xl border border-[var(--border)] bg-[var(--ink-900)] p-8 sm:p-14">
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--ink-900)] p-8 sm:p-14">
           <div className="text-center">
             <Eyebrow>Payments, built in</Eyebrow>
             <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-[-0.02em] text-white sm:text-4xl">
@@ -1427,12 +1420,12 @@ export default function Home() {
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
             {ENTERPRISE_POINTS.map((e) => (
-              <div key={e.title} className="rounded-2xl border border-[var(--border)] bg-white p-5">
+              <div key={e.title} className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-strong)]">
                     <Icon name={e.icon} className="h-5 w-5" />
                   </div>
-                  {e.planned && <span className="rounded-full bg-[var(--surface-3)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--muted)]">Planned</span>}
+                  {e.planned && <span className="rounded-full bg-[var(--surface-3)] px-2 py-0.5 text-[10px] font-semibold  text-[var(--muted)]">Planned</span>}
                 </div>
                 <h3 className="mt-3 font-bold tracking-tight">{e.title}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{e.desc}</p>
@@ -1454,10 +1447,10 @@ export default function Home() {
         </div>
         <div className="mt-14 grid gap-4 md:grid-cols-3">
           {TIMELINE.map((t, i) => (
-            <div key={t.day} className="relative rounded-2xl border border-[var(--border)] bg-white p-7">
+            <div key={t.day} className="relative rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-7">
               <div className="flex items-center gap-3">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--brand)] text-sm font-bold text-white">{i + 1}</span>
-                <span className="text-sm font-semibold uppercase tracking-wide text-[var(--brand-strong)]">{t.day}</span>
+                <span className="text-sm font-semibold  text-[var(--brand-strong)]">{t.day}</span>
               </div>
               <h3 className="mt-4 text-lg font-bold tracking-tight">{t.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{t.desc}</p>
@@ -1476,7 +1469,7 @@ export default function Home() {
           </div>
           <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {SECURITY.map((s) => (
-              <div key={s} className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-white px-5 py-4">
+              <div key={s} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-1)] px-5 py-4">
                 <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-[var(--brand)] text-white">
                   <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="3"><path d="m5 12 5 5L20 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </span>
@@ -1505,15 +1498,15 @@ export default function Home() {
             <span>no badge · planned</span>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">Recently shipped</span>
+            <span className="text-xs font-semibold  text-[var(--muted)]">Recently shipped</span>
             {SHIPPED.map((x) => (
-              <span key={x} className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">✓ {x}</span>
+              <span key={x} className="rounded-full bg-[var(--success-soft)] px-3 py-1 text-xs font-semibold text-[var(--success)]">✓ {x}</span>
             ))}
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {ROADMAP.map((p, i) => (
-              <div key={p.phase} className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand-strong)]">Phase {i + 1}</p>
+              <div key={p.phase} className="flex flex-col rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-6">
+                <p className="text-xs font-semibold  text-[var(--brand-strong)]">Phase {i + 1}</p>
                 <h3 className="mt-1 text-lg font-bold tracking-tight">{p.phase}</h3>
                 <p className="mt-1 text-sm text-[var(--muted)]">{p.why}</p>
                 <ul className="mt-4 space-y-2.5">
@@ -1550,11 +1543,11 @@ export default function Home() {
             </p>
             <ul className="mt-8 space-y-3">
               {[
-                "A live tour of the admin, floor plan and iPad till",
-                "Or set your club up yourself: self-service sign-up, modules and a plan, venues, guided setup",
+ "A live tour of the admin, floor plan and iPad till",
+ "Or set your club up yourself: self-service sign-up, modules and a plan, venues, guided setup",
 
-                "Your own menu and rooms loaded in, not a canned demo",
-                "Straight answers on migration, pricing and timelines",
+ "Your own menu and rooms loaded in, not a canned demo",
+ "Straight answers on migration, pricing and timelines",
               ].map((t) => (
                 <li key={t} className="flex gap-3 text-sm text-white/70">
                   <svg viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
@@ -1566,7 +1559,7 @@ export default function Home() {
             </ul>
 
           </div>
-          <div className="flex flex-col items-start gap-4 rounded-2xl border border-white/15 bg-white/5 p-8">
+          <div className="flex flex-col items-start gap-4 rounded-xl border border-white/15 bg-white/5 p-8">
             <h3 className="text-xl font-semibold text-white">Request your walkthrough</h3>
             <p className="text-sm text-white/60">
               Tell us about your venue and we&apos;ll set up a session that fits it.
@@ -1625,7 +1618,7 @@ export default function Home() {
 // each image loads, which reads as a jump while scrolling.
 function Shot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white text-left shadow-[0_40px_100px_-40px_rgba(11,18,32,0.4)]">
+    <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-1)] text-left shadow-sm">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={src} alt={alt} width={w} height={h} className="block h-auto w-full" />
     </div>
@@ -1639,7 +1632,7 @@ function Shot({ src, alt, w, h }: { src: string; alt: string; w: number; h: numb
 // motion). Both are real screens from the demo club.
 function ThemeWipe() {
   return (
-    <figure className="theme-wipe overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-[0_40px_100px_-40px_rgba(11,18,32,0.5)]">
+    <figure className="theme-wipe overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-1)] shadow-sm">
       <div className="relative" style={{ aspectRatio: "2880 / 1800" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/screenshots/dashboard.png" alt="synapse admin, light — tonight at Fernhollow Gardens: covers booked, next to arrive, rooms let" width={2880} height={1800} className="absolute inset-0 block h-full w-full" />
@@ -1654,7 +1647,7 @@ function ThemeWipe() {
 // Phone bezel for member-portal shots, captured at 375 × 812 on a 2× display.
 function PhoneShot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
   return (
-    <div className="mx-auto max-w-[300px] rounded-[34px] bg-[#1c1c1e] p-2.5 shadow-[0_40px_100px_-40px_rgba(11,18,32,0.55)] ring-1 ring-black/10">
+    <div className="mx-auto max-w-[300px] rounded-[34px] bg-[#1c1c1e] p-2.5 shadow-sm ring-1 ring-black/10">
       <div className="overflow-hidden rounded-[26px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt={alt} width={w} height={h} className="block h-auto w-full" />
@@ -1665,7 +1658,7 @@ function PhoneShot({ src, alt, w, h }: { src: string; alt: string; w: number; h:
 
 function TabletShot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
   return (
-    <div className="rounded-[26px] bg-[#1c1c1e] p-3 shadow-[0_40px_100px_-40px_rgba(11,18,32,0.55)] ring-1 ring-black/10 sm:rounded-[34px] sm:p-4">
+    <div className="rounded-[26px] bg-[#1c1c1e] p-3 shadow-sm ring-1 ring-black/10 sm:rounded-[34px] sm:p-4">
       <div className="flex items-center gap-3">
         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-white/25" aria-hidden />
         <div className="overflow-hidden rounded-[14px] sm:rounded-[18px]">

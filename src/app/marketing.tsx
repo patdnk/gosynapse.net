@@ -49,7 +49,7 @@ export function MarketingShowcase() {
   };
 
   return (
-    <div ref={ref} className="bg-white">
+    <div ref={ref} className="bg-[var(--surface-1)]">
       <div role="tablist" aria-label="Marketing features" className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-[var(--border)] px-3 pt-2 [scrollbar-width:none]">
         {VIEWS.map((v) => {
           const on = v.key === view;
@@ -153,7 +153,7 @@ function TriggersView({ run }: { run: boolean }) {
               </StageBody>
             ,
               <StageBody title="Confirmation emailed" icon="mail">
-                <div className="rounded-lg border border-[var(--border)] bg-white p-3">
+                <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-1)] p-3">
                   <div className="text-[10px] text-[var(--muted)]">{ORG}</div>
                   <div className="mt-0.5 text-xs font-semibold text-[var(--ink)]">Your table is booked for {when}</div>
                   <p className="mt-1.5 text-xs leading-relaxed text-[var(--muted)]">
@@ -180,15 +180,15 @@ function TriggersView({ run }: { run: boolean }) {
               </StageBody>
             ,
               <StageBody title="Reminder texted" icon="sms">
-                <div className="max-w-[17rem] rounded-2xl rounded-bl-md bg-[var(--brand)] px-3 py-2 text-xs leading-relaxed text-white">
+                <div className="max-w-[17rem] rounded-xl rounded-bl-md bg-[var(--brand)] px-3 py-2 text-xs leading-relaxed text-white">
                   Reminder from {VENUE}: your table for {party} is tomorrow, {when}. Ref {ref}. Can&apos;t make it? Please let us know.
                 </div>
                 <div className="mt-2 text-[10px] text-[var(--muted)]">Delivered · logged on {member.first}&apos;s record</div>
               </StageBody>
             ,
           ]} />
-          <div className="rounded-xl border border-[var(--border)] bg-white p-4">
-            <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">What happened</div>
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-4">
+            <div className="mb-3 text-xs font-semibold  text-[var(--muted)]">What happened</div>
             <ol className="space-y-2.5">
               {log.map((l, i) => {
                 const shown = i <= stage;
@@ -299,7 +299,7 @@ function JourneysView({ run }: { run: boolean }) {
               return (
                 <span
                   key={e.label}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--border)] bg-white px-1.5 py-0.5 text-[9px] font-semibold text-[var(--muted)]"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--border)] bg-[var(--surface-1)] px-1.5 py-0.5 text-[9px] font-semibold text-[var(--muted)]"
                   style={{ left: `${(a.x + b.x) / 2 + 3}%`, top: `${(a.y + b.y) / 2}%` }}
                 >
                   {e.label}
@@ -312,7 +312,7 @@ function JourneysView({ run }: { run: boolean }) {
               return (
                 <div
                   key={n.id}
-                  className="absolute w-[7.5rem] -translate-x-1/2 -translate-y-1/2 rounded-xl border bg-white px-2.5 py-2 shadow-sm transition-[border-color,box-shadow] duration-300"
+                  className="absolute w-[7.5rem] -translate-x-1/2 -translate-y-1/2 rounded-xl border bg-[var(--surface-1)] px-2.5 py-2 shadow-sm transition-[border-color,box-shadow] duration-300"
                   style={{
                     left: `${n.x}%`,
                     top: `${n.y}%`,
@@ -381,7 +381,7 @@ function CampaignsView({ run }: { run: boolean }) {
               <StageBody title="Audience" icon="member">
                 <div className="mb-2 flex flex-wrap gap-1.5">
                   {["Member status is Live", "Visited in the last 90 days"].map((c) => (
-                    <span key={c} className="rounded-md bg-white px-2 py-1 text-[10px] font-medium text-[var(--ink)] ring-1 ring-[var(--border)]">{c}</span>
+                    <span key={c} className="rounded-md bg-[var(--surface-1)] px-2 py-1 text-[10px] font-medium text-[var(--ink)] ring-1 ring-[var(--border)]">{c}</span>
                   ))}
                 </div>
                 <Row k="Matches" v="4 members" accent />
@@ -389,7 +389,7 @@ function CampaignsView({ run }: { run: boolean }) {
               </StageBody>
             ,
               <StageBody title="Template" icon="mail">
-                <div className="rounded-lg border border-[var(--border)] bg-white p-3">
+                <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-1)] p-3">
                   <div className="text-[10px] text-[var(--muted)]">{ORG}</div>
                   <div className="mt-0.5 text-xs font-semibold text-[var(--ink)]">{EVENT.title}</div>
                   <p className="mt-1.5 text-xs leading-relaxed text-[var(--muted)]">An evening of live jazz in the walled garden. {EVENT.price}, {EVENT.capacity} places.</p>
@@ -431,8 +431,8 @@ function CampaignsView({ run }: { run: boolean }) {
               </StageBody>
             ,
           ]} />
-          <div className="rounded-xl border border-[var(--border)] bg-white p-4">
-            <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">Recipients</div>
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-4">
+            <div className="mb-3 text-xs font-semibold  text-[var(--muted)]">Recipients</div>
             <ul className="space-y-2.5 text-xs">
               {RECIPIENTS.map((r) => {
                 const decided = stage >= 2;
@@ -490,7 +490,7 @@ function TemplatesView({ run }: { run: boolean }) {
       <ViewHeader title="Template · Save the date" note="Drag-and-drop email · SMS with a live count" />
       <div className="grid gap-4 px-5 py-5 sm:grid-cols-[7rem_1fr]">
         <div className="hidden flex-col gap-1.5 sm:flex">
-          <div className="text-[10px] font-semibold uppercase tracking-wide text-[var(--muted)]">Blocks</div>
+          <div className="text-[10px] font-semibold  text-[var(--muted)]">Blocks</div>
           {BLOCKS.map((b, i) => (
             <span
               key={b}
@@ -509,13 +509,13 @@ function TemplatesView({ run }: { run: boolean }) {
         <div className="grid gap-4 sm:grid-cols-[1fr_12rem]">
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3">
             <div className="mb-2 flex items-center justify-between">
-              <div className="flex rounded-md bg-white p-0.5 text-[10px] font-semibold ring-1 ring-[var(--border)]">
+              <div className="flex rounded-md bg-[var(--surface-1)] p-0.5 text-[10px] font-semibold ring-1 ring-[var(--border)]">
                 <span className={`rounded px-2 py-0.5 ${!preview ? "bg-[var(--brand)] text-white" : "text-[var(--muted)]"}`}>Design</span>
                 <span className={`rounded px-2 py-0.5 ${preview ? "bg-[var(--brand)] text-white" : "text-[var(--muted)]"}`}>Preview</span>
               </div>
               <span className="text-[10px] text-[var(--muted)]">{preview ? `as ${memberName(member)}` : "merge fields"}</span>
             </div>
-            <div className="rounded-lg bg-white p-4 text-xs leading-relaxed text-[var(--muted)] shadow-sm">
+            <div className="rounded-lg bg-[var(--surface-1)] p-4 text-xs leading-relaxed text-[var(--muted)] shadow-sm">
               <div className="text-center text-[10px] tracking-[0.2em]">
                 <Merge field="org.name | upcase" value={ORG.toUpperCase()} preview={preview} />
               </div>
@@ -530,9 +530,9 @@ function TemplatesView({ run }: { run: boolean }) {
               <span className="mt-3 inline-block rounded-md bg-[var(--brand)] px-2.5 py-1 text-[10px] font-semibold text-white">Book your place</span>
             </div>
           </div>
-          <div className="flex flex-col rounded-xl border border-[var(--border)] bg-white p-3">
-            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-[var(--muted)]">SMS template</div>
-            <div className="rounded-2xl rounded-bl-md bg-[var(--surface-2)] px-3 py-2 text-[11px] leading-relaxed text-[var(--ink)]">
+          <div className="flex flex-col rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-3">
+            <div className="mb-2 text-[10px] font-semibold  text-[var(--muted)]">SMS template</div>
+            <div className="rounded-xl rounded-bl-md bg-[var(--surface-2)] px-3 py-2 text-[11px] leading-relaxed text-[var(--ink)]">
               {preview ? SMS_RENDERED : (
                 <>
                   <Merge field="org.name" value={ORG} preview={false} />

@@ -4,29 +4,41 @@
    not crowd: "Sign in" reads SIGN IN. Lives in the components layer so a
    utility such as `normal-case` on a tab or a glyph-only control still wins. */
 @layer components {
-  button,
-  .btn {
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  /* Controls match the admin: sentence case, a visible focus ring. */
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
   }
 }
 
 
 :root {
-  /* Synapse palette — Oracle-clean: crisp neutrals, near-black ink, lots of
-     white, one strong accent. Where Oracle uses red, Synapse uses purple.
-     "Clean but clear": high contrast, minimal, confident. */
-  --brand: #6c2bd9; /* Synapse purple (Oracle's red, replaced) */
-  --brand-strong: #5620ad; /* darker purple — hover / pressed */
-  --brand-soft: #f2ecfd; /* faint purple tint — soft fills */
-  --accent: #9b4dff; /* brighter violet — gradients / pops */
-  --ink: #18161d; /* near-black — headings + body */
-  --ink-900: #100e15; /* darkest — dark bands */
-  --muted: #59565f; /* neutral gray — secondary text */
-  --surface-1: #ffffff;
-  --surface-2: #f7f6f8; /* faint neutral off-white */
-  --surface-3: #efedf2;
-  --border: #e5e3ea; /* light neutral line */
+  /* The admin's own light theme (apps/admin/src/app/globals.css), so the site
+     and the product read as one system. Names kept from the site's first
+     palette; values are the admin's OKLCH tokens. */
+  --brand: oklch(49.2% 0.239 292); /* theme-accent */
+  --brand-strong: oklch(41.7% 0.202 293); /* theme-accent-2: hover / pressed */
+  --brand-soft: oklch(95.3% 0.023 302); /* theme-accent-soft: soft fills */
+  --brand-wash: oklch(88% 0.06 300); /* theme-accent-wash */
+  --accent: oklch(55% 0.22 292); /* theme-focus: the brighter pop */
+  --ink: oklch(20.6% 0.014 298); /* theme-ink */
+  --ink-2: oklch(34% 0.014 300); /* theme-ink-2 */
+  --ink-900: oklch(15.5% 0.014 298); /* the admin's dark surface: dark bands */
+  --muted: oklch(45.9% 0.015 301); /* theme-muted */
+  --surface-1: oklch(99.7% 0.002 300); /* theme-panel: cards and the page */
+  --surface-2: oklch(97.4% 0.004 308); /* theme-surface: tinted bands */
+  --surface-3: oklch(91.9% 0.01 299); /* theme-surface-3 */
+  --border: oklch(91% 0.01 299); /* theme-rule */
+  --edge: oklch(60% 0.014 300); /* theme-edge: field edges */
+  --focus: oklch(55% 0.22 292);
+  --success: oklch(50% 0.12 150);
+  --success-soft: oklch(96% 0.03 150);
+  --warn: oklch(50% 0.12 65);
+  --warn-soft: oklch(96% 0.035 80);
+  --danger: oklch(52% 0.2 25);
+  --danger-soft: oklch(96% 0.02 25);
 }
 
 /* Type: Mona Sans throughout, Space Grotesk for small details. Both bundled
@@ -41,6 +53,8 @@
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--border);
+  --color-success: var(--success);
+  --color-warn: var(--warn);
 }
 
 html {
@@ -57,7 +71,6 @@ body {
 /* Space Grotesk for the details: eyebrows and section labels (every uppercase
    run on the page is one), captions, table headers and aligned figures.
    Headlines, copy and buttons stay in Mona Sans. */
-.uppercase,
 th,
 .font-detail,
 .tabular-nums {

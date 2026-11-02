@@ -29,7 +29,7 @@ export function useTick(intervalMs: number, active: boolean) {
 /* --------------------------------- icons --------------------------------- */
 
 export function FlowIcon({ name, className = "h-4 w-4" }: { name: string; className?: string }) {
-  const p = { className, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const p = { className, "aria-hidden": true, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   switch (name) {
     case "order": return <svg {...p}><path d="M6 2 4 6v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6l-2-4Z" /><path d="M4 6h16M9 10a3 3 0 0 0 6 0" /></svg>;
     case "discount": return <svg {...p}><path d="M20 12.5 12.5 20a2 2 0 0 1-2.8 0l-5.7-5.7a2 2 0 0 1 0-2.8L11 4h7a2 2 0 0 1 2 2Z" /><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" /></svg>;
@@ -169,14 +169,14 @@ export function RevenueFlow() {
   const easedIntake = useEased(intakeMinor, run);
 
   return (
-    <div ref={ref} className="bg-white">
+    <div ref={ref} className="bg-[var(--surface-1)]">
       <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
           <span className="h-2 w-2 rounded-full bg-[#12a150]" />
           Revenue engine
         </div>
         <div className="text-right">
-          <div className="text-[10px] uppercase tracking-wide text-[var(--muted)]">Intake today</div>
+          <div className="text-[10px]  text-[var(--muted)]">Intake today</div>
           <div className="text-sm font-bold tabular-nums text-[var(--ink)]">{fmt(Math.round(easedIntake))}</div>
         </div>
       </div>
@@ -188,7 +188,7 @@ export function RevenueFlow() {
           {/* active-stage record */}
           <StageStack active={stage} panels={[
               <div>
-                <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--brand-strong)]">Order · {order.table}</div>
+                <div className="mb-2 text-xs font-semibold  text-[var(--brand-strong)]">Order · {order.table}</div>
                 <OrderLines lines={order.lines} />
                 <div className="mt-2 flex justify-between border-t border-[var(--border)] pt-2 font-semibold text-[var(--ink)]">
                   <span>Subtotal</span><span className="tabular-nums">{fmt(t.subtotalMinor)}</span>
@@ -229,9 +229,9 @@ export function RevenueFlow() {
           ]} />
 
           {/* registering graph */}
-          <div className="rounded-xl border border-[var(--border)] bg-white p-4">
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">Intake · last {bars.length} checks</span>
+              <span className="text-xs font-semibold  text-[var(--muted)]">Intake · last {bars.length} checks</span>
               <span className="flex items-center gap-1 text-[10px] font-semibold text-[#12a150]"><span className="h-1.5 w-1.5 rounded-full bg-[#12a150]" />live</span>
             </div>
             <BarGraph values={bars} highlightLast={stage >= 3} />
@@ -255,10 +255,10 @@ const MEM_STAGES: Stage[] = [
 ];
 
 export const MEMBER_TABLE: Record<string, { table: string; time: string }> = {
-  "SF-0001": { table: "Window 4", time: "19:45" },
-  "SF-0002": { table: "Bar 1", time: "20:00" },
-  "SF-0003": { table: "Window 2", time: "20:15" },
-  "SF-0004": { table: "Bar 3", time: "20:30" },
+ "SF-0001": { table: "Window 4", time: "19:45" },
+ "SF-0002": { table: "Bar 1", time: "20:00" },
+ "SF-0003": { table: "Window 2", time: "20:15" },
+ "SF-0004": { table: "Bar 3", time: "20:30" },
 };
 
 // Seed each member with a plausible history so the tracker isn't empty.
@@ -324,7 +324,7 @@ export function MemberJourney() {
   const creditPct = Math.round((stat.usedMinor / plan.monthlyCreditMinor) * 100);
 
   return (
-    <div ref={ref} className="bg-white">
+    <div ref={ref} className="bg-[var(--surface-1)]">
       <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
           <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[var(--brand-soft)] text-[10px] font-bold text-[var(--brand-strong)]">{initials(member)}</span>
@@ -332,7 +332,7 @@ export function MemberJourney() {
           <span className="rounded-full bg-[var(--brand)] px-2 py-0.5 text-[10px] font-bold text-white">{plan.name}</span>
         </div>
         <div className="text-right">
-          <div className="text-[10px] uppercase tracking-wide text-[var(--muted)]">Visits</div>
+          <div className="text-[10px]  text-[var(--muted)]">Visits</div>
           <div className="text-sm font-bold tabular-nums text-[var(--ink)]">{Math.round(easedVisits)}</div>
         </div>
       </div>
@@ -350,7 +350,7 @@ export function MemberJourney() {
               </StageBody>
             ,
               <div>
-                <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--brand-strong)]">Order placed</div>
+                <div className="mb-2 text-xs font-semibold  text-[var(--brand-strong)]">Order placed</div>
                 <OrderLines lines={order.lines} />
                 <div className="mt-2 flex justify-between border-t border-[var(--border)] pt-2 font-semibold text-[var(--ink)]">
                   <span>Total</span><span className="tabular-nums">{fmt(t.totalMinor)}</span>
@@ -375,9 +375,9 @@ export function MemberJourney() {
           ]} />
 
           {/* spend tracker */}
-          <div className="rounded-xl border border-[var(--border)] bg-white p-4">
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">Spend · recent visits</span>
+              <span className="text-xs font-semibold  text-[var(--muted)]">Spend · recent visits</span>
               <span className="text-sm font-bold tabular-nums text-[var(--ink)]">{fmt(Math.round(easedSpend))}</span>
             </div>
             <BarGraph values={stat.spends} highlightLast={stage >= 2} />
@@ -406,10 +406,10 @@ const TRAIL_STAGES: Stage[] = [
 
 // Events and prices from the seed; Gold members hold the wine tasting.
 const MEMBER_EVENT: Record<string, { title: string; tickets: number; price: string }> = {
-  "SF-0001": { title: "Wine Tasting — Rhône", tickets: 2, price: "£65" },
-  "SF-0002": { title: "Jazz in the Walled Garden", tickets: 4, price: "£30" },
-  "SF-0003": { title: "Wine Tasting — Rhône", tickets: 1, price: "£65" },
-  "SF-0004": { title: "Jazz in the Walled Garden", tickets: 2, price: "£30" },
+ "SF-0001": { title: "Wine Tasting — Rhône", tickets: 2, price: "£65" },
+ "SF-0002": { title: "Jazz in the Walled Garden", tickets: 4, price: "£30" },
+ "SF-0003": { title: "Wine Tasting — Rhône", tickets: 1, price: "£65" },
+ "SF-0004": { title: "Jazz in the Walled Garden", tickets: 2, price: "£30" },
 };
 const TRAIL_REF: Record<string, string> = { "SF-0001": "BK-3F9Q2M", "SF-0002": "BK-7H2KX4", "SF-0003": "BK-Q8D1RW", "SF-0004": "BK-M5T6PA" };
 const TRAIL_SERVER: Record<string, string> = { "SF-0001": "Ada Admin", "SF-0002": "Wendy Waiter", "SF-0003": "Ada Admin", "SF-0004": "Wendy Waiter" };
@@ -449,7 +449,7 @@ export function MemberTrail() {
   ];
 
   return (
-    <div ref={ref} className="bg-white">
+    <div ref={ref} className="bg-[var(--surface-1)]">
       <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
           <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[var(--brand-soft)] text-[10px] font-bold text-[var(--brand-strong)]">{initials(member)}</span>
@@ -486,7 +486,7 @@ export function MemberTrail() {
               </StageBody>
             ,
               <StageBody title="Seated" icon="table">
-                <div className="mb-2 rounded-lg border border-[var(--border)] bg-white p-3">
+                <div className="mb-2 rounded-lg border border-[var(--border)] bg-[var(--surface-1)] p-3">
                   <div className="text-[10px] text-[var(--muted)]">Floor plan · Table {seat.number} · {seat.area}</div>
                   <div className="mt-0.5 text-sm font-semibold text-[var(--ink)]">{memberName(member)}</div>
                   <div className="mt-0.5 text-[11px] text-[var(--muted)]">Seated · {TRAIL_SERVER[member.ref]} · {fmt(t.totalMinor)}</div>
@@ -497,8 +497,8 @@ export function MemberTrail() {
           ]} />
 
           {/* the member record, gaining a link at every stage */}
-          <div className="rounded-xl border border-[var(--border)] bg-white p-4">
-            <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">On {member.first}&apos;s record</div>
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-4">
+            <div className="mb-3 text-xs font-semibold  text-[var(--muted)]">On {member.first}&apos;s record</div>
             <ul className="space-y-2.5">
               {links.map((l, i) => {
                 const on = i <= stage;
@@ -574,7 +574,7 @@ export function StageStack({ active, panels }: { active: number; panels: React.R
 export function StageBody({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--brand-strong)]">
+      <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold  text-[var(--brand-strong)]">
         <FlowIcon name={icon} className="h-3.5 w-3.5" />
         {title}
       </div>

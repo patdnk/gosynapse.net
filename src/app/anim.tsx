@@ -15,7 +15,7 @@ import { VENUE, MEMBERS, ORDERS, DISCOUNTS, checkTotals, priceOf, fmt, findMembe
 // the page as first-class product surfaces.
 export function Frame({ children }: { children: ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white text-left shadow-[0_40px_100px_-40px_rgba(11,18,32,0.4)]">
+    <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-1)] text-left shadow-sm">
       {children}
     </div>
   );
@@ -108,7 +108,7 @@ export function SyncFlow() {
   return (
     <div
       ref={ref}
-      className="relative rounded-2xl border border-[var(--border)] bg-white p-6 shadow-[0_30px_70px_-36px_rgba(11,18,32,0.3)]"
+      className="relative rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-6 shadow-sm"
     >
       {/* connector rail + travelling pulse down the left of the rows */}
       <div className="pointer-events-none absolute left-[34px] top-[42px] bottom-[86px] w-px bg-[var(--border)]">
@@ -128,7 +128,7 @@ export function SyncFlow() {
           return (
             <div
               key={s.name}
-              className="relative flex items-center gap-3 rounded-xl border bg-white px-4 py-3 transition-colors duration-500"
+              className="relative flex items-center gap-3 rounded-xl border bg-[var(--surface-1)] px-4 py-3 transition-colors duration-500"
               style={{
                 borderColor: active ? "var(--brand)" : "var(--border)",
                 boxShadow: active ? "0 0 0 3px var(--brand-soft)" : "none",
@@ -206,11 +206,11 @@ const FTABLES: Table[] = [
 
 // Per-table service data (covers seated, assigned server, reservation label).
 const TMETA: Record<string, { cover: number; srv: string; resv?: string }> = {
-  "1": { cover: 2, srv: SERVERS[0]! },
-  "2": { cover: 4, srv: SERVERS[0]! },
-  "3": { cover: 4, srv: SERVERS[1]! },
-  "4": { cover: 4, srv: SERVERS[2]!, resv: "20:00 · 4p" },
-  "5": { cover: 6, srv: SERVERS[1]! },
+ "1": { cover: 2, srv: SERVERS[0]! },
+ "2": { cover: 4, srv: SERVERS[0]! },
+ "3": { cover: 4, srv: SERVERS[1]! },
+ "4": { cover: 4, srv: SERVERS[2]!, resv: "20:00 · 4p" },
+ "5": { cover: 6, srv: SERVERS[1]! },
   B1: { cover: 2, srv: SERVERS[2]! },
   B2: { cover: 4, srv: SERVERS[3]! },
   B3: { cover: 2, srv: SERVERS[3]! },
@@ -353,7 +353,7 @@ export function FloorPlanLive() {
   const occPct = useEased(Math.round((busy / FTABLES.length) * 100), run);
 
   return (
-    <div ref={ref} className="bg-white">
+    <div ref={ref} className="bg-[var(--surface-1)]">
       <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
           <span className="h-2 w-2 rounded-full bg-[#12a150]" />
@@ -365,7 +365,7 @@ export function FloorPlanLive() {
         </div>
       </div>
 
-      <div className="bg-white p-3">
+      <div className="bg-[var(--surface-1)] p-3">
         <div className="overflow-hidden rounded-xl border border-[#e4e4e7]" style={{ backgroundColor: "#fafafa", backgroundImage: "linear-gradient(#eef0f2 1px, transparent 1px), linear-gradient(90deg, #eef0f2 1px, transparent 1px)", backgroundSize: "26px 26px" }}>
           <svg viewBox="0 0 620 400" className="block w-full">
             {FTABLES.map((t) => (
@@ -411,7 +411,7 @@ export function TillLive() {
   const paid = step >= L + 3;
 
   return (
-    <div ref={ref} className="bg-white">
+    <div ref={ref} className="bg-[var(--surface-1)]">
       <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3">
         <div className="text-sm font-semibold text-[var(--ink)]">{TILL_ORDER.table} · {memberName(TILL_MEMBER)}</div>
         <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--brand-strong)]">
@@ -485,7 +485,7 @@ export function TillLive() {
 /* --------------------------- shared mini-icons --------------------------- */
 
 function MiniIcon({ name, className = "h-4 w-4" }: { name: "insights" | "pos" | "crm" | "bolt"; className?: string }) {
-  const p = { className, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const p = { className, "aria-hidden": true, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   switch (name) {
     case "insights": return <svg {...p}><path d="M4 20V10M10 20V4M16 20v-6M22 20H2" /></svg>;
     case "pos": return <svg {...p}><rect x="4" y="3" width="16" height="13" rx="2" /><path d="M8 20h8M12 16v4M8 7h8M8 11h5" /></svg>;

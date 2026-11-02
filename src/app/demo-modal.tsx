@@ -72,7 +72,7 @@ export function DemoModal({
               aria-modal="true"
               aria-label="Book a demo"
               tabIndex={-1}
-              className="relative my-auto w-full max-w-xl rounded-2xl bg-[var(--ink-900)] p-6 shadow-2xl outline-none ring-1 ring-white/15 sm:p-8"
+              className="relative my-auto w-full max-w-xl rounded-xl bg-[var(--ink-900)] p-6 shadow-2xl outline-none ring-1 ring-white/15 sm:p-8"
             >
               <button
                 type="button"

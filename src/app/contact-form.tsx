@@ -103,11 +103,11 @@ export function ContactForm({ bare = false, onDone }: { bare?: boolean; onDone?:
 
   // In the modal the surrounding dialog already provides the card, so `bare`
   // drops this component's own border/background/padding.
-  const shell = bare ? "" : "rounded-2xl border border-white/15 bg-white/5 p-6 sm:p-8";
+  const shell = bare ? "" : "rounded-xl border border-white/15 bg-white/5 p-6 sm:p-8";
 
   if (status === "sent") {
     return (
-      <div className={bare ? "py-4 text-center" : "rounded-2xl border border-white/15 bg-white/5 p-8 text-center"}>
+      <div className={bare ? "py-4 text-center" : "rounded-xl border border-white/15 bg-white/5 p-8 text-center"}>
         <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--brand)]">
           <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="#fff" strokeWidth="2.5" aria-hidden>
             <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
@@ -129,7 +129,7 @@ export function ContactForm({ bare = false, onDone }: { bare?: boolean; onDone?:
   }
 
   const field =
-    "w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/35 outline-none transition-colors focus:border-[var(--brand)]";
+ "w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/35 outline-none transition-colors focus:border-[var(--brand)]";
 
   return (
     <form onSubmit={onSubmit} className={shell}>

@@ -27,7 +27,7 @@ const CHAPTERS: Chapter[] = [
     title: "The day at a glance",
     minutes: "3 min",
     blurb:
-      "We start where a manager starts: today's sales, VAT owed and how full the room is — all computed live, not exported overnight.",
+ "We start where a manager starts: today's sales, VAT owed and how full the room is — all computed live, not exported overnight.",
     points: ["Live sales and covers", "VAT as it accrues", "Occupancy across venues"],
     src: "/screenshots/dashboard.png",
     alt: "synapse admin — dashboard overview",
@@ -37,7 +37,7 @@ const CHAPTERS: Chapter[] = [
     title: "Floor plan & service",
     minutes: "5 min",
     blurb:
-      "Design the room once, then run service on it. Tables colour by state, and every cover, server and reservation is attached to the table it belongs to.",
+ "Design the room once, then run service on it. Tables colour by state, and every cover, server and reservation is attached to the table it belongs to.",
     points: ["Seated, upcoming and open at a glance", "Covers and spend per server", "Move a table mid-service"],
     src: "/screenshots/floor-plan.png",
     alt: "synapse admin — live service floor plan",
@@ -47,7 +47,7 @@ const CHAPTERS: Chapter[] = [
     title: "The iPad till",
     minutes: "6 min",
     blurb:
-      "The same catalogue the admin manages, on the floor. Items ring up against the open check with the subtotal and VAT recalculating as you go — and it keeps working when the internet doesn't.",
+ "The same catalogue the admin manages, on the floor. Items ring up against the open check with the subtotal and VAT recalculating as you go — and it keeps working when the internet doesn't.",
     points: ["Tap to ring up", "Running subtotal and VAT", "Offline-first with an outbox"],
     src: "/screenshots/till-order.png",
     alt: "synapse till on iPad — ringing up a check",
@@ -58,7 +58,7 @@ const CHAPTERS: Chapter[] = [
     title: "Payments & splits",
     minutes: "4 min",
     blurb:
-      "Take the money however the table wants to pay it: split evenly, part-pay, or hand over to a card-present reader.",
+ "Take the money however the table wants to pay it: split evenly, part-pay, or hand over to a card-present reader.",
     points: ["Split evenly or by amount", "Cash, card and card-present", "Stripe & Adyen per organisation"],
     src: "/screenshots/till-payment.png",
     alt: "synapse till on iPad — taking payment with splits and tenders",
@@ -69,7 +69,7 @@ const CHAPTERS: Chapter[] = [
     title: "Catalogue & stock",
     minutes: "5 min",
     blurb:
-      "Menus, recipes and suppliers in one place, with stock depleting as items sell and reorder points flagging what to buy.",
+ "Menus, recipes and suppliers in one place, with stock depleting as items sell and reorder points flagging what to buy.",
     points: ["Recipes roll up to cost", "Live stock and par levels", "Predictive reordering"],
     src: "/screenshots/catalog.png",
     alt: "synapse admin — catalogue and stock levels",
@@ -79,7 +79,7 @@ const CHAPTERS: Chapter[] = [
     title: "Members & CRM",
     minutes: "4 min",
     blurb:
-      "The whole member lifecycle — application, vetting, dues and wallet pass — with status driven by whether they've actually paid.",
+ "The whole member lifecycle — application, vetting, dues and wallet pass — with status driven by whether they've actually paid.",
     points: ["Applications and vetting", "Recurring dues and billing state", "Apple & Google wallet passes"],
     src: "/screenshots/members.png",
     alt: "synapse admin — members list",
@@ -89,7 +89,7 @@ const CHAPTERS: Chapter[] = [
     title: "Loyalty & insights",
     minutes: "3 min",
     blurb:
-      "Close the loop: what members spend, how often they come back, and what that's worth — computed from the same records the till wrote.",
+ "Close the loop: what members spend, how often they come back, and what that's worth — computed from the same records the till wrote.",
     points: ["Points and credit ledger", "Retention and cover trends", "One source of truth"],
     src: "/screenshots/loyalty.png",
     alt: "synapse admin — loyalty programmes",
@@ -165,7 +165,7 @@ export function DemoPlayer() {
                 onClick={() => go(i)}
                 aria-current={isActive ? "true" : undefined}
                 className={`normal-case tracking-normal relative w-full overflow-hidden rounded-xl px-4 py-3 text-left transition-colors ${
-                  isActive ? "bg-white shadow-sm ring-1 ring-[var(--border)]" : "hover:bg-white/60"
+                  isActive ? "bg-[var(--surface-1)] shadow-sm ring-1 ring-[var(--border)]" : "hover:bg-white/60"
                 }`}
               >
                 {isActive && playing && (
@@ -246,7 +246,7 @@ export function DemoPlayer() {
       <div className="order-1 lg:order-2">
         <div className="relative aspect-[7/5] w-full">
           {c.device === "tablet" ? (
-            <div className="absolute inset-0 rounded-[26px] bg-[#1c1c1e] p-3 shadow-[0_40px_100px_-40px_rgba(11,18,32,0.55)] ring-1 ring-black/10 sm:rounded-[34px] sm:p-4">
+            <div className="absolute inset-0 rounded-[26px] bg-[#1c1c1e] p-3 shadow-sm ring-1 ring-black/10 sm:rounded-[34px] sm:p-4">
               <div className="flex h-full items-center gap-3">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-white/25" aria-hidden />
                 <div className="h-full min-w-0 flex-1 overflow-hidden rounded-[14px] bg-black sm:rounded-[18px]">
@@ -256,7 +256,7 @@ export function DemoPlayer() {
               </div>
             </div>
           ) : (
-            <div className="absolute inset-0 overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-[0_40px_100px_-40px_rgba(11,18,32,0.4)]">
+            <div className="absolute inset-0 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-1)] shadow-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img key={c.src} src={c.src} alt={c.alt} className="block h-full w-full object-contain" />
             </div>
@@ -271,7 +271,7 @@ export function DemoPlayer() {
             {c.points.map((p) => (
               <li
                 key={p}
-                className="rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--muted)]"
+                className="rounded-full border border-[var(--border)] bg-[var(--surface-1)] px-3 py-1.5 text-xs font-medium text-[var(--muted)]"
               >
                 {p}
               </li>

@@ -84,10 +84,10 @@ export function VenueConfigurator() {
               type="button"
               onClick={() => selectVenue(v.key)}
               aria-pressed={active}
-              className={`normal-case tracking-normal group flex flex-col items-start gap-3 rounded-2xl border p-5 text-left transition-colors ${
+              className={`normal-case tracking-normal group flex flex-col items-start gap-3 rounded-xl border p-5 text-left transition-colors ${
                 active
-                  ? "border-[var(--brand)] bg-white ring-1 ring-[var(--brand)]"
-                  : "border-[var(--border)] bg-white hover:border-[var(--brand)]"
+                  ? "border-[var(--brand)] bg-[var(--surface-1)] ring-1 ring-[var(--brand)]"
+                  : "border-[var(--border)] bg-[var(--surface-1)] hover:border-[var(--brand)]"
               }`}
             >
               <span
@@ -104,7 +104,7 @@ export function VenueConfigurator() {
       </div>
 
       {/* module board */}
-      <div className="mt-8 rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-8">
+      <div className="mt-8 rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-6 sm:p-8">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <div>
             <h3 className="text-xl font-semibold tracking-[-0.01em]">{venue.label}</h3>
@@ -144,7 +144,7 @@ export function VenueConfigurator() {
                 >
                   <span
                     className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
-                      on ? "border-[var(--brand)] bg-[var(--brand)] text-white" : "border-[var(--border)] bg-white"
+                      on ? "border-[var(--brand)] bg-[var(--brand)] text-white" : "border-[var(--border)] bg-[var(--surface-1)]"
                     }`}
                     aria-hidden
                   >

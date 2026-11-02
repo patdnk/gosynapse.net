@@ -20,7 +20,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "synapse — The operating system for modern hospitality",
   description:
-    "CRM, front of house, POS, kitchen display, bookings, membership, payments and more — one real-time platform for restaurants, bars and members' clubs, with one traceable data model behind every decision.",
+ "CRM, front of house, POS, kitchen display, bookings, membership, payments and more — one real-time platform for restaurants, bars and members' clubs, with one traceable data model behind every decision.",
 };
 
 // NEVER render a literal <head> here. The App Router injects the stylesheet and

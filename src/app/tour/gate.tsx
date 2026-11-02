@@ -42,7 +42,7 @@ export function TourGate({ children }: { children: ReactNode }) {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[var(--surface-2)] px-5">
-      <div className="w-full max-w-sm rounded-2xl border border-[var(--border)] bg-white p-8 shadow-sm">
+      <div className="w-full max-w-sm rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-8 shadow-sm">
         <div className="mb-6 flex items-center gap-2.5">
           <Logo className="h-9 w-9" />
           <span className="text-lg font-semibold tracking-[-0.01em]">synapse</span>

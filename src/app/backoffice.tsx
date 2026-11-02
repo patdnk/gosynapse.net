@@ -66,14 +66,14 @@ export function ProcurementFlow() {
   const onOrder = useEased(stage >= 2 && stage < 3 ? poSubtotal : 0, run);
 
   return (
-    <div ref={ref} className="bg-white">
+    <div ref={ref} className="bg-[var(--surface-1)]">
       <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
           <span className="h-2 w-2 rounded-full bg-[#12a150]" />
           {VENUE_NAME} · purchasing
         </div>
         <div className="text-right">
-          <div className="text-[10px] uppercase tracking-wide text-[var(--muted)]">On order</div>
+          <div className="text-[10px]  text-[var(--muted)]">On order</div>
           <div className="text-sm font-bold tabular-nums text-[var(--ink)]">{fmt(Math.round(onOrder))}</div>
         </div>
       </div>
@@ -123,9 +123,9 @@ export function ProcurementFlow() {
             </StageBody>,
           ]} />
 
-          <div className="rounded-xl border border-[var(--border)] bg-white p-4">
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">Needs attention</span>
+              <span className="text-xs font-semibold  text-[var(--muted)]">Needs attention</span>
               <span className="text-[10px] font-semibold text-[var(--muted)]">emailed to whoever can act</span>
             </div>
             <ul className="space-y-2">
@@ -245,14 +245,14 @@ export function LedgerFlow() {
   const balanced = shownLines === JOURNAL.length;
 
   return (
-    <div ref={ref} className="bg-white">
+    <div ref={ref} className="bg-[var(--surface-1)]">
       <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
           <span className="h-2 w-2 rounded-full bg-[#12a150]" />
           {VENUE_NAME} · books
         </div>
         <div className="text-right">
-          <div className="text-[10px] uppercase tracking-wide text-[var(--muted)]">Posts automatically</div>
+          <div className="text-[10px]  text-[var(--muted)]">Posts automatically</div>
           <div className="text-sm font-bold tabular-nums text-[var(--ink)]">6h after close</div>
         </div>
       </div>
@@ -298,9 +298,9 @@ export function LedgerFlow() {
             </StageBody>,
           ]} />
 
-          <div className="rounded-xl border border-[var(--border)] bg-white p-4">
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-4">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">Journal lines</span>
+              <span className="text-xs font-semibold  text-[var(--muted)]">Journal lines</span>
               <span
                 className="flex items-center gap-1 text-[10px] font-semibold transition-colors duration-500"
                 style={{ color: balanced ? "#12a150" : "var(--muted)" }}
