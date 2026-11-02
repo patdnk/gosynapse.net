@@ -116,7 +116,7 @@ export function HeroScreens() {
         <div className="absolute bottom-0 left-0 w-[21%] rounded-[12px] bg-[#1c1c1e] p-[4px] shadow-[0_24px_48px_-12px_rgba(20,14,40,0.45)] ring-1 ring-black/10 sm:rounded-[18px] sm:p-[5px] lg:rounded-[20px] lg:p-[6px]">
           <div className="overflow-hidden rounded-[9px] sm:rounded-[14px] lg:rounded-[15px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/screenshots/portal-phone-public.png" alt="The member portal on a phone — Ashgrove Social Group's public page, black and gold" width={1170} height={2532} className="block h-auto w-full" />
+            <img src="/screenshots/portal-phone-public.png" alt="The member portal on a phone — Ashgrove Social Group's public page, black and gold" width={1206} height={2330} className="block h-auto w-full" />
           </div>
         </div>
 

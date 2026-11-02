@@ -880,13 +880,13 @@ export default function Home() {
           <div className="mx-auto mt-14 grid max-w-5xl gap-8 sm:grid-cols-3">
             <figure>
               <Reveal>
-                <PhoneShot src="/screenshots/portal-phone-public.png" alt="synapse member portal — the club's public page before sign-in, with Apply and Member sign in" w={1170} h={2532} />
+                <PhoneShot src="/screenshots/portal-phone-public.png" alt="synapse member portal — the club's public page before sign-in, with Apply and Member sign in" w={1206} h={2330} />
               </Reveal>
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Before sign-in: the club&apos;s public page, with Apply and Member sign in. Signing in is an email address and a six-digit code, no password.</figcaption>
             </figure>
             <figure>
               <Reveal delayMs={80}>
-                <PhoneShot src="/screenshots/portal-phone-apply.png" alt="synapse member portal — the application form" w={1170} h={2532} />
+                <PhoneShot src="/screenshots/portal-phone-apply.png" alt="synapse member portal — the application form" w={1206} h={2330} />
               </Reveal>
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Applying: the house, then the membership and its fees, then the questions you composed. Progress is saved and resumable from a link.</figcaption>
             </figure>
