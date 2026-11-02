@@ -3,13 +3,11 @@
 import { useEffect, useState } from "react";
 
 // The hero's picture: a gallery of the platform, one numbered screen per
-// module, each a real capture from the demo clubs. Admin screens carry both
-// themes, with the dark capture wiping slowly across the light one; the
-// native apps and the member portal show in their own colours. The gallery
-// advances on its own every few seconds as a plain cut, stops as soon as the
-// reader picks a screen or rests the pointer on it, and keeps one aspect
-// ratio so the hero never changes height. Under reduced motion it neither
-// advances nor wipes.
+// module, each a real capture from the demo clubs. Each screen slides in from
+// the right with its number and title on a plate; the gallery advances on its
+// own every few seconds, stops as soon as the reader picks a screen or rests
+// the pointer on it, and keeps one aspect ratio so the hero never changes
+// height. Under reduced motion nothing slides and nothing advances.
 
 type Overlay = {
   src: string;
@@ -24,7 +22,6 @@ type HeroScreen = {
   title: string;
   caption: string;
   light: string;
-  dark?: string;
   alt: string;
   /** A tablet capture (the till) sits in a bezel instead of a browser frame. */
   frame?: "browser" | "tablet";
@@ -49,8 +46,7 @@ const SCREENS: HeroScreen[] = [
     title: "CRM",
     caption: "Members and guests across venues and locations, with one record each: profile, membership, visits, bookings, spend and notes.",
     light: "/screenshots/members.png",
-    dark: "/screenshots/members-dark.png",
-    alt: "synapse CRM, light and dark — the members list with status, plan and venue",
+    alt: "synapse CRM — the members list with status, plan and venue",
   },
   {
     key: "events",
@@ -58,8 +54,7 @@ const SCREENS: HeroScreen[] = [
     title: "Events, with the door app",
     caption: "Ticket tiers, takings and the guest list in the office. At the door, the native app: scan, search, check in a whole party, seat them.",
     light: "/screenshots/event-tickets.png",
-    dark: "/screenshots/event-tickets-dark.png",
-    alt: "synapse event with ticket tiers, light and dark — tiers, takings and who is coming",
+    alt: "synapse event with ticket tiers — tiers, takings and who is coming",
     phone: { src: "/screenshots/door-guests.png", alt: "The door app on a phone — tonight's guest list, 88 of 158 checked in", width: 1206, height: 2330 },
   },
   {
@@ -68,8 +63,7 @@ const SCREENS: HeroScreen[] = [
     title: "Room and table booking",
     caption: "Tables by the slot, rooms by the night, the day or the hour, on one reservation spine. Staff book here; members book from the portal.",
     light: "/screenshots/rooms.png",
-    dark: "/screenshots/rooms-dark.png",
-    alt: "synapse rooms calendar, light and dark — a fortnight of room reservations",
+    alt: "synapse rooms calendar — a fortnight of room reservations",
     focus: "48% 14%",
   },
   {
@@ -78,8 +72,7 @@ const SCREENS: HeroScreen[] = [
     title: "Marketing",
     caption: "Email, SMS and WhatsApp on the same member record. Audiences, templates and journeys: a promo goes out, a reminder follows if it is not opened.",
     light: "/screenshots/marketing-journey-builder.png",
-    dark: "/screenshots/marketing-journey-builder-dark.png",
-    alt: "synapse journey builder, light and dark — an event promo with a reminder step",
+    alt: "synapse journey builder — an event promo with a reminder step",
     focus: "50% 20%",
   },
   {
@@ -88,8 +81,7 @@ const SCREENS: HeroScreen[] = [
     title: "FOH app",
     caption: "For reception and floor managers: who is in the building, who is due, passes read at the desk, the member's record a tap away.",
     light: "/screenshots/foh-reception.png",
-    dark: "/screenshots/foh-reception-dark.png",
-    alt: "synapse FOH app, day and dark — the reception board with tonight's check-ins",
+    alt: "synapse FOH app — the reception board with tonight's check-ins",
     zoom: 1.4,
     focus: "30% 6%",
   },
@@ -99,8 +91,7 @@ const SCREENS: HeroScreen[] = [
     title: "Membership plans and billing",
     caption: "Plans with their own fees, terms and perks. Subscriptions, pro-rata changes, freezes, credit notes and direct debit, billed on the record.",
     light: "/screenshots/plans.png",
-    dark: "/screenshots/plans-dark.png",
-    alt: "synapse membership plans, light and dark — plans with fees, terms and members",
+    alt: "synapse membership plans — plans with fees, terms and members",
   },
   {
     key: "loyalty",
@@ -108,8 +99,7 @@ const SCREENS: HeroScreen[] = [
     title: "Loyalty programmes",
     caption: "Points on spend or visits, tiers and rewards, earned at the till and shown on the wallet pass.",
     light: "/screenshots/loyalty.png",
-    dark: "/screenshots/loyalty-dark.png",
-    alt: "synapse loyalty programmes, light and dark",
+    alt: "synapse loyalty programmes",
   },
   {
     key: "cloakroom",
@@ -117,8 +107,7 @@ const SCREENS: HeroScreen[] = [
     title: "Cloakroom",
     caption: "Check an item in against the member, hand back by ticket or by QR, see what is still on the rail.",
     light: "/screenshots/cloakroom.png",
-    dark: "/screenshots/cloakroom-dark.png",
-    alt: "synapse cloakroom, light and dark — items on the rail",
+    alt: "synapse cloakroom — items on the rail",
   },
   {
     key: "portal",
@@ -138,8 +127,7 @@ const SCREENS: HeroScreen[] = [
     title: "Floor plans for POS and events",
     caption: "One plan editor for the restaurant floor and for an event's layout: tables, the bar, a DJ booth. Live on the till and in the door app's seating.",
     light: "/screenshots/floor-plan.png",
-    dark: "/screenshots/floor-plan-dark.png",
-    alt: "synapse floor plan editor, light and dark",
+    alt: "synapse floor plan editor",
     focus: "48% 25%",
     phone: { src: "/screenshots/door-seating.png", alt: "The door app's seating view — the event floor filling as guests arrive", width: 1206, height: 2330 },
   },
@@ -158,8 +146,7 @@ const SCREENS: HeroScreen[] = [
     title: "Catalogue",
     caption: "Menu items, option sets, menus by time of day, tax rates, sales groups and the raw items behind them, shared by every till.",
     light: "/screenshots/catalog.png",
-    dark: "/screenshots/catalog-dark.png",
-    alt: "synapse catalogue, light and dark — menu items with their categories, options and prices",
+    alt: "synapse catalogue — menu items with their categories, options and prices",
   },
   {
     key: "kds",
@@ -177,8 +164,7 @@ const SCREENS: HeroScreen[] = [
     title: "Procurement",
     caption: "Purchase orders, deliveries, invoices and credits by supplier, matched to the catalogue and posted to the books.",
     light: "/screenshots/procurement.png",
-    dark: "/screenshots/procurement-dark.png",
-    alt: "synapse procurement, light and dark — purchase orders by supplier and status",
+    alt: "synapse procurement — purchase orders by supplier and status",
   },
   {
     key: "integrations",
@@ -186,8 +172,7 @@ const SCREENS: HeroScreen[] = [
     title: "Integrations",
     caption: "Salesforce, SevenRooms, SynXis, Xero and QuickBooks, card payments, wallet passes, email, SMS and WhatsApp, plus a public API and webhooks.",
     light: "/screenshots/integrations.png",
-    dark: "/screenshots/integrations-dark.png",
-    alt: "synapse integrations, light and dark — connected systems and webhook deliveries",
+    alt: "synapse integrations — connected systems and webhook deliveries",
   },
 ];
 
@@ -244,22 +229,19 @@ export function HeroScreens() {
                   <div className="absolute inset-0" style={{ transform: `scale(${s.zoom ?? ZOOM})`, transformOrigin: s.focus ?? FOCUS }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={s.light} alt={on ? s.alt : ""} width={2880} height={1800} loading={eager} className="absolute inset-0 block h-full w-full object-cover object-top" />
-                    {s.dark && (
-                      <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={s.dark} alt="" aria-hidden width={2880} height={1800} loading={eager} className="theme-wipe-dark absolute inset-0 block h-full w-full object-cover object-top" />
-                        <span className="theme-wipe-line absolute inset-y-0 w-px bg-[var(--accent)]" aria-hidden />
-                      </>
-                    )}
                   </div>
                 </div>
               );
             })}
+            <div key={current.key} className="hero-enter pointer-events-none absolute top-[5%] left-[4%] max-w-[70%] rounded-lg bg-[var(--brand)] px-3 py-2 text-white shadow-[0_12px_32px_-8px_rgba(20,14,40,0.5)] sm:px-4 sm:py-2.5">
+              <span className="block font-mono text-[10px] text-white/70 sm:text-[11px]">{String(active + 1).padStart(2, "0")} · {current.app}</span>
+              <span className="block text-sm leading-tight font-semibold sm:text-base lg:text-lg">{current.title}</span>
+            </div>
           </div>
         </figure>
 
         {current.phone && (
-          <div className="absolute bottom-0 left-[-2%] w-[21%] rounded-[12px] bg-[#1c1c1e] p-[4px] shadow-[0_24px_48px_-12px_rgba(20,14,40,0.45)] ring-1 ring-black/10 sm:rounded-[18px] sm:p-[5px] lg:rounded-[20px] lg:p-[6px]">
+          <div key={`phone-${current.key}`} className="hero-enter absolute bottom-0 left-[-2%] w-[21%] rounded-[12px] bg-[#1c1c1e] p-[4px] shadow-[0_24px_48px_-12px_rgba(20,14,40,0.45)] ring-1 ring-black/10 sm:rounded-[18px] sm:p-[5px] lg:rounded-[20px] lg:p-[6px]">
             <div className="overflow-hidden rounded-[9px] sm:rounded-[14px] lg:rounded-[15px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={current.phone.src} alt={current.phone.alt} width={current.phone.width} height={current.phone.height} className="block h-auto w-full" />
@@ -268,7 +250,7 @@ export function HeroScreens() {
         )}
 
         {current.pass && (
-          <div className="absolute right-[-2%] bottom-[4%] w-[26%] -rotate-3 overflow-hidden rounded-[6%] shadow-[0_24px_48px_-12px_rgba(20,14,40,0.45)] ring-1 ring-black/10">
+          <div key={`pass-${current.key}`} className="hero-enter absolute right-[-2%] bottom-[4%] w-[26%] -rotate-3 overflow-hidden rounded-[6%] shadow-[0_24px_48px_-12px_rgba(20,14,40,0.45)] ring-1 ring-black/10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/screenshots/pass-card.png" alt="A membership pass for Apple Wallet, designed in synapse" width={600} height={600} className="block h-auto w-full" />
           </div>
@@ -295,7 +277,7 @@ export function HeroScreens() {
         ))}
       </div>
 
-      <p className="mt-3 min-h-[4.5rem] text-sm text-[var(--muted)]" aria-live="polite">
+      <p key={current.key} className="hero-enter mt-3 min-h-[4.5rem] text-sm text-[var(--muted)]" aria-live="polite">
         <span className="font-medium text-[var(--ink)]">{current.title}.</span> {current.caption}
       </p>
     </div>
