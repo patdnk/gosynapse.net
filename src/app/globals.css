@@ -269,22 +269,18 @@ th,
   .sysmap .flow { display: none; }
 }
 
-/* Hero: one surface at a time, crossfading. On slides that have both themes the
-   dark capture wipes across the light one; the wipe restarts each time a slide
-   becomes active (the animation is only on .hero-slide-on). clip-path and left
-   are cheap to animate (one image, no layout). Under reduced motion nothing
-   moves: the wipe holds at 58% and the slides only change by the tabs. */
-.hero-slide { opacity: 0; transition: opacity 700ms ease; }
-.hero-slide-on { opacity: 1; }
+/* Hero: a composed scene — the admin screen at the back, switched by the tabs
+   with no transition, a phone and a wallet pass in front. On screens that have
+   both themes the dark capture wipes slowly back and forth across the light
+   one; clip-path and left are cheap to animate (one image, no layout). Under
+   reduced motion the wipe holds at 58%. */
+.hero-slide { visibility: hidden; }
+.hero-slide-on { visibility: visible; }
 .theme-wipe-dark { clip-path: inset(0 0 0 58%); }
 .theme-wipe-line { left: 58%; box-shadow: 0 0 22px 4px rgba(155, 77, 255, 0.7); }
-.hero-tab { position: relative; overflow: hidden; }
-.hero-tab-bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: rgba(255, 255, 255, 0.55); transform-origin: left; transform: scaleX(0); }
 @media (prefers-reduced-motion: no-preference) {
-  .hero-slide-on .theme-wipe-dark { animation: theme-wipe-clip 6s ease-in-out forwards; }
-  .hero-slide-on .theme-wipe-line { animation: theme-wipe-left 6s ease-in-out forwards; }
-  .hero-tab-bar { animation: hero-tab-fill 7s linear forwards; }
+  .hero-slide-on .theme-wipe-dark { animation: theme-wipe-clip 14s ease-in-out infinite alternate; }
+  .hero-slide-on .theme-wipe-line { animation: theme-wipe-left 14s ease-in-out infinite alternate; }
 }
-@keyframes theme-wipe-clip { from { clip-path: inset(0 0 0 76%); } to { clip-path: inset(0 0 0 36%); } }
-@keyframes theme-wipe-left { from { left: 76%; } to { left: 36%; } }
-@keyframes hero-tab-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes theme-wipe-clip { from { clip-path: inset(0 0 0 74%); } to { clip-path: inset(0 0 0 36%); } }
+@keyframes theme-wipe-left { from { left: 74%; } to { left: 36%; } }

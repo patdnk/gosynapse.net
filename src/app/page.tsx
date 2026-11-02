@@ -145,9 +145,9 @@ const FEATURES = [
 // Reasons to scroll, as links: the first screen says the page is long and what is on it.
 const HERO_LINKS = [
   { label: "What shipped in November", href: "#new" },
-  { label: "10 modules on one record", href: "#products" },
   { label: "The member portal, on a phone", href: "#members" },
-  { label: "Purchasing and the books", href: "#backoffice" },
+  { label: "Marketing and journeys", href: "#marketing" },
+  { label: "Wallet passes", href: "#passes" },
 ];
 
 // The November update, as on LinkedIn: the headline screens, then the rest as a list.
@@ -589,7 +589,7 @@ export default function Home() {
       <section id="top" className="relative overflow-hidden bg-[var(--surface-2)]">
         {/* First screen: the claim on the left, the product running on the right. Both
             cards are live and built from the seed, so the page opens on data, not a slogan. */}
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pt-10 pb-14 lg:grid-cols-12 lg:gap-8 lg:pt-14 lg:pb-20">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pt-10 pb-12 lg:grid-cols-12 lg:gap-8 lg:pt-12 lg:pb-12">
           <div className="lg:col-span-5">
             <h1 className="text-5xl font-bold leading-[0.98] tracking-[-0.03em] sm:text-6xl">
               <span className="text-[var(--brand)]">One platform</span>
@@ -597,8 +597,8 @@ export default function Home() {
               <span className="whitespace-nowrap">for whole venue</span>
             </h1>
             <p className="mt-5 max-w-md text-lg text-[var(--muted)] sm:text-xl">
-              POS, bookings, membership, marketing and the books on one record, for restaurants, bars
-              and members&apos; clubs.
+              Membership and CRM, bookings, events and tickets, wallet passes and marketing on one
+              record, for members&apos; clubs. Add the till and kitchen when you want them.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <ButtonPrimary href="#demo">Get started</ButtonPrimary>
