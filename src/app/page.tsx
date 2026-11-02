@@ -141,6 +141,14 @@ const FEATURES = [
   { title: "Multi-venue", desc: "Organisation, venues and locations. Staff scoped to their venues see their own visits and spend; billing, accounting and erasure stay organisation-wide.", icon: "floor" },
 ];
 
+// Reasons to scroll, as links: the first screen says the page is long and what is on it.
+const HERO_LINKS = [
+  { label: "10 modules on one record", href: "#products" },
+  { label: "The member portal, on a phone", href: "#members" },
+  { label: "Purchasing and the books", href: "#backoffice" },
+  { label: "What shipped this fortnight", href: "#roadmap" },
+];
+
 const BACKOFFICE_POINTS = [
   { title: "Procurement", desc: "Stock per site and a pack catalogue per supplier. Purchase orders go through your approval policy and straight to the supplier; deliveries update stock on signature; invoices match line by line, with credits tracked and a Xero CSV ready.", icon: "catalogue" },
   { title: "Accounting export", desc: "Every sale is a signed, append-only record by sales group and VAT treatment, on the trading day it belongs to. Connect Xero or QuickBooks, map your accounts once, and journals post automatically after a grace period.", icon: "insights" },
@@ -563,29 +571,53 @@ export default function Home() {
           <div className="bg-grid absolute inset-0" />
           <div className="orb orb-a left-[6%] top-[8%] h-72 w-72" style={{ background: "radial-gradient(circle, rgba(155,77,255,0.55), transparent 70%)" }} />
           <div className="orb orb-b right-[4%] top-[2%] h-80 w-80" style={{ background: "radial-gradient(circle, rgba(108,43,217,0.45), transparent 70%)" }} />
-          <HeroNetwork className="absolute left-1/2 top-[4%] h-[340px] w-[340px] -translate-x-1/2 opacity-[0.13]" />
+          <HeroNetwork className="absolute left-[68%] top-[2%] h-[340px] w-[340px] -translate-x-1/2 opacity-[0.13]" />
         </div>
-        <div className="mx-auto max-w-6xl px-5 pt-24 pb-16 text-center sm:pt-32">
-          <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[0.98] tracking-[-0.03em] sm:text-7xl">
-            <span className="bg-gradient-to-r from-[var(--brand)] to-[var(--accent)] bg-clip-text text-transparent">One platform</span>
-            <br />
-            for whole venue
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)] sm:text-xl">
-            CRM, front of house, POS, kitchen display, bookings, membership, payments and more — one
-            real-time system for restaurants, bars and members' clubs. Every guest, booking and order
-            flows through one traceable data model, so you can visualise it in seconds and make
-            strategic decisions on data, not guesswork.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <ButtonPrimary href="#demo">Get started</ButtonPrimary>
-            <ButtonGhost href="#platform">Explore the platform</ButtonGhost>
+        {/* First screen: the claim on the left, the product running on the right. Both
+            cards are live and built from the seed, so the page opens on data, not a slogan. */}
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pt-10 pb-14 lg:grid-cols-12 lg:gap-8 lg:pt-14 lg:pb-20">
+          <div className="lg:col-span-5">
+            <h1 className="text-5xl font-bold leading-[0.98] tracking-[-0.03em] sm:text-6xl">
+              <span className="bg-gradient-to-r from-[var(--brand)] to-[var(--accent)] bg-clip-text text-transparent">One platform</span>
+              <br />
+              <span className="whitespace-nowrap">for whole venue</span>
+            </h1>
+            <p className="mt-5 max-w-md text-lg text-[var(--muted)] sm:text-xl">
+              POS, bookings, membership, marketing and the books on one record, for restaurants, bars
+              and members&apos; clubs.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <ButtonPrimary href="#demo">Get started</ButtonPrimary>
+              <ButtonGhost href="#platform">Explore the platform</ButtonGhost>
+            </div>
+            <ul className="mt-8 flex flex-wrap gap-2">
+              {HERO_LINKS.map((l) => (
+                <li key={l.href}>
+                  <a href={l.href} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-white/80 px-3 py-1.5 text-xs font-medium text-[var(--muted)] backdrop-blur transition-colors hover:border-[var(--brand)] hover:text-[var(--ink)]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand)]" aria-hidden />
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
-          {/* The system map: every surface, module and connection on one sheet. */}
-          <div className="relative mx-auto mt-16 max-w-5xl">
-            <Reveal>
-              <SystemMap />
-            </Reveal>
+          <div className="lg:col-span-7">
+            <div className="grid items-start gap-4 sm:grid-cols-2">
+              <Reveal>
+                <Frame>
+                  <TillLive />
+                </Frame>
+              </Reveal>
+              <Reveal delayMs={120} className="hidden sm:block">
+                <Frame>
+                  <FloorPlanLive />
+                </Frame>
+              </Reveal>
+            </div>
+            <p className="mt-3 text-sm text-[var(--muted)]">
+              A check ringing up on the till and the room filling on the floor plan, live, on one record.
+              Every illustration on this page runs on the seed data a demo club ships with.
+            </p>
           </div>
         </div>
       </section>
@@ -1081,34 +1113,18 @@ export default function Home() {
       <section id="live" className="border-t border-[var(--border)]">
         <div className="mx-auto max-w-6xl px-5 py-28">
           <div className="max-w-2xl">
-            <Eyebrow>Live, not a slideshow</Eyebrow>
-            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Watch a service run</h2>
+            <Eyebrow>How it fits together</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Every surface, module and connection on one sheet</h2>
             <p className="mt-5 text-lg text-[var(--muted)]">
-              The room filling up and a check being settled — the same data your admin, tills and
-              front-of-house all share, updating in real time.
+              The admin, till, kitchen display, front of house, member portal and partner apps feed one
+              synapse record. It drives payments, wallet passes, messaging, accounting, CRM and booking
+              sync, and webhooks. Hover a box to trace what it talks to.
             </p>
           </div>
-          <div className="mt-14 grid items-start gap-6 lg:grid-cols-2">
-            <figure>
-              <Reveal>
-                <div className="float-soft">
-                  <Frame>
-                    <FloorPlanLive />
-                  </Frame>
-                </div>
-              </Reveal>
-              <figcaption className="mt-3 text-sm text-[var(--muted)]">Floor plan — tables recolour with occupancy; covers and reservations update as guests are seated.</figcaption>
-            </figure>
-            <figure>
-              <Reveal delayMs={120}>
-                <div className="float-soft" style={{ animationDelay: "1.4s" }}>
-                  <Frame>
-                    <TillLive />
-                  </Frame>
-                </div>
-              </Reveal>
-              <figcaption className="mt-3 text-sm text-[var(--muted)]">Till — items ring up, the member discount applies and the total recalculates, then payment settles card-present.</figcaption>
-            </figure>
+          <div className="mx-auto mt-14 max-w-5xl">
+            <Reveal>
+              <SystemMap />
+            </Reveal>
           </div>
         </div>
       </section>
