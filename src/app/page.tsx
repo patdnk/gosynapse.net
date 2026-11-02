@@ -7,6 +7,7 @@
 import { DemoModal } from "./demo-modal";
 import { VenueConfigurator } from "./venue-configurator";
 import { Reveal } from "./reveal";
+import { HeroScreens } from "./hero-screens";
 import { HeroNetwork, SyncFlow, FloorPlanLive, TillLive, Frame } from "./anim";
 import { ProcurementFlow, LedgerFlow } from "./backoffice";
 import { SystemMap } from "./sysmap";
@@ -616,12 +617,8 @@ export default function Home() {
           </div>
           <div className="lg:col-span-7">
             <Reveal>
-              <ThemeWipe />
+              <HeroScreens />
             </Reveal>
-            <p className="mt-3 text-sm text-[var(--muted)]">
-              The admin on a Monday evening at Fernhollow Gardens, a demo club: 38 covers booked, who is
-              next to arrive, rooms let tonight. Light for the office, dark for the door, one screen.
-            </p>
           </div>
         </div>
       </section>
@@ -1627,23 +1624,6 @@ function Shot({ src, alt, w, h }: { src: string; alt: string; w: number; h: numb
 
 // Tablet bezel for the iPad till shots — the app is landscape-locked, so the
 // frame is landscape too, with a camera dot on the long edge like a real iPad.
-// The hero's picture: the same dashboard captured light and dark, the dark one
-// wiped across the light one by a slow CSS animation (static under reduced
-// motion). Both are real screens from the demo club.
-function ThemeWipe() {
-  return (
-    <figure className="theme-wipe overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-1)] shadow-sm">
-      <div className="relative" style={{ aspectRatio: "2880 / 1800" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/screenshots/dashboard.png" alt="synapse admin, light — tonight at Fernhollow Gardens: covers booked, next to arrive, rooms let" width={2880} height={1800} className="absolute inset-0 block h-full w-full" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/screenshots/dashboard-dark.png" alt="" aria-hidden width={2880} height={1800} className="theme-wipe-dark absolute inset-0 block h-full w-full" />
-        <span className="theme-wipe-line absolute inset-y-0 w-px bg-[var(--accent)]" aria-hidden />
-      </div>
-    </figure>
-  );
-}
-
 // Phone bezel for member-portal shots, captured at 375 × 812 on a 2× display.
 function PhoneShot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
   return (
