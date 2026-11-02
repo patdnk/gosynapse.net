@@ -32,7 +32,15 @@ type HeroScreen = {
   phone?: Overlay;
   /** The wallet pass, in front on the right. */
   pass?: boolean;
+  /** How far into the page the frame looks, and from where (transform-origin).
+      The default shows the top of the content area to the right of the
+      sidebar: a corner of each screen, not the whole of it. */
+  zoom?: number;
+  focus?: string;
 };
+
+const ZOOM = 1.6;
+const FOCUS = "43% 6%";
 
 const SCREENS: HeroScreen[] = [
   {
@@ -62,6 +70,7 @@ const SCREENS: HeroScreen[] = [
     light: "/screenshots/rooms.png",
     dark: "/screenshots/rooms-dark.png",
     alt: "synapse rooms calendar, light and dark — a fortnight of room reservations",
+    focus: "48% 14%",
   },
   {
     key: "marketing",
@@ -71,6 +80,7 @@ const SCREENS: HeroScreen[] = [
     light: "/screenshots/marketing-journey-builder.png",
     dark: "/screenshots/marketing-journey-builder-dark.png",
     alt: "synapse journey builder, light and dark — an event promo with a reminder step",
+    focus: "50% 20%",
   },
   {
     key: "foh",
@@ -80,6 +90,8 @@ const SCREENS: HeroScreen[] = [
     light: "/screenshots/foh-reception.png",
     dark: "/screenshots/foh-reception-dark.png",
     alt: "synapse FOH app, day and dark — the reception board with tonight's check-ins",
+    zoom: 1.4,
+    focus: "30% 6%",
   },
   {
     key: "plans",
@@ -115,6 +127,8 @@ const SCREENS: HeroScreen[] = [
     caption: "The club's own colours. Members apply, book tables, rooms and events, and carry their membership card with its door code, or the wallet pass.",
     light: "/screenshots/portal-desktop-book-table.png",
     alt: "The member portal on the desktop — Ashgrove's booking page, black and gold",
+    zoom: 1.35,
+    focus: "50% 0%",
     phone: { src: "/screenshots/portal-phone-qr.png", alt: "The member portal on a phone — the membership card turned to its QR door code", width: 1170, height: 2532 },
     pass: true,
   },
@@ -126,6 +140,7 @@ const SCREENS: HeroScreen[] = [
     light: "/screenshots/floor-plan.png",
     dark: "/screenshots/floor-plan-dark.png",
     alt: "synapse floor plan editor, light and dark",
+    focus: "48% 25%",
     phone: { src: "/screenshots/door-seating.png", alt: "The door app's seating view — the event floor filling as guests arrive", width: 1206, height: 2330 },
   },
   {
@@ -153,6 +168,8 @@ const SCREENS: HeroScreen[] = [
     caption: "Station and expo screens. Courses held and fired, times by table, bumped when the pass is clear.",
     light: "/screenshots/kds-expo.png",
     alt: "synapse kitchen display — the expo screen with three tables in progress",
+    zoom: 1.3,
+    focus: "0% 0%",
   },
   {
     key: "procurement",
@@ -223,16 +240,18 @@ export function HeroScreens() {
                 );
               }
               return (
-                <div key={s.key} className={`hero-slide absolute inset-0 ${on ? "hero-slide-on" : ""}`} aria-hidden={!on}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={s.light} alt={on ? s.alt : ""} width={2880} height={1800} loading={eager} className="absolute inset-0 block h-full w-full object-cover object-top" />
-                  {s.dark && (
-                    <>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={s.dark} alt="" aria-hidden width={2880} height={1800} loading={eager} className="theme-wipe-dark absolute inset-0 block h-full w-full object-cover object-top" />
-                      <span className="theme-wipe-line absolute inset-y-0 w-px bg-[var(--accent)]" aria-hidden />
-                    </>
-                  )}
+                <div key={s.key} className={`hero-slide absolute inset-0 overflow-hidden ${on ? "hero-slide-on" : ""}`} aria-hidden={!on}>
+                  <div className="absolute inset-0" style={{ transform: `scale(${s.zoom ?? ZOOM})`, transformOrigin: s.focus ?? FOCUS }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={s.light} alt={on ? s.alt : ""} width={2880} height={1800} loading={eager} className="absolute inset-0 block h-full w-full object-cover object-top" />
+                    {s.dark && (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={s.dark} alt="" aria-hidden width={2880} height={1800} loading={eager} className="theme-wipe-dark absolute inset-0 block h-full w-full object-cover object-top" />
+                        <span className="theme-wipe-line absolute inset-y-0 w-px bg-[var(--accent)]" aria-hidden />
+                      </>
+                    )}
+                  </div>
                 </div>
               );
             })}

@@ -276,11 +276,11 @@ th,
    reduced motion the wipe holds at 58%. */
 .hero-slide { visibility: hidden; }
 .hero-slide-on { visibility: visible; }
-.theme-wipe-dark { clip-path: inset(0 0 0 58%); }
-.theme-wipe-line { left: 58%; box-shadow: 0 0 22px 4px rgba(155, 77, 255, 0.7); }
+.theme-wipe-dark { clip-path: inset(0 0 0 55%); }
+.theme-wipe-line { left: 55%; box-shadow: 0 0 22px 4px rgba(155, 77, 255, 0.7); }
 @media (prefers-reduced-motion: no-preference) {
   .hero-slide-on .theme-wipe-dark { animation: theme-wipe-clip 14s ease-in-out infinite alternate; }
   .hero-slide-on .theme-wipe-line { animation: theme-wipe-left 14s ease-in-out infinite alternate; }
 }
-@keyframes theme-wipe-clip { from { clip-path: inset(0 0 0 74%); } to { clip-path: inset(0 0 0 36%); } }
-@keyframes theme-wipe-left { from { left: 74%; } to { left: 36%; } }
+@keyframes theme-wipe-clip { from { clip-path: inset(0 0 0 70%); } to { clip-path: inset(0 0 0 40%); } }
+@keyframes theme-wipe-left { from { left: 70%; } to { left: 40%; } }
