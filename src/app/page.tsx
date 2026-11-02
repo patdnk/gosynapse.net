@@ -143,10 +143,30 @@ const FEATURES = [
 
 // Reasons to scroll, as links: the first screen says the page is long and what is on it.
 const HERO_LINKS = [
+  { label: "What shipped in November", href: "#new" },
   { label: "10 modules on one record", href: "#products" },
   { label: "The member portal, on a phone", href: "#members" },
   { label: "Purchasing and the books", href: "#backoffice" },
-  { label: "What shipped this fortnight", href: "#roadmap" },
+];
+
+// The November update, as on LinkedIn: the headline screens, then the rest as a list.
+const WHATS_NEW: { title: string; desc: string; next?: string; src: string; alt: string; phone?: { src: string; alt: string } }[] = [
+  { title: "A new UI, light and dark", desc: "Every admin screen is rebuilt on one design system: light for the office, dark for the door at midnight. The dashboard opens on tonight, with covers booked, who is arriving and rooms let.", src: "/screenshots/dashboard-dark.png", alt: "synapse admin in dark mode — tonight at Fernhollow Gardens, with covers, arrivals and rooms let" },
+  { title: "Ticketing for events", desc: "Ticket tiers: early bird, members only, a garden table for four. Hidden tiers behind unlock codes, and live sales, takings and check-ins for every event. Members buy from the portal; staff add attendees from admin.", next: "a front-of-house event-door screen that reads QR tickets in a second and shows the queue against capacity.", src: "/screenshots/event-tickets.png", alt: "synapse admin — Jazz in the Walled Garden: places sold, takings, three ticket tiers and the guest list" },
+  { title: "A member portal, on desktop and mobile", desc: "Every club gets its own branded portal. Prospective members apply online with their plan, photo, proposers and card. Members sign in with an email code to see what is on, book tables, events and rooms, bring a guest and manage their account.", src: "/screenshots/portal-desktop-book-table.png", alt: "synapse member portal on a desktop — booking a table at Fernhollow Gardens", phone: { src: "/screenshots/portal-phone-book-event.png", alt: "synapse member portal on a phone — buying event tickets from a tier" } },
+  { title: "Room bookings, with a SynXis connector", desc: "Overnight, day-use and hourly rooms on one reservation spine, with availability by night and arrivals, in-house and departures at a glance. SynXis two-way sync is built and waits on a partner agreement.", src: "/screenshots/rooms.png", alt: "synapse admin — rooms left per night per room type, with arriving, in-house and due-out lists" },
+  { title: "The door", desc: "Tonight's arrivals on a timeline by room, check-in person by person, allergies flagged, live on every device. Seated parties are never late, and the night line says what it shows.", src: "/screenshots/bookings-door.png", alt: "synapse admin — tonight's bookings as a timeline by room and a door view of each party" },
+];
+
+const ALSO_SHIPPED: { text: string; href?: string }[] = [
+  { text: "Applicant pipeline: a board with ratings, proposers and approval straight into membership", href: "#members" },
+  { text: "Self-service: a club signs up, follows guided setup and connects card payments through Stripe Connect", href: "#members" },
+  { text: "Booking messages: confirmations and reminders for tables, events and rooms, sent from the club's own domain", href: "#marketing" },
+  { text: "Member records: visits, bookings, house account and spend on one page, plus an audited CSV export" },
+  { text: "Billing: pro-rata, freezes, credit notes and Direct Debit house accounts", href: "#billing" },
+  { text: "Wallet passes delivered by WhatsApp, SMS or email", href: "#passes" },
+  { text: "Accounting: daily journals to Xero and QuickBooks", href: "#backoffice" },
+  { text: "A help centre, live at gosynapse.net/docs", href: "/docs/" },
 ];
 
 const BACKOFFICE_POINTS = [
@@ -602,22 +622,66 @@ export default function Home() {
             </ul>
           </div>
           <div className="lg:col-span-7">
-            <div className="grid items-start gap-4 sm:grid-cols-2">
-              <Reveal>
-                <Frame>
-                  <TillLive />
-                </Frame>
-              </Reveal>
-              <Reveal delayMs={120} className="hidden sm:block">
-                <Frame>
-                  <FloorPlanLive />
-                </Frame>
-              </Reveal>
-            </div>
+            <Reveal>
+              <ThemeWipe />
+            </Reveal>
             <p className="mt-3 text-sm text-[var(--muted)]">
-              A check ringing up on the till and the room filling on the floor plan, live, on one record.
-              Every illustration on this page runs on the seed data a demo club ships with.
+              The admin on a Monday evening at Fernhollow Gardens, a demo club: 38 covers booked, who is
+              next to arrive, rooms let tonight. Light for the office, dark for the door, one screen.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* what's new — real screens from the demo, mirroring the November update */}
+      <section id="new" className="border-t border-[var(--border)] bg-[var(--surface-2)]">
+        <div className="mx-auto max-w-6xl px-5 py-24">
+          <div className="max-w-2xl">
+            <Eyebrow>What&apos;s new, November 2026</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Sixteen releases since 23 October</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              synapse now covers the whole members&apos; club, from the application form to the room
+              key. Every screen below is the demo club, captured this week.
+            </p>
+          </div>
+          <div className="mt-14 space-y-20">
+            {WHATS_NEW.map((w, i) => (
+              <div key={w.title} className="grid items-center gap-8 lg:grid-cols-12">
+                <div className={`lg:col-span-4 ${i % 2 ? "lg:order-2" : ""}`}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand-strong)]">{String(i + 1).padStart(2, "0")}</p>
+                  <h3 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{w.title}</h3>
+                  <p className="mt-3 text-base leading-relaxed text-[var(--muted)]">{w.desc}</p>
+                  {w.next && <p className="mt-3 text-sm text-[var(--muted)]"><span className="font-semibold text-[var(--ink)]">Next: </span>{w.next}</p>}
+                </div>
+                <div className={`lg:col-span-8 ${i % 2 ? "lg:order-1" : ""}`}>
+                  <Reveal>
+                    {w.phone ? (
+                      <div className="flex items-end gap-4">
+                        <div className="min-w-0 flex-1">
+                          <Shot src={w.src} alt={w.alt} w={2880} h={1800} />
+                        </div>
+                        <div className="hidden w-[150px] flex-none sm:block">
+                          <PhoneShot src={w.phone.src} alt={w.phone.alt} w={1170} h={2532} />
+                        </div>
+                      </div>
+                    ) : (
+                      <Shot src={w.src} alt={w.alt} w={2880} h={1800} />
+                    )}
+                  </Reveal>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-20 rounded-2xl border border-[var(--border)] bg-white p-6 sm:p-8">
+            <h3 className="font-bold tracking-tight">Also shipped</h3>
+            <ul className="mt-4 grid gap-x-8 gap-y-2 text-sm text-[var(--muted)] sm:grid-cols-2">
+              {ALSO_SHIPPED.map((a) => (
+                <li key={a.text} className="flex gap-2">
+                  <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-[var(--brand)]" aria-hidden />
+                  <span>{a.href ? <a href={a.href} className="text-[var(--ink)] underline decoration-[var(--border)] underline-offset-4 hover:decoration-[var(--brand)]">{a.text}</a> : a.text}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -826,19 +890,19 @@ export default function Home() {
           <div className="mx-auto mt-14 grid max-w-5xl gap-8 sm:grid-cols-3">
             <figure>
               <Reveal>
-                <PhoneShot src="/screenshots/portal-public.jpg" alt="synapse member portal — the club's sign-in screen: an email address and a six-digit code, no password" w={750} h={1624} />
+                <PhoneShot src="/screenshots/portal-phone-public.png" alt="synapse member portal — the club's public page before sign-in, with Apply and Member sign in" w={1170} h={2532} />
               </Reveal>
-              <figcaption className="mt-3 text-sm text-[var(--muted)]">Before sign-in: an email address, a six-digit code, no password. The public page behind it carries the houses and Apply.</figcaption>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Before sign-in: the club&apos;s public page, with Apply and Member sign in. Signing in is an email address and a six-digit code, no password.</figcaption>
             </figure>
             <figure>
               <Reveal delayMs={80}>
-                <PhoneShot src="/screenshots/portal-apply.jpg" alt="synapse member portal — the application form, step two of nine" w={750} h={1624} />
+                <PhoneShot src="/screenshots/portal-phone-apply.png" alt="synapse member portal — the application form" w={1170} h={2532} />
               </Reveal>
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Applying: the house, then the membership and its fees, then the questions you composed. Progress is saved and resumable from a link.</figcaption>
             </figure>
             <figure>
               <Reveal delayMs={160}>
-                <PhoneShot src="/screenshots/portal-home.jpg" alt="synapse member portal — Home after sign-in: the next booking, what's on, news from the house, and the Home, Calendar and Me tabs" w={738} h={1598} />
+                <PhoneShot src="/screenshots/portal-phone-home.png" alt="synapse member portal — Home after sign-in: notices, the next booking, what's on and news from the house" w={1170} h={2532} />
               </Reveal>
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Signed in: Home, then Book, Calendar and Me, with the wallet pass and access card on a phone.</figcaption>
             </figure>
@@ -1111,6 +1175,37 @@ export default function Home() {
 
       {/* live illustrations */}
       <section id="live" className="border-t border-[var(--border)]">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <div className="max-w-2xl">
+            <Eyebrow>Live, not a slideshow</Eyebrow>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Watch a service run</h2>
+            <p className="mt-5 text-lg text-[var(--muted)]">
+              The room filling up and a check being settled, on the same data your admin, tills and
+              front of house share, updating in real time.
+            </p>
+          </div>
+          <div className="mt-14 grid items-start gap-6 lg:grid-cols-2">
+            <figure>
+              <Reveal>
+                <Frame>
+                  <FloorPlanLive />
+                </Frame>
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Floor plan: tables recolour with occupancy; covers and reservations update as guests are seated.</figcaption>
+            </figure>
+            <figure>
+              <Reveal delayMs={120}>
+                <Frame>
+                  <TillLive />
+                </Frame>
+              </Reveal>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Till: items ring up, the member discount applies and the total recalculates, then payment settles card-present.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="map" className="border-t border-[var(--border)]">
         <div className="mx-auto max-w-6xl px-5 py-28">
           <div className="max-w-2xl">
             <Eyebrow>How it fits together</Eyebrow>
@@ -1539,6 +1634,23 @@ function Shot({ src, alt, w, h }: { src: string; alt: string; w: number; h: numb
 
 // Tablet bezel for the iPad till shots — the app is landscape-locked, so the
 // frame is landscape too, with a camera dot on the long edge like a real iPad.
+// The hero's picture: the same dashboard captured light and dark, the dark one
+// wiped across the light one by a slow CSS animation (static under reduced
+// motion). Both are real screens from the demo club.
+function ThemeWipe() {
+  return (
+    <figure className="theme-wipe overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-[0_40px_100px_-40px_rgba(11,18,32,0.5)]">
+      <div className="relative" style={{ aspectRatio: "2880 / 1800" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/screenshots/dashboard.png" alt="synapse admin, light — tonight at Fernhollow Gardens: covers booked, next to arrive, rooms let" width={2880} height={1800} className="absolute inset-0 block h-full w-full" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/screenshots/dashboard-dark.png" alt="" aria-hidden width={2880} height={1800} className="theme-wipe-dark absolute inset-0 block h-full w-full" />
+        <span className="theme-wipe-line absolute inset-y-0 w-px bg-[var(--accent)]" aria-hidden />
+      </div>
+    </figure>
+  );
+}
+
 // Phone bezel for member-portal shots, captured at 375 × 812 on a 2× display.
 function PhoneShot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
   return (

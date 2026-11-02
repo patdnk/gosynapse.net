@@ -255,3 +255,15 @@ th,
 @media (prefers-reduced-motion: reduce) {
   .sysmap .flow { display: none; }
 }
+
+/* Hero: the dark capture wipes across the light one. clip-path and left are
+   cheap to animate here (one image, no layout), and the wipe holds still under
+   reduced motion. */
+.theme-wipe-dark { clip-path: inset(0 0 0 58%); }
+.theme-wipe-line { left: 58%; box-shadow: 0 0 22px 4px rgba(155, 77, 255, 0.7); }
+@media (prefers-reduced-motion: no-preference) {
+  .theme-wipe-dark { animation: theme-wipe-clip 14s ease-in-out infinite alternate; }
+  .theme-wipe-line { animation: theme-wipe-left 14s ease-in-out infinite alternate; }
+}
+@keyframes theme-wipe-clip { from { clip-path: inset(0 0 0 72%); } to { clip-path: inset(0 0 0 38%); } }
+@keyframes theme-wipe-left { from { left: 72%; } to { left: 38%; } }
