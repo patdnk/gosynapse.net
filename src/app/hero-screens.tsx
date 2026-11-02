@@ -74,7 +74,7 @@ const SCREENS: HeroScreen[] = [
     key: "portal",
     app: "Member portal",
     title: "A member booking a table",
-    caption: "Members apply, sign in by email code, book tables, rooms and events, and see their account. Desktop and phone.",
+    caption: "Each club's portal in its own colours: Ashgrove Social Group in black and gold. Members apply, sign in by email code, book tables, rooms and events, and see their account.",
     light: "/screenshots/portal-desktop-book-table.png",
     alt: "synapse member portal on desktop — a member choosing a time to book a table",
   },

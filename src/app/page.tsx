@@ -154,7 +154,7 @@ const HERO_LINKS = [
 const WHATS_NEW: { title: string; desc: string; next?: string; src: string; alt: string; phone?: { src: string; alt: string } }[] = [
   { title: "A new UI, light and dark", desc: "Every admin screen is rebuilt on one design system: light for the office, dark for the door at midnight. The dashboard opens on tonight, with covers booked, who is arriving and rooms let.", src: "/screenshots/dashboard-dark.png", alt: "synapse admin in dark mode — tonight at Fernhollow Gardens, with covers, arrivals and rooms let" },
   { title: "Ticketing for events", desc: "Ticket tiers: early bird, members only, a garden table for four. Hidden tiers behind unlock codes, and live sales, takings and check-ins for every event. Members buy from the portal; staff add attendees from admin.", next: "a front-of-house event-door screen that reads QR tickets in a second and shows the queue against capacity.", src: "/screenshots/event-tickets.png", alt: "synapse admin — Jazz in the Walled Garden: places sold, takings, three ticket tiers and the guest list" },
-  { title: "A member portal, on desktop and mobile", desc: "Every club gets its own branded portal. Prospective members apply online with their plan, photo, proposers and card. Members sign in with an email code to see what is on, book tables, events and rooms, bring a guest and manage their account.", src: "/screenshots/portal-desktop-book-table.png", alt: "synapse member portal on a desktop — booking a table at Fernhollow Gardens", phone: { src: "/screenshots/portal-phone-book-event.png", alt: "synapse member portal on a phone — buying event tickets from a tier" } },
+  { title: "A member portal, on desktop and mobile", desc: "Every club gets its own branded portal. Prospective members apply online with their plan, photo, proposers and card. Members sign in with an email code to see what is on, book tables, events and rooms, bring a guest and manage their account.", src: "/screenshots/portal-desktop-book-table.png", alt: "synapse member portal on a desktop — Ashgrove Social Group, black and gold, booking a table", phone: { src: "/screenshots/portal-phone-book-table.png", alt: "synapse member portal on a phone — the same booking, day, party and time" } },
   { title: "Room bookings, with a SynXis connector", desc: "Overnight, day-use and hourly rooms on one reservation spine, with availability by night and arrivals, in-house and departures at a glance. SynXis two-way sync is built and waits on a partner agreement.", src: "/screenshots/rooms.png", alt: "synapse admin — rooms left per night per room type, with arriving, in-house and due-out lists" },
   { title: "The door", desc: "Tonight's arrivals on a timeline by room, check-in person by person, allergies flagged, live on every device. Seated parties are never late, and the night line says what it shows.", src: "/screenshots/bookings-door.png", alt: "synapse admin — tonight's bookings as a timeline by room and a door view of each party" },
 ];
@@ -892,9 +892,9 @@ export default function Home() {
             </figure>
             <figure>
               <Reveal delayMs={160}>
-                <PhoneShot src="/screenshots/portal-phone-home.png" alt="synapse member portal — Home after sign-in: notices, the next booking, what's on and news from the house" w={1170} h={2532} />
+                <PhoneShot src="/screenshots/portal-phone-me.png" alt="synapse member portal — Me after sign-in: profile, membership, house credit, card and guests" w={1170} h={2532} />
               </Reveal>
-              <figcaption className="mt-3 text-sm text-[var(--muted)]">Signed in: Home, then Book, Calendar and Me, with the wallet pass and access card on a phone.</figcaption>
+              <figcaption className="mt-3 text-sm text-[var(--muted)]">Signed in: Me, with profile, membership, house credit, payment card and guests. Home, Book and Calendar sit beside it.</figcaption>
             </figure>
           </div>
           <div className="mx-auto mt-12 grid max-w-5xl gap-4 sm:grid-cols-3">
