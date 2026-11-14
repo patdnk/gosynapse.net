@@ -1,5 +1,6 @@
 "use client";
 
+import { PhoneFrame, type PhoneShotSpec } from "./phone-frame";
 import { useEffect, useState } from "react";
 
 // The hero's picture: a gallery of the platform, one numbered screen per
@@ -8,13 +9,6 @@ import { useEffect, useState } from "react";
 // own every few seconds, stops as soon as the reader picks a screen or rests
 // the pointer on it, and keeps one aspect ratio so the hero never changes
 // height. Under reduced motion nothing slides and nothing advances.
-
-type Overlay = {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-};
 
 type HeroScreen = {
   key: string;
@@ -26,7 +20,7 @@ type HeroScreen = {
   /** A tablet capture (the till) sits in a bezel instead of a browser frame. */
   frame?: "browser" | "tablet";
   /** A phone in front of the frame, bottom left. */
-  phone?: Overlay;
+  phone?: PhoneShotSpec;
   /** The wallet pass, in front on the right. */
   pass?: boolean;
   /** How far into the page the frame looks, and from where (transform-origin).
@@ -55,7 +49,7 @@ const SCREENS: HeroScreen[] = [
     caption: "Ticket tiers, takings and the guest list in the office. At the door, the native app: scan, search, check in a whole party, seat them.",
     light: "/screenshots/event-night.png",
     alt: "synapse event page — the Summer Party tonight: places sold, takings, attendees, invitations, host lists and the report",
-    phone: { src: "/screenshots/door-guests.png", alt: "The door app on a phone — tonight's guest list, 88 of 158 checked in", width: 1206, height: 2330 },
+    phone: { device: "iphone", src: "/screenshots/door-ios-guests.png", alt: "The door app on an iPhone — the Summer Party guest list, 91 of 164 checked in, with its Guests, Seating, Scan, Add and More tabs", w: 640, h: 1391 },
   },
   {
     key: "bookings",
@@ -118,7 +112,7 @@ const SCREENS: HeroScreen[] = [
     alt: "The member portal on the desktop — Ashgrove's booking page, black and gold",
     zoom: 1.35,
     focus: "50% 0%",
-    phone: { src: "/screenshots/portal-phone-qr.png", alt: "The member portal on a phone — the membership card turned to its QR door code", width: 1170, height: 2532 },
+    phone: { device: "pixel", src: "/screenshots/portal-android-qr.png", alt: "The member portal installed on a Pixel — the membership card turned to its QR door code, with Add to Google Wallet and the Home, Book, Calendar and Me tabs", w: 640, h: 1422 },
     pass: true,
   },
   {
@@ -129,7 +123,7 @@ const SCREENS: HeroScreen[] = [
     light: "/screenshots/floor-plan.png",
     alt: "synapse floor plan editor",
     focus: "48% 25%",
-    phone: { src: "/screenshots/door-seating.png", alt: "The door app's seating view — the event floor filling as guests arrive", width: 1206, height: 2330 },
+    phone: { device: "pixel", src: "/screenshots/door-android-seating.png", alt: "The door app on a Pixel — the Summer Party seating plan filling as guests arrive", w: 640, h: 1422 },
   },
   {
     key: "pos",
@@ -241,11 +235,8 @@ export function HeroScreens() {
         </figure>
 
         {current.phone && (
-          <div key={`phone-${current.key}`} className="hero-enter absolute bottom-0 left-[-2%] w-[21%] rounded-[12px] bg-[#1c1c1e] p-[4px] shadow-[0_24px_48px_-12px_rgba(20,14,40,0.45)] ring-1 ring-black/10 sm:rounded-[18px] sm:p-[5px] lg:rounded-[20px] lg:p-[6px]">
-            <div className="overflow-hidden rounded-[9px] sm:rounded-[14px] lg:rounded-[15px]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={current.phone.src} alt={current.phone.alt} width={current.phone.width} height={current.phone.height} className="block h-auto w-full" />
-            </div>
+          <div key={`phone-${current.key}`} className="hero-enter absolute bottom-[2%] left-[-1%] w-[19%]">
+            <PhoneFrame {...current.phone} eager />
           </div>
         )}
 

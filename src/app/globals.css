@@ -281,3 +281,41 @@ th,
   .hero-slide-on .hero-enter { animation-delay: 0.12s; }
 }
 @keyframes hero-slide-in { from { opacity: 0; transform: translateX(56px); } to { opacity: 1; transform: none; } }
+
+/* ---- Phones (phone-frame.tsx) ------------------------------------------------
+   An iPhone 17 Pro or a Pixel around a full-screen capture. Sized in container
+   units so one frame scales from the hero overlay to a full figure. The screen
+   box takes the capture's own aspect ratio, so nothing is cropped or stretched. */
+.phone { container-type: inline-size; }
+.phone-body {
+  position: relative;
+  padding: 3.1cqw;
+  border-radius: 16cqw;
+  background: #09090b;
+  box-shadow:
+    0 0 0 0.7cqw #44444c,
+    0 0 0 0.95cqw #1c1c20,
+    0 3cqw 7cqw -2cqw rgba(20, 14, 40, 0.5);
+}
+.phone-screen { position: relative; overflow: hidden; border-radius: 13cqw; background: #000; }
+.phone-screen img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.phone-camera { position: absolute; left: 50%; transform: translateX(-50%); background: #000; border-radius: 999px; }
+.phone-key { position: absolute; width: 0.9cqw; background: #44444c; border-radius: 0.5cqw; }
+
+/* iPhone 17 Pro: Dynamic Island 126 × 37 pt, 11 pt below the screen's top edge
+   (screen = 93.8cqw wide); action button and volume on the left, side button right. */
+.phone-iphone .phone-camera { top: calc(3.1cqw + 2.55cqw); width: 29.4cqw; height: 8.6cqw; }
+.phone-iphone .phone-key-a { left: -1.85cqw; top: 17%; height: 4.5%; }
+.phone-iphone .phone-key-b { left: -1.85cqw; top: 24%; height: 13%; background: linear-gradient(#44444c 0 45%, transparent 45% 55%, #44444c 55%); }
+.phone-iphone .phone-key-c { right: -1.85cqw; top: 25%; height: 10%; }
+
+/* Pixel: flatter corners, a punch-hole camera centred in the 24 dp status bar,
+   power and volume on the right. */
+.phone-pixel { padding: 3.3cqw; border-radius: 11.5cqw; background: #0b0b0d; }
+.phone-pixel { box-shadow: 0 0 0 0.75cqw #2c2c31, 0 0 0 0.95cqw #18181b, 0 3cqw 7cqw -2cqw rgba(20, 14, 40, 0.5); }
+.phone-pixel .phone-screen { border-radius: 8.6cqw; }
+.phone-pixel .phone-camera { top: calc(3.3cqw + 1.05cqw); width: 3.3cqw; height: 3.3cqw; }
+.phone-pixel .phone-key { background: #2c2c31; }
+.phone-pixel .phone-key-a { right: -1.85cqw; top: 21%; height: 6.5%; }
+.phone-pixel .phone-key-b { right: -1.85cqw; top: 31%; height: 12%; }
+.phone-pixel .phone-key-c { display: none; }

@@ -4,6 +4,7 @@
 // accent, pill buttons, an integrations strip, a verticals grid and a "live in
 // days" timeline.
 
+import { PhoneFrame, type PhoneShotSpec } from "./phone-frame";
 import { DemoModal } from "./demo-modal";
 import { VenueConfigurator } from "./venue-configurator";
 import { Reveal } from "./reveal";
@@ -151,13 +152,13 @@ const HERO_LINKS = [
 ];
 
 // The November update, as on LinkedIn: the headline screens, then the rest as a list.
-const WHATS_NEW: { title: string; desc: string; next?: string; src: string; alt: string; phone?: { src: string; alt: string; w?: number; h?: number } }[] = [
-  { title: "Events, from the invitation to the report", desc: "Guest lists per event with a CSV import, invitations with RSVP, requests and approval, a waitlist that offers places itself, host lists for members who bring their own guests, pass designs per list, badges printed on first arrival, a no-show sweep and an event report with every person's history.", next: "a waitlist for tables, and event categories on the GraphQL plane.", src: "/screenshots/events-guest-lists.png", alt: "synapse admin — the Summer Party's guest lists, with the general list, a host list and a comp list", phone: { src: "/screenshots/door-guests.png", alt: "The door app on a phone — tonight's guest list, 88 of 158 checked in", w: 1206, h: 2330 } },
-  { title: "A door app for iPhone and Android", desc: "Tickets, wallet passes and booking codes scanned in a second, a walk-in queue, the event floor filling as guests arrive, and VIP arrivals announced to the manager's phone. Arrivals queue when the signal drops and reconcile when it returns.", src: "/screenshots/event-night.png", alt: "synapse admin — the Summer Party tonight: arrivals, capacity and the lists at the door", phone: { src: "/screenshots/door-seating.png", alt: "The door app's seating view — the event floor filling as guests arrive", w: 1206, h: 2330 } },
+const WHATS_NEW: { title: string; desc: string; next?: string; src: string; alt: string; phones?: PhoneShotSpec[] }[] = [
+  { title: "Events, from the invitation to the report", desc: "Guest lists per event with a CSV import, invitations with RSVP, requests and approval, a waitlist that offers places itself, host lists for members who bring their own guests, pass designs per list, badges printed on first arrival, a no-show sweep and an event report with every person's history.", next: "a waitlist for tables, and event categories on the GraphQL plane.", src: "/screenshots/events-guest-lists.png", alt: "synapse admin — the Summer Party's guest lists, with the general list, a host list and a comp list", phones: [{ device: "iphone", src: "/screenshots/door-ios-guests.png", alt: "The door app on an iPhone — the Summer Party guest list, 91 of 164 checked in", w: 640, h: 1391 }] },
+  { title: "A door app for iPhone and Android", desc: "Tickets, wallet passes and booking codes scanned in a second, a walk-in queue, the event floor filling as guests arrive, and VIP arrivals announced to the manager's phone. Arrivals queue when the signal drops and reconcile when it returns.", src: "/screenshots/event-night.png", alt: "synapse admin — the Summer Party tonight: arrivals, capacity and the lists at the door", phones: [{ device: "pixel", src: "/screenshots/door-android-guests.png", alt: "The door app on a Pixel — the guest list with its tabs: Guests, Seating, Scan, Add, More", w: 640, h: 1422 }, { device: "iphone", src: "/screenshots/door-ios-seating.png", alt: "The door app on an iPhone — the seating plan filling as guests arrive", w: 640, h: 1391 }] },
   { title: "Linked POS: keep your till, bring the checks", desc: "Oracle Simphony Cloud, Lightspeed K and Toast connect read-only. Checks, tables and customers come in, get matched to your bookings and members, and feed spend, insights and audiences. Staff answer a question once and the club's pattern is learned.", src: "/screenshots/linked-pos.png", alt: "synapse admin — linked checks imported from the club's own till: bar and dining-room checks with spend, service and tips" },
   { title: "SevenRooms, both ways", desc: "A booking made at the desk appears on the SevenRooms floor; a change on either side syncs back, last write wins. Every member is pushed as a client with Synapse as the source of truth, and bookings SevenRooms holds that are not yours sit on a Not synced list.", src: "/screenshots/sevenrooms.png", alt: "synapse admin — SevenRooms connected: members and bookings syncing, venues mapped to locations" },
   { title: "The developer platform, complete", desc: "/public/v1 now covers members, applicants, reservations, events and tickets, loyalty, passes, billing, checks and payments. Webhooks v2: up to twenty signed endpoints per key, retries over a day, a test send, resend and an event log. And a read-only GraphQL plane for a member 360 in one query.", next: "OAuth for installed apps and SDKs.", src: "/screenshots/webhooks.png", alt: "synapse admin — Settings → Webhooks: endpoints, their event types and the delivery log" },
-  { title: "The portal in your colours, on your domain", desc: "Nine colours, display and body fonts, your own SVG graphics and app icon. The portal is served from the club's own domain, bare or a subdomain, with the certificate issued on demand.", src: "/screenshots/member-portal-looks.png", alt: "synapse admin — Member portal: the palette, fonts, graphics and domain of the club's portal" },
+  { title: "The portal in your colours, on your domain", desc: "Nine colours, display and body fonts, your own SVG graphics and app icon. The portal is served from the club's own domain, bare or a subdomain, with the certificate issued on demand.", src: "/screenshots/member-portal-looks.png", alt: "synapse admin — Member portal: the palette, fonts, graphics and domain of the club's portal", phones: [{ device: "iphone", src: "/screenshots/portal-ios-book.png", alt: "The Ashgrove portal installed on an iPhone, black and gold — booking a table, with the Home, Book, Calendar and Me tabs", w: 640, h: 1391 }] },
 ];
 
 const ALSO_SHIPPED: { text: string; href?: string }[] = [
@@ -654,14 +655,16 @@ export default function Home() {
                 </div>
                 <div className={`lg:col-span-8 ${i % 2 ? "lg:order-1" : ""}`}>
                   <Reveal>
-                    {w.phone ? (
+                    {w.phones?.length ? (
                       <div className="flex items-end gap-4">
                         <div className="min-w-0 flex-1">
                           <Shot src={w.src} alt={w.alt} w={2880} h={1800} />
                         </div>
-                        <div className="hidden w-[150px] flex-none sm:block">
-                          <PhoneShot src={w.phone.src} alt={w.phone.alt} w={w.phone.w ?? 1170} h={w.phone.h ?? 2532} />
-                        </div>
+                        {w.phones.map((p) => (
+                          <div key={p.src} className={`hidden flex-none sm:block ${w.phones!.length > 1 ? "w-[124px]" : "w-[150px]"}`}>
+                            <PhoneFrame {...p} />
+                          </div>
+                        ))}
                       </div>
                     ) : (
                       <Shot src={w.src} alt={w.alt} w={2880} h={1800} />
@@ -889,19 +892,19 @@ export default function Home() {
           <div className="mx-auto mt-14 grid max-w-5xl gap-8 sm:grid-cols-3">
             <figure>
               <Reveal>
-                <PhoneShot src="/screenshots/portal-phone-public.png" alt="synapse member portal — the club's public page before sign-in, with Apply and Member sign in" w={1206} h={2330} />
+                <PhoneFrame device="iphone" src="/screenshots/portal-ios-public.png" alt="synapse member portal on an iPhone — the club's public page before sign-in, with Member sign in" w={640} h={1391} className="mx-auto max-w-[250px]" />
               </Reveal>
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Before sign-in: the club&apos;s public page, with Apply and Member sign in. Signing in is an email address and a six-digit code, no password.</figcaption>
             </figure>
             <figure>
               <Reveal delayMs={80}>
-                <PhoneShot src="/screenshots/portal-phone-apply.png" alt="synapse member portal — the application form" w={1206} h={2330} />
+                <PhoneFrame device="pixel" src="/screenshots/portal-android-apply.png" alt="synapse member portal on a Pixel — the application form, step 1 of 9: choosing the house" w={640} h={1422} className="mx-auto max-w-[250px]" />
               </Reveal>
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Applying: the house, then the membership and its fees, then the questions you composed. Progress is saved and resumable from a link.</figcaption>
             </figure>
             <figure>
               <Reveal delayMs={160}>
-                <PhoneShot src="/screenshots/portal-phone-me.png" alt="synapse member portal — Me after sign-in: profile, membership, house credit, card and guests" w={1170} h={2532} />
+                <PhoneFrame device="iphone" src="/screenshots/portal-ios-me.png" alt="synapse member portal on an iPhone — Me after sign-in: the member, their membership card and Add to Apple Wallet, with the Home, Book, Calendar and Me tabs" w={640} h={1391} className="mx-auto max-w-[250px]" />
               </Reveal>
               <figcaption className="mt-3 text-sm text-[var(--muted)]">Signed in: Me, with profile, membership, house credit, payment card and guests. Home, Book and Calendar sit beside it.</figcaption>
             </figure>
@@ -1633,18 +1636,6 @@ function Shot({ src, alt, w, h }: { src: string; alt: string; w: number; h: numb
 
 // Tablet bezel for the iPad till shots — the app is landscape-locked, so the
 // frame is landscape too, with a camera dot on the long edge like a real iPad.
-// Phone bezel for member-portal shots, captured at 375 × 812 on a 2× display.
-function PhoneShot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
-  return (
-    <div className="mx-auto max-w-[300px] rounded-[34px] bg-[#1c1c1e] p-2.5 shadow-sm ring-1 ring-black/10">
-      <div className="overflow-hidden rounded-[26px]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={alt} width={w} height={h} className="block h-auto w-full" />
-      </div>
-    </div>
-  );
-}
-
 function TabletShot({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
   return (
     <div className="rounded-[26px] bg-[#1c1c1e] p-3 shadow-sm ring-1 ring-black/10 sm:rounded-[34px] sm:p-4">
