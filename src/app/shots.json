@@ -1,0 +1,174 @@
+{
+ "/screenshots/members.png": [
+  880,
+  550
+ ],
+ "/screenshots/event-night.png": [
+  1400,
+  875
+ ],
+ "/screenshots/rooms.png": [
+  880,
+  550
+ ],
+ "/screenshots/marketing-journey-builder.png": [
+  1400,
+  875
+ ],
+ "/screenshots/foh-reception.png": [
+  1400,
+  876
+ ],
+ "/screenshots/plans.png": [
+  800,
+  500
+ ],
+ "/screenshots/loyalty.png": [
+  720,
+  450
+ ],
+ "/screenshots/cloakroom.png": [
+  880,
+  550
+ ],
+ "/screenshots/portal-desktop-book-table.png": [
+  1400,
+  875
+ ],
+ "/screenshots/floor-plan.png": [
+  832,
+  520
+ ],
+ "/screenshots/till-order.png": [
+  1400,
+  875
+ ],
+ "/screenshots/catalog.png": [
+  880,
+  550
+ ],
+ "/screenshots/kds-expo.png": [
+  1400,
+  875
+ ],
+ "/screenshots/procurement.png": [
+  880,
+  550
+ ],
+ "/screenshots/integrations.png": [
+  1400,
+  875
+ ],
+ "/screenshots/events-guest-lists.png": [
+  1400,
+  583
+ ],
+ "/screenshots/linked-pos.png": [
+  1400,
+  788
+ ],
+ "/screenshots/sevenrooms.png": [
+  1400,
+  846
+ ],
+ "/screenshots/webhooks.png": [
+  1400,
+  540
+ ],
+ "/screenshots/member-portal-looks.png": [
+  1382,
+  1530
+ ],
+ "/screenshots/marketing-automations.png": [
+  1400,
+  788
+ ],
+ "/screenshots/marketing-audience.png": [
+  1400,
+  937
+ ],
+ "/screenshots/marketing-template.png": [
+  1400,
+  583
+ ],
+ "/screenshots/pass-designer.png": [
+  979,
+  1134
+ ],
+ "/screenshots/procurement-attention.png": [
+  1400,
+  802
+ ],
+ "/screenshots/dashboard.png": [
+  1400,
+  875
+ ],
+ "/screenshots/house-account.png": [
+  1400,
+  875
+ ],
+ "/screenshots/foh-door.png": [
+  1400,
+  875
+ ],
+ "/screenshots/till-payment.png": [
+  1355,
+  934
+ ],
+ "/screenshots/billing-subscription.png": [
+  1400,
+  540
+ ],
+ "/screenshots/billing-change-plan.png": [
+  1008,
+  962
+ ],
+ "/screenshots/billing-freeze.png": [
+  1008,
+  1178
+ ],
+ "/screenshots/billing-credit.png": [
+  1400,
+  836
+ ],
+ "/screenshots/pass-card.png": [
+  600,
+  600
+ ],
+ "/screenshots/door-ios-guests.png": [
+  600,
+  730
+ ],
+ "/screenshots/door-ios-seating.png": [
+  600,
+  783
+ ],
+ "/screenshots/door-android-guests.png": [
+  600,
+  747
+ ],
+ "/screenshots/door-android-seating.png": [
+  600,
+  800
+ ],
+ "/screenshots/portal-ios-public.png": [
+  600,
+  678
+ ],
+ "/screenshots/portal-ios-me.png": [
+  600,
+  730
+ ],
+ "/screenshots/portal-ios-book.png": [
+  600,
+  730
+ ],
+ "/screenshots/portal-android-apply.png": [
+  600,
+  667
+ ],
+ "/screenshots/portal-android-qr.png": [
+  600,
+  853
+ ]
+}

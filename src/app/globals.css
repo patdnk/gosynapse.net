@@ -319,3 +319,52 @@ th,
 .phone-pixel .phone-key-a { right: -1.85cqw; top: 21%; height: 6.5%; }
 .phone-pixel .phone-key-b { right: -1.85cqw; top: 31%; height: 12%; }
 .phone-pixel .phone-key-c { display: none; }
+
+/* ---- Peeks (peek.tsx) --------------------------------------------------------
+   A fragment of a screen on a tinted panel, bleeding off its right edge and
+   foot, as zkipster and tiquo show product: a part, never the whole page. */
+.peek { position: relative; overflow: hidden; border-radius: 20px; background: var(--peek-bg); }
+.peek-lilac { --peek-bg: oklch(94.5% 0.028 295); }
+.peek-sand { --peek-bg: oklch(95% 0.03 80); }
+.peek-sage { --peek-bg: oklch(94.5% 0.03 155); }
+.peek-sky { --peek-bg: oklch(94.5% 0.025 240); }
+.peek-shot {
+  position: absolute;
+  top: 9%;
+  display: block;
+  height: auto;
+  border-radius: 12px 0 0 0;
+  box-shadow: 0 24px 60px -24px rgba(20, 14, 40, 0.35), 0 0 0 1px rgba(20, 14, 40, 0.07);
+}
+.peek-phone { position: absolute; bottom: 0; width: 24%; filter: drop-shadow(0 18px 30px rgba(20, 14, 40, 0.35)); }
+.peek-phone-solo { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); filter: drop-shadow(0 18px 30px rgba(20, 14, 40, 0.3)); }
+.peek-tag {
+  position: absolute;
+  left: 4%;
+  bottom: 5%;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 8px 20px -8px rgba(20, 14, 40, 0.3);
+}
+.peek-tag::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: var(--brand); }
+.peek-tablet {
+  position: absolute;
+  left: 7%;
+  top: 9%;
+  padding: 2.2% 0 0 2.2%;
+  border-radius: 26px 0 0 0;
+  background: #1c1c1e;
+  box-shadow: 0 24px 60px -24px rgba(20, 14, 40, 0.45);
+}
+.peek-tablet::before { content: ""; position: absolute; left: 0.8%; top: 22%; width: 6px; height: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.22); }
+.peek-tablet img { display: block; width: 100%; height: auto; border-radius: 14px 0 0 0; }
+
+/* A phone standing on an edge: the foot is clipped, the sides and top are not. */
+.phone-cut { position: relative; min-height: 0; clip-path: inset(-40% -20% 0 -20%); }

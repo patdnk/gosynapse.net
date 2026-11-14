@@ -1,6 +1,6 @@
 "use client";
 
-import { PhoneFrame, type PhoneShotSpec } from "./phone-frame";
+import { PhoneCut, shotSize, type PhonePeekSpec } from "./peek";
 import { useEffect, useState } from "react";
 
 // The hero's picture: a gallery of the platform, one numbered screen per
@@ -20,18 +20,11 @@ type HeroScreen = {
   /** A tablet capture (the till) sits in a bezel instead of a browser frame. */
   frame?: "browser" | "tablet";
   /** A phone in front of the frame, bottom left. */
-  phone?: PhoneShotSpec;
+  phone?: PhonePeekSpec;
   /** The wallet pass, in front on the right. */
   pass?: boolean;
-  /** How far into the page the frame looks, and from where (transform-origin).
-      The default shows the top of the content area to the right of the
-      sidebar: a corner of each screen, not the whole of it. */
-  zoom?: number;
-  focus?: string;
 };
 
-const ZOOM = 1.6;
-const FOCUS = "43% 6%";
 
 const SCREENS: HeroScreen[] = [
   {
@@ -49,7 +42,7 @@ const SCREENS: HeroScreen[] = [
     caption: "Ticket tiers, takings and the guest list in the office. At the door, the native app: scan, search, check in a whole party, seat them.",
     light: "/screenshots/event-night.png",
     alt: "synapse event page — the Summer Party tonight: places sold, takings, attendees, invitations, host lists and the report",
-    phone: { device: "iphone", src: "/screenshots/door-ios-guests.png", alt: "The door app on an iPhone — the Summer Party guest list, 91 of 164 checked in, with its Guests, Seating, Scan, Add and More tabs", w: 640, h: 1391 },
+    phone: { device: "iphone", src: "/screenshots/door-ios-guests.png", alt: "The door app on an iPhone — the Summer Party guest list, 91 of 164 checked in, with its Guests, Seating, Scan, Add and More tabs" },
   },
   {
     key: "bookings",
@@ -58,7 +51,6 @@ const SCREENS: HeroScreen[] = [
     caption: "Tables by the slot, rooms by the night, the day or the hour, on one reservation spine. Staff book here; members book from the portal.",
     light: "/screenshots/rooms.png",
     alt: "synapse rooms calendar — a fortnight of room reservations",
-    focus: "48% 14%",
   },
   {
     key: "marketing",
@@ -67,7 +59,6 @@ const SCREENS: HeroScreen[] = [
     caption: "Email, SMS and WhatsApp on the same member record. Audiences, templates and journeys: a promo goes out, a reminder follows if it is not opened.",
     light: "/screenshots/marketing-journey-builder.png",
     alt: "synapse journey builder — an event promo with a reminder step",
-    focus: "50% 20%",
   },
   {
     key: "foh",
@@ -76,8 +67,6 @@ const SCREENS: HeroScreen[] = [
     caption: "For reception and floor managers: who is in the building, who is due, passes read at the desk, the member's record a tap away.",
     light: "/screenshots/foh-reception.png",
     alt: "synapse front of house — Saturday at the door, who is in the house, on the shared theme",
-    zoom: 1.4,
-    focus: "30% 6%",
   },
   {
     key: "plans",
@@ -110,9 +99,7 @@ const SCREENS: HeroScreen[] = [
     caption: "The club's own colours. Members apply, book tables, rooms and events, and carry their membership card with its door code, or the wallet pass.",
     light: "/screenshots/portal-desktop-book-table.png",
     alt: "The member portal on the desktop — Ashgrove's booking page, black and gold",
-    zoom: 1.35,
-    focus: "50% 0%",
-    phone: { device: "pixel", src: "/screenshots/portal-android-qr.png", alt: "The member portal installed on a Pixel — the membership card turned to its QR door code, with Add to Google Wallet and the Home, Book, Calendar and Me tabs", w: 640, h: 1422 },
+    phone: { device: "pixel", src: "/screenshots/portal-android-qr.png", alt: "The member portal installed on a Pixel — the membership card turned to its QR door code, with Add to Google Wallet and the Home, Book, Calendar and Me tabs" },
     pass: true,
   },
   {
@@ -122,8 +109,7 @@ const SCREENS: HeroScreen[] = [
     caption: "One plan editor for the restaurant floor and for an event's layout: tables, the bar, a DJ booth. Live on the till and in the door app's seating.",
     light: "/screenshots/floor-plan.png",
     alt: "synapse floor plan editor",
-    focus: "48% 25%",
-    phone: { device: "pixel", src: "/screenshots/door-android-seating.png", alt: "The door app on a Pixel — the Summer Party seating plan filling as guests arrive", w: 640, h: 1422 },
+    phone: { device: "pixel", src: "/screenshots/door-android-seating.png", alt: "The door app on a Pixel — the Summer Party seating plan filling as guests arrive" },
   },
   {
     key: "pos",
@@ -149,8 +135,6 @@ const SCREENS: HeroScreen[] = [
     caption: "Station and expo screens. Courses held and fired, times by table, bumped when the pass is clear.",
     light: "/screenshots/kds-expo.png",
     alt: "synapse kitchen display — the expo screen with three tables in progress, on the shared theme",
-    zoom: 1.3,
-    focus: "0% 0%",
   },
   {
     key: "procurement",
@@ -208,22 +192,21 @@ export function HeroScreens() {
             {SCREENS.map((s, i) => {
               const on = i === active;
               const eager = i < 3 ? "eager" : "lazy";
+              const [sw, sh] = shotSize(s.light);
               if (s.frame === "tablet") {
                 return (
-                  <div key={s.key} className={`hero-slide absolute inset-0 flex items-center justify-center bg-[#15131a] p-[3%] ${on ? "hero-slide-on" : ""}`} aria-hidden={!on}>
-                    <div className="h-full max-w-full overflow-hidden rounded-[2.5%] bg-black p-[0.6%] ring-1 ring-white/15" style={{ aspectRatio: "2420 / 1668" }}>
+                  <div key={s.key} className={`hero-slide absolute inset-0 overflow-hidden bg-[#15131a] ${on ? "hero-slide-on" : ""}`} aria-hidden={!on}>
+                    <div className="absolute top-[9%] left-[6%] w-[104%] rounded-tl-[22px] bg-black pt-[1.6%] pl-[1.6%] ring-1 ring-white/15">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={s.light} alt={on ? s.alt : ""} width={2420} height={1668} loading={eager} className="block h-full w-full rounded-[2%] object-cover" />
+                      <img src={s.light} alt={on ? s.alt : ""} width={sw} height={sh} loading={eager} className="block h-auto w-full rounded-tl-[14px]" />
                     </div>
                   </div>
                 );
               }
               return (
                 <div key={s.key} className={`hero-slide absolute inset-0 overflow-hidden ${on ? "hero-slide-on" : ""}`} aria-hidden={!on}>
-                  <div className="absolute inset-0" style={{ transform: `scale(${s.zoom ?? ZOOM})`, transformOrigin: s.focus ?? FOCUS }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={s.light} alt={on ? s.alt : ""} width={2880} height={1800} loading={eager} className="absolute inset-0 block h-full w-full object-cover object-top" />
-                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={s.light} alt={on ? s.alt : ""} width={sw} height={sh} loading={eager} className="absolute inset-0 block h-full w-full object-cover object-left-top" />
                 </div>
               );
             })}
@@ -235,8 +218,8 @@ export function HeroScreens() {
         </figure>
 
         {current.phone && (
-          <div key={`phone-${current.key}`} className="hero-enter absolute bottom-[2%] left-[-1%] w-[19%]">
-            <PhoneFrame {...current.phone} eager />
+          <div key={`phone-${current.key}`} className="hero-enter absolute bottom-0 left-[-2%] w-[25%]">
+            <PhoneCut {...current.phone} eager />
           </div>
         )}
 
