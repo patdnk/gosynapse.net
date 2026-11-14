@@ -264,69 +264,52 @@ const HARDWARE: { title: string; icon: string; runs: string; desc: string; picks
   },
 ];
 
-// What landed on main most recently, newest first. Trim from the bottom.
-const SHIPPED = [
- "Events v2: guest lists, RSVP, waitlists, host lists, badges and reports",
- "Public API complete: REST, webhooks v2 and GraphQL",
- "SevenRooms two-way sync",
- "Linked POS: Simphony, Lightspeed and Toast",
- "Wallet passes with fall-through delivery and bulk issue",
- "The portal in the club's colours, on its own domain",
- "A native door app for iPhone and Android",
- "Front of house and kitchen on one theme",
-];
-
-// Each item says where it stands: shipped, being built now, or planned (no status).
-type RoadmapStatus = "shipped" | "building";
-
-const ROADMAP: { phase: string; why: string; items: { title: string; desc: string; status?: RoadmapStatus }[] }[] = [
+// The roadmap in three columns, re-read against synapse main on 14 Nov 2026:
+// what is live, what finishes something already partly live, and what is
+// planned. Nothing is labelled "being built" unless a branch is open for it.
+type RoadmapItem = { title: string; desc: string };
+const ROADMAP: { key: "shipped" | "next" | "later"; title: string; why: string; items: RoadmapItem[] }[] = [
   {
-    phase: "Foundations",
-    why: "Reach members without a staff member holding the phone.",
+    key: "shipped",
+    title: "Shipped",
+    why: "Live on main, newest first.",
     items: [
-      { title: "WhatsApp and pass delivery", desc: "One automation sends a pass by WhatsApp, then SMS, then email, and waits for delivery. Send from the profile, or to a whole plan or an event list at once, with a design per pass type.", status: "shipped" },
-      { title: "Billing adjustments", desc: "VAT invoice lines, credit notes and refunds to card or account, plan changes now or at renewal, and freezes with holding fees.", status: "shipped" },
-      { title: "Booking messages", desc: "Confirmations, changes, cancellations and room emails as moments owned by Bookings, each with its own editable copy and a dark version, in a Communications area kept apart from Marketing.", status: "shipped" },
-      { title: "Linked POS", desc: "Oracle Simphony Cloud, Lightspeed K and Toast, read-only: checks, tables and customers imported, matched to bookings and members, with the club's own patterns learned from staff answers. Spend and insights read them.", status: "shipped" },
-      { title: "Accounting export", desc: "Xero and QuickBooks connectors, account mapping and the daily sales and billing journals are live, with VAT reported by treatment. Supplier bills and card payouts follow.", status: "building" },
-      { title: "Sending domains", desc: "A club sends from its own domain: DKIM and DMARC records generated for it, proved in DNS, managed on the Channels page. Without one, a Synapse mailer address with guardrails. Next: a status page and branded hosts.", status: "building" },
-      { title: "Procurement", desc: "Per-site stock, supplier packs, purchase orders with approval, receiving, invoice matching and a needs-attention queue.", status: "shipped" },
+      { title: "Events v2", desc: "Guest lists with CSV import, invitations and RSVP, requests, waitlists that offer places, host lists, pass designs per list, arrival alerts, badges, a no-show sweep and the event report." },
+      { title: "GraphQL read plane", desc: "Member 360, a reservation with its spend, an event with its tickets, in one costed, read-only query." },
+      { title: "Door app for iPhone and Android", desc: "Tickets, passes and booking codes scanned, the walk-in queue and the seating plan, safe offline." },
+      { title: "Public REST API and webhooks v2", desc: "Every module on /public/v1; signed endpoints with retries, resend and an event log." },
+      { title: "SevenRooms, both ways", desc: "Bookings, members and POS tickets in sync with the SevenRooms floor." },
+      { title: "Linked POS", desc: "Oracle Simphony Cloud, Lightspeed K and Toast checks, read-only, matched to members." },
+      { title: "Wallet pass delivery", desc: "WhatsApp, then SMS, then email; from the profile, to a plan or to an event list." },
+      { title: "Member portal", desc: "Tables, events and rooms, account and card, in the club's colours on its own domain." },
+      { title: "And before that", desc: "Applications with card capture, rooms and reservations, billing adjustments, booking messages, procurement, self-service onboarding, the kitchen display." },
     ],
   },
   {
-    phase: "Member-facing",
-    why: "A home for the member, deep-linked from their wallet pass.",
+    key: "next",
+    title: "Next",
+    why: "Finishing what is already partly live.",
     items: [
-      { title: "Member portal", desc: "News and notices, booking tables, event tickets and rooms, the calendar, guests, statements, credit, card on file and Direct Debit, on a phone or a desktop. In the club's own colours and fonts, served from its own domain.", status: "shipped" },
-      { title: "Applications", desc: "A public page per house, the application form composed in admin, photos, card capture in the form through Stripe or Adyen, managers' ratings, and the joining fee charged on approval.", status: "shipped" },
-      { title: "Rooms & reservations", desc: "Overnight, day-use and hourly rooms on the same reservation spine as tables and events: ten-minute holds, hosted payment links, deposits and no-show policies. SynXis two-way sync is built and waits on a partner agreement.", status: "shipped" },
-      { title: "Bookings & events v2", desc: "Ticket tiers with hidden tiers and unlock codes, every guest named, held places that expire, waitlists that offer places, and the door reading each person's own code.", status: "shipped" },
-      { title: "Guest lists & passes", desc: "The event-night toolkit: lists per event, CSV import, invitations and RSVP, host lists, pass designs, arrival alerts, badges, a no-show sweep and the event report.", status: "shipped" },
-      { title: "Door app", desc: "A native app for iPhone and Android: tickets, passes and booking codes scanned, a walk-in queue, the seating plan filling live, and arrivals queued safely when the signal drops.", status: "shipped" },
-      { title: "Member accounts & Direct Debit", desc: "The house-account ledger and GoCardless mandates are live, set up from a link or a QR at reception. Collections and statements follow, then dues and bookings charged to the account.", status: "building" },
+      { title: "Member accounts & Direct Debit", desc: "The house-account ledger and GoCardless mandates are live. Next: collections and statements, then dues and bookings charged to the account." },
+      { title: "Accounting export", desc: "Daily sales and billing journals to Xero and QuickBooks are live. Next: supplier bills and card payouts." },
+      { title: "Multi-venue", desc: "Organisation and venue admins, staff scoped to their venues, are live. Next: the venue switcher and plans that cover specific houses." },
+      { title: "Module pricing", desc: "Every module priced and two bundles with a live total at sign-up. Next: charging per module, with the door as its own line." },
+      { title: "Sending domains", desc: "DKIM and DMARC per club, proved in DNS, are live. Next: a status page and branded link and image hosts." },
+      { title: "Developer platform", desc: "REST, GraphQL, webhooks and the docs are live. Next: OAuth for installed apps, then SDKs." },
+    ],
+  },
+  {
+    key: "later",
+    title: "Later",
+    why: "Planned, not promised.",
+    items: [
+      { title: "The till", desc: "A menu per till, menus by time of day, and checks that keep working offline." },
+      { title: "Roles", desc: "Screen access by role, and an events team who set up events without full admin." },
+      { title: "A table waitlist", desc: "The event waitlist's offer-a-place flow, for tables." },
       { title: "Tap to Pay", desc: "Any staff phone as a card terminal; pay at the table." },
-    ],
-  },
-  {
-    phase: "Developer-facing",
-    why: "Partners and a venue's own apps build on the same data.",
-    items: [
-      { title: "Public REST API", desc: "/public/v1 with scoped live and test keys, idempotency, cursor paging and rate limits per key: members, applicants, reservations, events and tickets, the door, loyalty, passes, billing, cases, checks and payments.", status: "shipped" },
-      { title: "GraphQL read plane", desc: "Member 360, a reservation with its spend, an event with its tickets, one query. Read-only, costed per query, with persisted queries.", status: "shipped" },
-      { title: "Webhooks v2", desc: "Up to twenty endpoints per key, signed envelopes, retries from a minute to a day, a test send, resend, and an event log to reconcile against.", status: "shipped" },
-      { title: "Docs, sandbox, SDKs", desc: "Developer docs and the full API reference are live at gosynapse.net/docs; sandbox organisations carry test keys. Next: OAuth for installed apps, then SDKs.", status: "building" },
-    ],
-  },
-  {
-    phase: "Intelligence & trust",
-    why: "Answers from the venue's own data, and the certificates buyers ask for.",
-    items: [
-      { title: "AI insights", desc: "Questions in plain language, automatic reports and forecasts." },
-      { title: "Self-service and onboarding", desc: "Sign up with a card and terms or request access, choose modules and a plan, then a guided setup per module on first login. Stripe Connect per organisation, with an optional commission.", status: "shipped" },
-      { title: "Module pricing", desc: "Every module priced the same for every club, bundles for the usual sets, and a live total at sign-up. Next: charging per module and the door as its own line.", status: "building" },
-      { title: "Multi-venue", desc: "Organisation admins and venue admins, staff scoped to their venues. Next: the venue switcher and plans that cover specific houses.", status: "building" },
       { title: "Embassy mode", desc: "A temporary venue for a week or a month, with a chosen set of members, their passes and accounts, and the books posting back to the group." },
-      { title: "Kitchen display", desc: "Course pacing, hold-and-fire and an expo view, on the same theme as front of house.", status: "shipped" },
+      { title: "A native member app", desc: "Built on the public API the portal already uses, with inbound order ingestion alongside." },
+      { title: "AI insights", desc: "Questions in plain language, automatic reports and forecasts." },
       { title: "SOC 2 Type II, then ISO 27001", desc: "Most controls already exist in code; the programme does the rest." },
     ],
   },
@@ -553,14 +536,6 @@ function IntegrationCard({
       </div>
       <p className={"mt-2 text-sm " + (light ? "text-[var(--muted)]" : "text-white/60")}>{detail}</p>
     </div>
-  );
-}
-
-function RoadmapBadge({ status }: { status: RoadmapStatus }) {
-  return status === "shipped" ? (
-    <span className="rounded-full bg-[var(--success-soft)] px-2 py-0.5 text-[10px] font-semibold  text-[var(--success)]">Shipped</span>
-  ) : (
-    <span className="rounded-full bg-[var(--warn-soft)] px-2 py-0.5 text-[10px] font-semibold  text-[var(--warn)]">In progress</span>
   );
 }
 
@@ -1496,46 +1471,44 @@ export default function Home() {
             <Eyebrow>Roadmap</Eyebrow>
             <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Where synapse goes next</h2>
             <p className="mt-5 text-lg text-[var(--muted)]">
-              From a complete venue platform to a member-facing, developer-facing, certified product.
-              Sequenced by dependency, so every phase ships something a venue or a partner can use.
-              Each item says where it stands; anything without a badge is planned, not promised.
+              Events v2 and the GraphQL read plane are live, which finishes the event night and the
+              developer platform. Next is finishing what is already partly live; anything under
+              Later is planned, not promised.
             </p>
           </div>
-          <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-[var(--muted)]">
-            <span className="flex items-center gap-1.5"><RoadmapBadge status="shipped" /> on main</span>
-            <span className="flex items-center gap-1.5"><RoadmapBadge status="building" /> being built now</span>
-            <span>no badge · planned</span>
+          <div className="mt-12 grid gap-5 lg:grid-cols-3">
+            {ROADMAP.map((col) => {
+              const shipped = col.key === "shipped";
+              return (
+                <div
+                  key={col.key}
+                  className={`flex flex-col rounded-xl border p-6 ${shipped ? "border-[color-mix(in_oklch,var(--success)_30%,transparent)] bg-[var(--success-soft)]" : "border-[var(--border)] bg-[var(--surface-1)]"}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      aria-hidden
+                      className={`h-2.5 w-2.5 rounded-full ${shipped ? "bg-[var(--success)]" : col.key === "next" ? "bg-[var(--brand)]" : "border border-[var(--muted)]"}`}
+                    />
+                    <h3 className="text-lg font-bold tracking-tight">{col.title}</h3>
+                  </div>
+                  <p className="mt-1 text-sm text-[var(--muted)]">{col.why}</p>
+                  <ul className="mt-5 space-y-3.5">
+                    {col.items.map((it) => (
+                      <li key={it.title} className="text-sm">
+                        <span className="flex items-start gap-2">
+                          {shipped && <span aria-hidden className="mt-px font-semibold text-[var(--success)]">✓</span>}
+                          <span>
+                            <span className="block font-semibold text-[var(--ink)]">{it.title}</span>
+                            <span className="block text-[var(--muted)]">{it.desc}</span>
+                          </span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
-          <div className="mt-8 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold  text-[var(--muted)]">Recently shipped</span>
-            {SHIPPED.map((x) => (
-              <span key={x} className="rounded-full bg-[var(--success-soft)] px-3 py-1 text-xs font-semibold text-[var(--success)]">✓ {x}</span>
-            ))}
-          </div>
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {ROADMAP.map((p, i) => (
-              <div key={p.phase} className="flex flex-col rounded-xl border border-[var(--border)] bg-[var(--surface-1)] p-6">
-                <p className="text-xs font-semibold  text-[var(--brand-strong)]">Phase {i + 1}</p>
-                <h3 className="mt-1 text-lg font-bold tracking-tight">{p.phase}</h3>
-                <p className="mt-1 text-sm text-[var(--muted)]">{p.why}</p>
-                <ul className="mt-4 space-y-2.5">
-                  {p.items.map((it) => (
-                    <li key={it.title} className="text-sm">
-                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <span className="font-semibold text-[var(--ink)]">{it.title}</span>
-                        {it.status && <RoadmapBadge status={it.status} />}
-                      </span>
-                      <span className="block text-[var(--muted)]">{it.desc}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <p className="mt-6 text-sm text-[var(--muted)]">
-            With the public API live, a native member app and inbound order ingestion are the next
-            things to build on it.
-          </p>
         </div>
       </section>
 
