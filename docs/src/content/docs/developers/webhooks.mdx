@@ -1,12 +1,115 @@
 ---
 title: Webhooks
-description: Coming soon. Synapse will push events to your endpoint.
+description: Synapse pushes events to your HTTPS endpoint as they happen, signed and retried.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-<Aside type="note" title="Coming soon">
-Webhooks are not available yet. Until they are, poll list endpoints with `updated_since` (see [Pagination](/docs/developers/pagination/)).
-</Aside>
+Synapse sends an HTTP POST to an endpoint you register whenever something the key can read changes: a reservation is created or seated, a check closes, a payment is captured, a member is updated. You never have to poll, though the [event log](#the-event-log) is there to reconcile against.
 
-When webhooks ship, you will register an HTTPS endpoint and choose which events it receives, such as a reservation being created or a member checking in. Each delivery will be signed so you can check it came from Synapse, and failed deliveries will be retried. This page will list every event and show how to verify a signature.
+## Register an endpoint
+
+Endpoints belong to an API key and receive only the events that key could read over the API: its scopes, its venue limit and the organisation's licence all apply. An admin creates one under **Settings → Webhooks**, or you create it over the API:
+
+```bash
+curl -X POST https://api.gosynapse.net/public/v1/webhook-endpoints \
+  -H "Authorization: Bearer syn_live_…" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-system.example/hooks/synapse",
+    "description": "Finance warehouse",
+    "event_types": ["reservation.*", "check.closed", "payment.*"]
+  }'
+```
+
+The answer carries the endpoint and its **secret**. The secret is shown once, on create and on rotate; store it then. A key may hold up to 20 endpoints, disabled ones included until they are deleted.
+
+`event_types` takes exact names, a family such as `reservation.*`, or `*` for everything the key may read. Types the key's scopes cannot cover are refused at create time.
+
+Endpoints must be public HTTPS addresses. Private, loopback and link-local addresses are refused, and the address is checked again on every attempt.
+
+## The envelope
+
+Every delivery is one event:
+
+```json
+{
+  "id": "evt_cmv4…",
+  "type": "reservation.seated",
+  "api_version": "v1",
+  "occurred_at": "2026-11-14T19:02:11.000Z",
+  "org_id": "org_cmv4…",
+  "venue_id": "ven_cmv4…",
+  "business_date": null,
+  "data": { "object": { "id": "res_cmv5…", "status": "checked_in", "…": "…" } },
+  "previous_attributes": { "status": "confirmed" }
+}
+```
+
+`data.object` is the resource as the REST API would return it to that key. `previous_attributes` appears only for a status change. `business_date` is set for checks and payments (the venue's trading day) and null elsewhere.
+
+Three headers come with it:
+
+| Header | Holds |
+| --- | --- |
+| `Synapse-Event-Id` | The envelope's `id`, for de-duplication |
+| `Synapse-Event-Type` | The envelope's `type` |
+| `Synapse-Signature` | `t=<unix seconds>,v1=<hex>`, see below |
+
+## Verify the signature
+
+Compute an HMAC-SHA256 of `"<t>.<raw body>"` with your endpoint secret and compare it, in constant time, with a `v1=` value in the header. Reject deliveries whose `t` is more than five minutes from your clock. During a secret rotation the header carries two `v1=` values, one per live secret, so either matches.
+
+```js
+import { createHmac, timingSafeEqual } from "node:crypto";
+
+function verify(header, rawBody, secret) {
+  const parts = Object.fromEntries(header.split(",").map((p) => p.trim().split("=")));
+  const expected = createHmac("sha256", secret).update(`${parts.t}.${rawBody}`).digest("hex");
+  const given = header.split(",").filter((p) => p.trim().startsWith("v1=")).map((p) => p.trim().slice(3));
+  return given.some((v) => v.length === expected.length && timingSafeEqual(Buffer.from(v), Buffer.from(expected)));
+}
+```
+
+Sign the raw bytes you received, not a re-serialised object.
+
+## Respond, retries and disabling
+
+Answer with any 2xx within the timeout. Anything else, a timeout included, is retried at 1 minute, 5 minutes, 30 minutes, 2 hours, 6 hours, 12 hours and 24 hours; a failure on the eighth attempt marks the delivery `failed`. Retries resend the same bytes, freshly signed.
+
+An endpoint that has been failing for 24 hours is disabled and the organisation's admins are emailed once. Setting it back to active clears its failing clock; deliveries that waited more than a day are failed rather than sent in a burst.
+
+Deliveries can arrive out of order and, rarely, twice. Use `Synapse-Event-Id` to de-duplicate and `occurred_at` to order.
+
+## Test, inspect, resend
+
+- `POST /public/v1/webhook-endpoints/{id}/test` sends a `webhook.test` event to that endpoint.
+- `GET /public/v1/webhook-endpoints/{id}/deliveries` lists recent deliveries with their attempts and status; `POST /public/v1/webhook-deliveries/{id}/resend` sends one again.
+- `POST /public/v1/webhook-endpoints/{id}/rotate-secret` returns a new secret; the old one keeps signing for a grace period so you can switch without a gap.
+
+Delivery records are kept for 30 days.
+
+## Event types
+
+| Family | Events |
+| --- | --- |
+| Members | `member.created`, `member.updated`, `member.status_changed`, `member.merged` |
+| Applicants | `applicant.created`, `applicant.updated`, `applicant.decided`, `applicant.converted` |
+| Reservations | `reservation.created`, `reservation.updated`, `reservation.seated`, `reservation.cancelled` (tables, rooms and event places alike) |
+| Event tickets | `event.ticket.reserved`, `event.ticket.paid`, `event.ticket.checked_in`, `event.ticket.cancelled` |
+| Door | `checkin.created`, `cloakroom.collected` |
+| Loyalty | `loyalty.credited`, `loyalty.redeemed` |
+| Passes | `pass.issued`, `pass.revoked` |
+| Billing | `invoice.issued`, `invoice.paid` |
+| POS | `check.opened`, `check.closed`, `check.voided`, `payment.captured`, `payment.refunded` |
+| Test | `webhook.test` |
+
+Each type needs the matching read scope on the owning key. Members with sensitive fields appear only for keys holding `members:sensitive`.
+
+## The event log
+
+`GET /public/v1/event-log` returns the same envelopes in order, with a cursor, so you can fill a gap after an outage or run a reconciliation without webhooks at all. Events younger than ten seconds are held back, so a page never skips one that commits late.
+
+<Aside type="tip">
+On a sandbox organisation, a test key can deliver to a receiver on your own machine during development. Ask us to switch it on for your sandbox.
+</Aside>

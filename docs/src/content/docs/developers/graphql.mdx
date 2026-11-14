@@ -1,0 +1,56 @@
+---
+title: GraphQL
+description: A read-only GraphQL plane for composed views, a member 360 or a reservation with its spend in one query.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`POST https://api.gosynapse.net/public/graphql` serves the same data as the REST API through one schema, so a view that would take several REST calls is one round trip. It uses the same keys, scopes, venue limits and licensing as `/public/v1`; it is read-only, with no mutations and no subscriptions (push is [webhooks](/docs/developers/webhooks/)).
+
+## A first query
+
+```bash
+curl https://api.gosynapse.net/public/graphql \
+  -H "Authorization: Bearer syn_live_…" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ me { kind orgId scopes } }"}'
+```
+
+## What the schema holds
+
+The root fields mirror the REST resources: `me`, `node(id)`, `member` / `members`, `reservation` / `reservations`, `event` / `events`, `check` / `checks`, `venue` / `venues`. Lists are Relay connections (`edges { node }`, `pageInfo`) with the same cursor and `updatedSince` semantics as REST, for syncing.
+
+A member carries their whole picture:
+
+```graphql
+query {
+  member(id: "mem_cmv4…") {
+    firstName lastName status memberNo
+    spend { visits checks total { minor currency } }
+    reservations(first: 5) {
+      edges { node { kind startsAt status venue { name } check { totals { total { minor } } } } }
+    }
+    tickets(first: 5) { edges { node { holderName quantity status amount { minor } } } }
+    loyalty { programName balance { minor currency } }
+    passes { platform status }
+  }
+}
+```
+
+A reservation resolves its member, table or room, venue and, for a seated party, the check with its lines, payments and totals. An event resolves its tickets and `ticketTotals`.
+
+Money is always `{ minor, currency }`; ids are the public prefixed ids (`mem_…`, `res_…`, `ven_…`), so a `node(id)` lookup works for any of them. Enumerated values are GraphQL enums in upper case (`CONFIRMED`, `CHECKED_IN`), where REST uses lower-case strings.
+
+## Authorisation
+
+Field by field. `Member.sensitive` is null without `members:sensitive`; `Check` and `Payment` fields need the POS product and `checks:read` / `payments:read`, and answer null with a `FORBIDDEN` entry in `errors` otherwise. A venue-limited key sees only its venues' reservations, events and checks.
+
+## Cost and limits
+
+Every query is costed before it runs: one point per field, and a connection costs `1 + first × cost of its children` (`first` defaults to 50). A query may spend at most 1,000 points, reach a depth of 8, and select at most 2,000 fields once fragments are expanded; documents are capped at 64 KB. A refused query answers HTTP 400 with the reason; rate limiting answers 429 with the same headers as REST.
+
+Persisted queries (automatic persisted queries, SHA-256) are supported. Introspection is on for test keys; live keys in production have it off, so fetch the schema with a test key or from the committed `schema.graphql`.
+
+<Aside type="note">
+The schema is generated from the API and checked in CI for breaking changes, so a field that exists today keeps existing; new fields are added, not renamed.
+</Aside>

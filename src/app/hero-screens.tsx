@@ -53,8 +53,8 @@ const SCREENS: HeroScreen[] = [
     app: "Events",
     title: "Events, with the door app",
     caption: "Ticket tiers, takings and the guest list in the office. At the door, the native app: scan, search, check in a whole party, seat them.",
-    light: "/screenshots/event-tickets.png",
-    alt: "synapse event with ticket tiers — tiers, takings and who is coming",
+    light: "/screenshots/event-night.png",
+    alt: "synapse event page — the Summer Party tonight: places sold, takings, attendees, invitations, host lists and the report",
     phone: { src: "/screenshots/door-guests.png", alt: "The door app on a phone — tonight's guest list, 88 of 158 checked in", width: 1206, height: 2330 },
   },
   {
@@ -81,7 +81,7 @@ const SCREENS: HeroScreen[] = [
     title: "FOH app",
     caption: "For reception and floor managers: who is in the building, who is due, passes read at the desk, the member's record a tap away.",
     light: "/screenshots/foh-reception.png",
-    alt: "synapse FOH app — the reception board with tonight's check-ins",
+    alt: "synapse front of house — Saturday at the door, who is in the house, on the shared theme",
     zoom: 1.4,
     focus: "30% 6%",
   },
@@ -154,7 +154,7 @@ const SCREENS: HeroScreen[] = [
     title: "Kitchen display",
     caption: "Station and expo screens. Courses held and fired, times by table, bumped when the pass is clear.",
     light: "/screenshots/kds-expo.png",
-    alt: "synapse kitchen display — the expo screen with three tables in progress",
+    alt: "synapse kitchen display — the expo screen with three tables in progress, on the shared theme",
     zoom: 1.3,
     focus: "0% 0%",
   },
@@ -172,7 +172,7 @@ const SCREENS: HeroScreen[] = [
     title: "Integrations",
     caption: "Salesforce, SevenRooms, SynXis, Xero and QuickBooks, card payments, wallet passes, email, SMS and WhatsApp, plus a public API and webhooks.",
     light: "/screenshots/integrations.png",
-    alt: "synapse integrations — connected systems and webhook deliveries",
+    alt: "synapse integrations — Salesforce, SevenRooms and Linked POS live, with the webhook deliveries and POS feeds",
   },
 ];
 

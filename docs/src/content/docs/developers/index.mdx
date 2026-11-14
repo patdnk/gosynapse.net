@@ -3,7 +3,7 @@ title: Introduction
 description: Connect your systems to Synapse with the public REST API.
 ---
 
-The Synapse public API lets a venue's own developers and approved partners read data from Synapse and act on it. Today it is in early access: the foundation (keys, scopes, errors, limits) is live, and the [reference](/docs/developers/reference/operations/getme/) lists every endpoint you can call now. New endpoints appear there as they ship.
+The Synapse public API lets a venue's own developers and approved partners read data from Synapse and act on it. It covers members and applicants, reservations (tables, rooms and event places), events and tickets, the door and cloakroom, loyalty, passes, billing and cases, and, for venues on the POS, checks and payments. The [reference](/docs/developers/reference/operations/getme/) lists every endpoint; [webhooks](/docs/developers/webhooks/) push changes to you, and [GraphQL](/docs/developers/graphql/) composes a member 360 in one query.
 
 ## Base URL
 
@@ -45,3 +45,5 @@ Live keys start `syn_live_…` and act on a venue's real data. Test keys start `
 - [Errors](/docs/developers/errors/): the problem format and every code
 - [Pagination](/docs/developers/pagination/), [Idempotency](/docs/developers/idempotency/) and [Rate limits](/docs/developers/rate-limits/)
 - [Conventions](/docs/developers/conventions/): IDs, money and time
+- [Webhooks](/docs/developers/webhooks/): signed deliveries, retries and the event log
+- [GraphQL](/docs/developers/graphql/): the read plane for composed views

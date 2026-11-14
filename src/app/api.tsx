@@ -1,11 +1,11 @@
 "use client";
 
 // The API section: data in from the systems a venue already runs, data out to
-// whatever it builds next. Live, in progress and coming are labelled honestly —
-// REST, the check feeds and signed webhooks run today; the partner plane and
-// GraphQL are being built (docs/superpowers/specs/2026-10-12-public-api-platform-design.md
-// in the synapse repo). Code samples use the
-// real endpoints, fields and headers.
+// whatever it builds next. Live, in progress and coming are labelled honestly:
+// the partner REST API, webhooks v2 and the GraphQL read plane all run on main
+// (docs/superpowers/specs/2026-10-12-public-api-platform-design.md in the
+// synapse repo, M0–M6 built); SynXis waits on a partner agreement. Code
+// samples use the real endpoints, fields and headers.
 
 import { useState } from "react";
 import { useInView, useReducedMotion } from "./motion";
@@ -15,69 +15,76 @@ type Link = { name: string; what: string; status: Status };
 
 const INBOUND: Link[] = [
   { name: "Salesforce", what: "Members and applicants, both ways — OAuth, a field mapper over your own objects, and a sync engine that never echoes.", status: "live" },
-  { name: "SevenRooms", what: "Venues, clients and reservations in; every check out, so spend lands on the guest profile.", status: "live" },
+  { name: "SevenRooms", what: "Two-way: a booking made at the desk lands on the SevenRooms floor, reservations and members sync both ways, and POS tickets arrive as linked checks.", status: "live" },
+  { name: "Oracle Simphony · Lightspeed · Toast", what: "Linked POS: checks, tables and customers in, read-only, matched to your bookings and members, with the club's own patterns learned from staff answers.", status: "live" },
   { name: "SynXis", what: "Hotel reservations in by activity date, check-ins and cancellations back — built against the published API, live once a venue's partner agreement is in place.", status: "building" },
   { name: "Tripleseat", what: "Events and banqueting in, on the same pattern as SevenRooms.", status: "coming" },
 ];
 
 const OUTBOUND: Link[] = [
-  { name: "REST API", what: "Every module — members, bookings, events, checks, menus, reports — versioned, with an OpenAPI reference and developer docs at gosynapse.net/docs.", status: "live" },
-  { name: "Webhooks & events", what: "Signed callbacks when a check opens, changes or closes; a domain-event outbox behind every booking, ticket and member.", status: "live" },
+  { name: "REST API", what: "/public/v1 — members, applicants, reservations, events and tickets, the door, loyalty, passes, billing, cases, checks and payments — with scoped live and test keys, idempotency, cursor pagination, per-key rate limits and an OpenAPI reference at gosynapse.net/docs.", status: "live" },
+  { name: "GraphQL", what: "POST /public/graphql, read-only and costed per query: a member with their reservations, check-ins, tickets, loyalty and spend in one round trip.", status: "live" },
+  { name: "Webhooks v2", what: "Up to twenty HTTPS endpoints per key, a Synapse-Signature over the raw body, retries from a minute to a day, a test send, resend, and an event log to reconcile against.", status: "live" },
   { name: "POS feeds", what: "Checks and reservations as Oracle Simphony-shaped documents, so anything that reads a POS feed reads ours.", status: "live" },
-  { name: "GraphQL", what: "A read plane for composed views — a check with its table, member and totals in one query. After the REST resources.", status: "coming" },
-  { name: "Partner API", what: "/public/v1 with scoped keys, idempotency, cursor pagination and per-key rate limits. Venues, rooms, room reservations and the caller's own record are live; members, events and checks follow, then OAuth for installed apps.", status: "building" },
+  { name: "OAuth for installed apps", what: "Partner apps installed by a club, with persisted GraphQL queries. After the key-based plane.", status: "coming" },
 ];
 
 const SAMPLES = {
   rest: {
     label: "REST",
     note: "Live",
-    code: `GET /v1/bookings?status=BOOKED
-Authorization: Bearer <token>
+    code: `GET /public/v1/reservations?status=confirmed&updated_since=2026-11-14T00:00:00Z
+Authorization: Bearer syn_live_…
 
-[
-  {
- "id": "cmv55zeip007nbdpvl0dvg9gn",
- "tableNumber": "3",
- "memberName": "Olivia Bennett",
- "partySize": 2,
- "startsAt": "2026-10-15T18:45:00.000Z",
- "status": "BOOKED",
- "source": "INTERNAL",
- "spendMinor": null
-  }
-]`,
+{
+  "data": [
+    {
+ "id": "res_cmv55zeip007nbdpvl0dvg9gn",
+ "kind": "table",
+ "status": "confirmed",
+ "reference": "R-2041",
+ "member_id": "mem_cmv4…",
+ "starts_at": "2026-11-14T18:45:00.000Z",
+ "adults": 2,
+ "table": { "number": "3" },
+ "total": { "minor": 0, "currency": "GBP" }
+    }
+  ],
+  "has_more": false,
+  "next_cursor": null
+}`,
   },
   webhook: {
     label: "Webhook",
-    note: "Live",
+    note: "Live — v2",
     code: `POST https://your-system.example/hooks
-x-pos-event: pos.check.closed
-x-pos-signature: 9f2c…  # HMAC-SHA256 of the body
+Synapse-Signature: t=1763142724,v1=9f2c…  # HMAC-SHA256 over the raw body
 
 {
- "id": "evt_cmv4…_pos.check.closed",
- "type": "pos.check.closed",
- "occurredAt": "2026-10-15T21:12:04.000Z",
- "source": "POS",
- "match": { "venue": "Ashgrove House", "table": "3" },
- "guestCheck": {
- "chkNum": 129,
- "tblName": "3",
- "guest": { "firstName": "Olivia", "lastName": "Bennett", … },
- "totals": { "chkTtl": 84.00, "payTtl": 84.00, "balDueTtl": 0, … }
-  }
+  "id": "evt_cmv4…",
+  "type": "reservation.seated",
+  "api_version": "v1",
+  "occurred_at": "2026-11-14T19:02:11.000Z",
+  "org_id": "org_cmv4…",
+  "venue_id": "ven_cmv4…",
+  "business_date": null,
+  "data": { "object": { "id": "res_cmv55…", "status": "checked_in", … } },
+  "previous_attributes": { "status": "confirmed" }
 }`,
   },
   graphql: {
     label: "GraphQL",
-    note: "Coming — preview",
-    code: `query {
-  check(id: "chk_…") {
-    checkNumber
-    table { number }
-    member { firstName lastName }
-    totals { totalMinor currency }
+    note: "Live — read-only",
+    code: `POST /public/graphql
+
+query {
+  member(id: "mem_cmv4…") {
+    firstName lastName status
+    spend { visits checks total { minor currency } }
+    reservations(first: 3) {
+      edges { node { startsAt status venue { name } } }
+    }
+    loyalty { programName balance { minor } }
   }
 }`,
   },

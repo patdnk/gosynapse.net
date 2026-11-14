@@ -43,6 +43,7 @@ export default defineConfig({
             "developers/rate-limits",
             "developers/conventions",
             "developers/webhooks",
+            "developers/graphql",
           ],
         },
         ...openAPISidebarGroups,

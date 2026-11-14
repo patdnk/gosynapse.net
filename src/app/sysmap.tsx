@@ -20,7 +20,7 @@ const SURFACES: Node[] = [
   { id: "kds", label: "KITCHEN DISPLAY", short: "KITCHEN", tag: "S-03 · THE PASS", shortTag: "S-03", keys: [] },
   { id: "foh", label: "FRONT OF HOUSE", short: "DOOR", tag: "S-04 · THE DOOR", shortTag: "S-04", keys: ["wallets", "messaging"] },
   { id: "portal", label: "MEMBER PORTAL", short: "PORTAL", tag: "S-05 · MEMBERS, WEB + PHONE", shortTag: "S-05", keys: ["payments", "wallets", "messaging"] },
-  { id: "partner", label: "PARTNER APPS", short: "PARTNERS", tag: "S-06 · PUBLIC API, BUILDING", shortTag: "S-06", future: true, keys: ["webhooks"] },
+  { id: "partner", label: "PARTNER APPS", short: "PARTNERS", tag: "S-06 · PUBLIC API: REST, GRAPHQL, WEBHOOKS", shortTag: "S-06", keys: ["webhooks"] },
 ];
 
 // Where data goes. Every one of these is live except what the tag says.
@@ -29,7 +29,7 @@ const CONNECTIONS: Node[] = [
   { id: "wallets", label: "WALLET PASSES", short: "WALLETS", tag: "C-02 · APPLE · GOOGLE", shortTag: "C-02", keys: ["foh", "portal"] },
   { id: "messaging", label: "MESSAGING", tag: "C-03 · EMAIL · SMS · WHATSAPP", shortTag: "C-03", keys: ["admin", "foh"] },
   { id: "accounting", label: "ACCOUNTING", tag: "C-04 · XERO · QUICKBOOKS", shortTag: "C-04", keys: ["admin"] },
-  { id: "crm", label: "CRM & BOOKINGS", short: "CRM SYNC", tag: "C-05 · SALESFORCE · SEVENROOMS", shortTag: "C-05", keys: ["admin"] },
+  { id: "crm", label: "CRM & BOOKINGS", short: "CRM SYNC", tag: "C-05 · SALESFORCE · SEVENROOMS · LINKED POS", shortTag: "C-05", keys: ["admin"] },
   { id: "webhooks", label: "WEBHOOKS & API", short: "API", tag: "C-06 · YOUR SYSTEMS", shortTag: "C-06", keys: ["till", "partner"] },
 ];
 

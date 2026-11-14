@@ -151,23 +151,24 @@ const HERO_LINKS = [
 ];
 
 // The November update, as on LinkedIn: the headline screens, then the rest as a list.
-const WHATS_NEW: { title: string; desc: string; next?: string; src: string; alt: string; phone?: { src: string; alt: string } }[] = [
-  { title: "A new UI, light and dark", desc: "Every admin screen is rebuilt on one design system: light for the office, dark for the door at midnight. The dashboard opens on tonight, with covers booked, who is arriving and rooms let.", src: "/screenshots/dashboard-dark.png", alt: "synapse admin in dark mode — tonight at Fernhollow Gardens, with covers, arrivals and rooms let" },
-  { title: "Ticketing for events", desc: "Ticket tiers: early bird, members only, a garden table for four. Hidden tiers behind unlock codes, and live sales, takings and check-ins for every event. Members buy from the portal; staff add attendees from admin.", next: "a front-of-house event-door screen that reads QR tickets in a second and shows the queue against capacity.", src: "/screenshots/event-tickets.png", alt: "synapse admin — Jazz in the Walled Garden: places sold, takings, three ticket tiers and the guest list" },
-  { title: "A member portal, on desktop and mobile", desc: "Every club gets its own branded portal. Prospective members apply online with their plan, photo, proposers and card. Members sign in with an email code to see what is on, book tables, events and rooms, bring a guest and manage their account.", src: "/screenshots/portal-desktop-book-table.png", alt: "synapse member portal on a desktop — Ashgrove Social Group, black and gold, booking a table", phone: { src: "/screenshots/portal-phone-book-table.png", alt: "synapse member portal on a phone — the same booking, day, party and time" } },
-  { title: "Room bookings, with a SynXis connector", desc: "Overnight, day-use and hourly rooms on one reservation spine, with availability by night and arrivals, in-house and departures at a glance. SynXis two-way sync is built and waits on a partner agreement.", src: "/screenshots/rooms.png", alt: "synapse admin — rooms left per night per room type, with arriving, in-house and due-out lists" },
-  { title: "The door", desc: "Tonight's arrivals on a timeline by room, check-in person by person, allergies flagged, live on every device. Seated parties are never late, and the night line says what it shows.", src: "/screenshots/bookings-door.png", alt: "synapse admin — tonight's bookings as a timeline by room and a door view of each party" },
+const WHATS_NEW: { title: string; desc: string; next?: string; src: string; alt: string; phone?: { src: string; alt: string; w?: number; h?: number } }[] = [
+  { title: "Events, from the invitation to the report", desc: "Guest lists per event with a CSV import, invitations with RSVP, requests and approval, a waitlist that offers places itself, host lists for members who bring their own guests, pass designs per list, badges printed on first arrival, a no-show sweep and an event report with every person's history.", next: "a waitlist for tables, and event categories on the GraphQL plane.", src: "/screenshots/events-guest-lists.png", alt: "synapse admin — the Summer Party's guest lists, with the general list, a host list and a comp list", phone: { src: "/screenshots/door-guests.png", alt: "The door app on a phone — tonight's guest list, 88 of 158 checked in", w: 1206, h: 2330 } },
+  { title: "A door app for iPhone and Android", desc: "Tickets, wallet passes and booking codes scanned in a second, a walk-in queue, the event floor filling as guests arrive, and VIP arrivals announced to the manager's phone. Arrivals queue when the signal drops and reconcile when it returns.", src: "/screenshots/event-night.png", alt: "synapse admin — the Summer Party tonight: arrivals, capacity and the lists at the door", phone: { src: "/screenshots/door-seating.png", alt: "The door app's seating view — the event floor filling as guests arrive", w: 1206, h: 2330 } },
+  { title: "Linked POS: keep your till, bring the checks", desc: "Oracle Simphony Cloud, Lightspeed K and Toast connect read-only. Checks, tables and customers come in, get matched to your bookings and members, and feed spend, insights and audiences. Staff answer a question once and the club's pattern is learned.", src: "/screenshots/linked-pos.png", alt: "synapse admin — linked checks imported from the club's own till: bar and dining-room checks with spend, service and tips" },
+  { title: "SevenRooms, both ways", desc: "A booking made at the desk appears on the SevenRooms floor; a change on either side syncs back, last write wins. Every member is pushed as a client with Synapse as the source of truth, and bookings SevenRooms holds that are not yours sit on a Not synced list.", src: "/screenshots/sevenrooms.png", alt: "synapse admin — SevenRooms connected: members and bookings syncing, venues mapped to locations" },
+  { title: "The developer platform, complete", desc: "/public/v1 now covers members, applicants, reservations, events and tickets, loyalty, passes, billing, checks and payments. Webhooks v2: up to twenty signed endpoints per key, retries over a day, a test send, resend and an event log. And a read-only GraphQL plane for a member 360 in one query.", next: "OAuth for installed apps and SDKs.", src: "/screenshots/webhooks.png", alt: "synapse admin — Settings → Webhooks: endpoints, their event types and the delivery log" },
+  { title: "The portal in your colours, on your domain", desc: "Nine colours, display and body fonts, your own SVG graphics and app icon. The portal is served from the club's own domain, bare or a subdomain, with the certificate issued on demand.", src: "/screenshots/member-portal-looks.png", alt: "synapse admin — Member portal: the palette, fonts, graphics and domain of the club's portal" },
 ];
 
 const ALSO_SHIPPED: { text: string; href?: string }[] = [
-  { text: "Applicant pipeline: a board with ratings, proposers and approval straight into membership", href: "#members" },
-  { text: "Self-service: a club signs up, follows guided setup and connects card payments through Stripe Connect", href: "#members" },
-  { text: "Booking messages: confirmations and reminders for tables, events and rooms, sent from the club's own domain", href: "#marketing" },
-  { text: "Member records: visits, bookings, house account and spend on one page, plus an audited CSV export" },
-  { text: "Billing: pro-rata, freezes, credit notes and Direct Debit house accounts", href: "#billing" },
-  { text: "Wallet passes delivered by WhatsApp, SMS or email", href: "#passes" },
-  { text: "Accounting: daily journals to Xero and QuickBooks", href: "#backoffice" },
-  { text: "A help centre, live at gosynapse.net/docs", href: "/docs/" },
+  { text: "Named guests on every booking, with table and room passes in the wallet", href: "#passes" },
+  { text: "Wallet passes delivered WhatsApp → SMS → email, sent from the profile or to a whole plan", href: "#passes" },
+  { text: "A dark version of every email, edited on the canvas per colour or per element", href: "#marketing" },
+  { text: "Front of house and the kitchen display on one theme with admin", href: "#foh" },
+  { text: "Events set up in their own area; booking stays under Bookings" },
+  { text: "Event categories with their colours, in admin and the portal" },
+  { text: "Per-module prices and two bundles with a live total at sign-up", href: "#members" },
+  { text: "The API reference now lists every public endpoint", href: "/docs/developers/" },
 ];
 
 const BACKOFFICE_POINTS = [
@@ -264,14 +265,14 @@ const HARDWARE: { title: string; icon: string; runs: string; desc: string; picks
 
 // What landed on main most recently, newest first. Trim from the bottom.
 const SHIPPED = [
- "Tables, events and rooms booked from the member portal",
- "Admin in light and dark, one theme across every screen",
- "The bookings door: arrivals per person, tonight on the dashboard",
- "Ticket tiers with hidden tiers and unlock codes",
- "Booking messages per moment, owned by Bookings",
- "Guided setup per module on first login",
- "Self-service sign-up, plans and platform billing",
- "Online applications with card capture and approval",
+ "Events v2: guest lists, RSVP, waitlists, host lists, badges and reports",
+ "Public API complete: REST, webhooks v2 and GraphQL",
+ "SevenRooms two-way sync",
+ "Linked POS: Simphony, Lightspeed and Toast",
+ "Wallet passes with fall-through delivery and bulk issue",
+ "The portal in the club's colours, on its own domain",
+ "A native door app for iPhone and Android",
+ "Front of house and kitchen on one theme",
 ];
 
 // Each item says where it stands: shipped, being built now, or planned (no status).
@@ -282,9 +283,10 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Foundations",
     why: "Reach members without a staff member holding the phone.",
     items: [
-      { title: "WhatsApp and pass delivery", desc: "WhatsApp is live as a channel, and each holder gets a link that opens the right wallet. Next: sending it from the profile with a WhatsApp → SMS → email fallback, then issuing to a whole plan.", status: "building" },
+      { title: "WhatsApp and pass delivery", desc: "One automation sends a pass by WhatsApp, then SMS, then email, and waits for delivery. Send from the profile, or to a whole plan or an event list at once, with a design per pass type.", status: "shipped" },
       { title: "Billing adjustments", desc: "VAT invoice lines, credit notes and refunds to card or account, plan changes now or at renewal, and freezes with holding fees.", status: "shipped" },
-      { title: "Booking messages", desc: "Confirmations, changes, cancellations and room emails as moments owned by Bookings, each with its own editable copy, in a Communications area kept apart from Marketing.", status: "shipped" },
+      { title: "Booking messages", desc: "Confirmations, changes, cancellations and room emails as moments owned by Bookings, each with its own editable copy and a dark version, in a Communications area kept apart from Marketing.", status: "shipped" },
+      { title: "Linked POS", desc: "Oracle Simphony Cloud, Lightspeed K and Toast, read-only: checks, tables and customers imported, matched to bookings and members, with the club's own patterns learned from staff answers. Spend and insights read them.", status: "shipped" },
       { title: "Accounting export", desc: "Xero and QuickBooks connectors, account mapping and the daily sales and billing journals are live, with VAT reported by treatment. Supplier bills and card payouts follow.", status: "building" },
       { title: "Sending domains", desc: "A club sends from its own domain: DKIM and DMARC records generated for it, proved in DNS, managed on the Channels page. Without one, a Synapse mailer address with guardrails. Next: a status page and branded hosts.", status: "building" },
       { title: "Procurement", desc: "Per-site stock, supplier packs, purchase orders with approval, receiving, invoice matching and a needs-attention queue.", status: "shipped" },
@@ -294,12 +296,13 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Member-facing",
     why: "A home for the member, deep-linked from their wallet pass.",
     items: [
-      { title: "Member portal", desc: "News and notices, booking tables, event tickets and rooms, the calendar with cancellations, guests, statements and invoice PDFs, credit, card on file and Direct Debit — on a phone or a desktop, signed in with a one-time email code.", status: "shipped" },
+      { title: "Member portal", desc: "News and notices, booking tables, event tickets and rooms, the calendar, guests, statements, credit, card on file and Direct Debit, on a phone or a desktop. In the club's own colours and fonts, served from its own domain.", status: "shipped" },
       { title: "Applications", desc: "A public page per house, the application form composed in admin, photos, card capture in the form through Stripe or Adyen, managers' ratings, and the joining fee charged on approval.", status: "shipped" },
       { title: "Rooms & reservations", desc: "Overnight, day-use and hourly rooms on the same reservation spine as tables and events: ten-minute holds, hosted payment links, deposits and no-show policies. SynXis two-way sync is built and waits on a partner agreement.", status: "shipped" },
-      { title: "Bookings & events v2", desc: "Ticket tiers with hidden tiers and unlock codes, and the door with arrivals per person, are live on the reservation spine. Waitlists remain.", status: "building" },
-      { title: "Guest lists & passes", desc: "The event-night toolkit: guest lists per event, passes for guests of members, and the door reading them." },
-      { title: "Member accounts & Direct Debit", desc: "The house-account ledger and GoCardless mandates are live — set up from a link or a QR at reception. Collections and statements follow, then dues and bookings charged to the account.", status: "building" },
+      { title: "Bookings & events v2", desc: "Ticket tiers with hidden tiers and unlock codes, every guest named, held places that expire, waitlists that offer places, and the door reading each person's own code.", status: "shipped" },
+      { title: "Guest lists & passes", desc: "The event-night toolkit: lists per event, CSV import, invitations and RSVP, host lists, pass designs, arrival alerts, badges, a no-show sweep and the event report.", status: "shipped" },
+      { title: "Door app", desc: "A native app for iPhone and Android: tickets, passes and booking codes scanned, a walk-in queue, the seating plan filling live, and arrivals queued safely when the signal drops.", status: "shipped" },
+      { title: "Member accounts & Direct Debit", desc: "The house-account ledger and GoCardless mandates are live, set up from a link or a QR at reception. Collections and statements follow, then dues and bookings charged to the account.", status: "building" },
       { title: "Tap to Pay", desc: "Any staff phone as a card terminal; pay at the table." },
     ],
   },
@@ -307,10 +310,10 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     phase: "Developer-facing",
     why: "Partners and a venue's own apps build on the same data.",
     items: [
-      { title: "Public REST API", desc: "/public/v1 with scoped keys, idempotency, cursor paging and rate limits per key; venues, rooms, room reservations and the caller's own record are live. Members, events and checks next.", status: "building" },
-      { title: "GraphQL read plane", desc: "Member 360, a booking with its spend, an event with its tickets — one query. After the REST resources." },
-      { title: "Webhooks v2", desc: "Many endpoints per club, signed envelopes, retries and replay.", status: "building" },
-      { title: "Docs, sandbox, SDKs", desc: "Developer docs and a help centre are live at gosynapse.net/docs. A sandbox and SDKs follow the public API resources.", status: "building" },
+      { title: "Public REST API", desc: "/public/v1 with scoped live and test keys, idempotency, cursor paging and rate limits per key: members, applicants, reservations, events and tickets, the door, loyalty, passes, billing, cases, checks and payments.", status: "shipped" },
+      { title: "GraphQL read plane", desc: "Member 360, a reservation with its spend, an event with its tickets, one query. Read-only, costed per query, with persisted queries.", status: "shipped" },
+      { title: "Webhooks v2", desc: "Up to twenty endpoints per key, signed envelopes, retries from a minute to a day, a test send, resend, and an event log to reconcile against.", status: "shipped" },
+      { title: "Docs, sandbox, SDKs", desc: "Developer docs and the full API reference are live at gosynapse.net/docs; sandbox organisations carry test keys. Next: OAuth for installed apps, then SDKs.", status: "building" },
     ],
   },
   {
@@ -319,9 +322,10 @@ const ROADMAP: { phase: string; why: string; items: { title: string; desc: strin
     items: [
       { title: "AI insights", desc: "Questions in plain language, automatic reports and forecasts." },
       { title: "Self-service and onboarding", desc: "Sign up with a card and terms or request access, choose modules and a plan, then a guided setup per module on first login. Stripe Connect per organisation, with an optional commission.", status: "shipped" },
+      { title: "Module pricing", desc: "Every module priced the same for every club, bundles for the usual sets, and a live total at sign-up. Next: charging per module and the door as its own line.", status: "building" },
       { title: "Multi-venue", desc: "Organisation admins and venue admins, staff scoped to their venues. Next: the venue switcher and plans that cover specific houses.", status: "building" },
       { title: "Embassy mode", desc: "A temporary venue for a week or a month, with a chosen set of members, their passes and accounts, and the books posting back to the group." },
-      { title: "Kitchen display", desc: "Course pacing, hold-and-fire and an expo view.", status: "shipped" },
+      { title: "Kitchen display", desc: "Course pacing, hold-and-fire and an expo view, on the same theme as front of house.", status: "shipped" },
       { title: "SOC 2 Type II, then ISO 27001", desc: "Most controls already exist in code; the programme does the rest." },
     ],
   },
@@ -354,7 +358,7 @@ const PARTNER_INTEGRATIONS = [
   {
     name: "API gateway",
     status: "live" as const,
-    detail: "An extensive, versioned REST API with webhooks on every change, so your own desktop and mobile apps — and any upstream system — build on the same data the tills run on.",
+    detail: "REST, GraphQL and signed webhooks over every module, so your own desktop and mobile apps — and any upstream system — build on the same data the tills run on.",
   },
   {
     name: "Salesforce",
@@ -364,12 +368,17 @@ const PARTNER_INTEGRATIONS = [
   {
     name: "SevenRooms",
     status: "live" as const,
-    detail: "Checks export in an Oracle Simphony-shaped document, with webhooks on every change.",
+    detail: "Two-way: bookings made in synapse reach the SevenRooms floor, reservations and members sync back, and POS tickets land as linked checks.",
+  },
+  {
+    name: "Oracle Simphony, Lightspeed & Toast",
+    status: "live" as const,
+    detail: "Keep your till until the contract ends: checks, tables and customers imported read-only, matched to bookings and members, feeding spend and insights.",
   },
   {
     name: "Apple & Google Wallet",
     status: "live" as const,
-    detail: "Member passes issued and updated from the platform.",
+    detail: "Member, guest, table, room and event passes issued and updated from the platform, with a design per type.",
   },
   {
     name: "Identity provider",
@@ -628,10 +637,10 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-5 py-24">
           <div className="max-w-2xl">
             <Eyebrow>What&apos;s new, November 2026</Eyebrow>
-            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Sixteen releases since 23 October</h2>
+            <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">From v0.13 to v0.15 in twelve days</h2>
             <p className="mt-5 text-lg text-[var(--muted)]">
-              synapse now covers the whole members&apos; club, from the application form to the room
-              key. Every screen below is the demo club, captured this week.
+              The event night, the till you already own, SevenRooms both ways and a finished
+              developer platform. Every screen below is the demo club, captured this week.
             </p>
           </div>
           <div className="mt-14 space-y-20">
@@ -651,7 +660,7 @@ export default function Home() {
                           <Shot src={w.src} alt={w.alt} w={2880} h={1800} />
                         </div>
                         <div className="hidden w-[150px] flex-none sm:block">
-                          <PhoneShot src={w.phone.src} alt={w.phone.alt} w={1170} h={2532} />
+                          <PhoneShot src={w.phone.src} alt={w.phone.alt} w={w.phone.w ?? 1170} h={w.phone.h ?? 2532} />
                         </div>
                       </div>
                     ) : (
@@ -918,9 +927,9 @@ export default function Home() {
             <Eyebrow>Wallet passes</Eyebrow>
             <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">The membership card is in their phone</h2>
             <p className="mt-5 text-lg text-[var(--muted)]">
-              Design Apple and Google Wallet passes in the admin, issue them from the member&apos;s
-              profile, and send one link that works on any phone. Sending it automatically by
-              WhatsApp, SMS or email is being built now.
+              Design a pass per type in the admin, issue them from the member&apos;s profile or to
+              a whole plan at once, and let one automation send the link by WhatsApp, then SMS,
+              then email until it lands. Table, room and event passes join the membership card.
             </p>
             <ul className="mt-8 space-y-4">
               {PASS_POINTS.map((p) => (
@@ -1385,8 +1394,8 @@ export default function Home() {
             <h2 className="text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Open in both directions</h2>
             <p className="mt-5 text-lg text-[var(--muted)]">
               Bring members, reservations and events in from the platforms you already run, and serve
-              every module back out to your own apps and partners — REST today, GraphQL next, with
-              webhooks so nobody has to poll.
+              every module back out to your own apps and partners — REST, GraphQL and signed
+              webhooks, so nobody has to poll.
             </p>
           </div>
           <div className="mt-14">
@@ -1521,8 +1530,8 @@ export default function Home() {
             ))}
           </div>
           <p className="mt-6 text-sm text-[var(--muted)]">
-            Inbound order ingestion and a native member app come after the public API and the member
-            portal they depend on.
+            With the public API live, a native member app and inbound order ingestion are the next
+            things to build on it.
           </p>
         </div>
       </section>
