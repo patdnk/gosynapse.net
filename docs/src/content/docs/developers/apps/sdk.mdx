@@ -1,14 +1,14 @@
 ---
 title: Using the SDK
-description: The @gosynapse/sdk TypeScript client, with quickstarts for API keys and installed apps.
+description: The @synapseos/sdk TypeScript client, with quickstarts for API keys and installed apps.
 ---
 
-`@gosynapse/sdk` is a TypeScript client for the public API. It covers both API keys and installed apps, and it handles pagination, idempotency keys, retries, token refresh and webhook signature checks.
+`@synapseos/sdk` is a TypeScript client for the public API. It covers both API keys and installed apps, and it handles pagination, idempotency keys, retries, token refresh and webhook signature checks.
 
 Install it from npm:
 
 ```sh
-npm install @gosynapse/sdk
+npm install @synapseos/sdk
 ```
 
 It is MIT-licensed. It needs Node 20 or later, and ships ESM and CommonJS builds with TypeScript types.
@@ -16,7 +16,7 @@ It is MIT-licensed. It needs Node 20 or later, and ships ESM and CommonJS builds
 ## API key quickstart
 
 ```ts
-import { Synapse } from "@gosynapse/sdk";
+import { Synapse } from "@synapseos/sdk";
 
 const synapse = new Synapse({ apiKey: process.env.SYNAPSE_API_KEY! });
 
@@ -33,7 +33,7 @@ Use a `syn_test_…` key while you build. Test keys only work in sandbox organis
 An installed app sends a venue admin to the authorise page, then trades the code for tokens. It needs a registered app first, in **Settings → Developer apps**, and you can install a draft in your own organisation to try it.
 
 ```ts
-import { buildAuthorizeUrl, exchangeCode, Synapse, type OAuthTokens } from "@gosynapse/sdk";
+import { buildAuthorizeUrl, exchangeCode, Synapse, type OAuthTokens } from "@synapseos/sdk";
 
 const clientId = "app_fernhollow_pos_bridge";
 const redirectUri = "https://bridge.example.test/oauth/callback";
@@ -88,7 +88,7 @@ const page = await synapse.members.list({ limit: 100 }).page();
 Every non-2xx answer throws a `SynapseError` (or a subclass):
 
 ```ts
-import { InsufficientScopeError, RateLimitError, SynapseError } from "@gosynapse/sdk";
+import { InsufficientScopeError, RateLimitError, SynapseError } from "@synapseos/sdk";
 
 try {
   await synapse.members.get("mem_ashgrove_0001");
@@ -133,5 +133,5 @@ GraphQL `errors` throw a `SynapseError` with code `graphql_error`, and the messa
 `1.x` targets `/public/v1`. A breaking change to that path gets a new major version of the SDK and a new path. `SDK_API_DIGEST` identifies the OpenAPI document the SDK was generated from, and `SDK_VERSION` is the package version.
 
 ```ts
-import { SDK_API_DIGEST, SDK_VERSION } from "@gosynapse/sdk";
+import { SDK_API_DIGEST, SDK_VERSION } from "@synapseos/sdk";
 ```

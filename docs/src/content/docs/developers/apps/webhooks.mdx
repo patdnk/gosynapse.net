@@ -39,7 +39,7 @@ The response carries the endpoint's signing secret, shown once. As with API keys
 Check the signature against the raw request body before you parse the JSON. Frameworks that parse JSON for you must hand over the original bytes. The [SDK](/docs/developers/apps/sdk/) does the check:
 
 ```ts
-import { webhooks, WebhookVerificationError } from "@gosynapse/sdk";
+import { webhooks, WebhookVerificationError } from "@synapseos/sdk";
 
 app.post("/synapse/webhooks", rawBodyParser, async (req, res) => {
   try {
