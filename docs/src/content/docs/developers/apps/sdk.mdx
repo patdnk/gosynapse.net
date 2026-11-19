@@ -8,7 +8,7 @@ import { Aside } from '@astrojs/starlight/components';
 `@gosynapse/sdk` is a TypeScript client for the public API. It covers both API keys and installed apps, and it handles pagination, idempotency keys, retries, token refresh and webhook signature checks.
 
 <Aside type="caution">
-  The package is not yet on the npm registry; publishing to npm is coming soon. Until then, install it from its tarball:
+  The package is not on the npm registry. Install it from its tarball:
 </Aside>
 
 ```sh
@@ -104,7 +104,7 @@ try {
 }
 ```
 
-`code` is the API's stable machine code, for example `not_found` or `validation_failed`. `requestId` is for support. An installed app that gets `invalid_token` after a refresh has lost its install: send the admin back through consent.
+`code` is the API's stable machine code, for example `not_found` or `validation_failed`. `requestId` is for support. An installed app that gets `invalid_token` after a refresh has lost its tokens: send an admin back through consent.
 
 ## Retries and idempotency
 
