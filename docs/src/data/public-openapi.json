@@ -3,19 +3,484 @@
   "info": {
     "title": "Synapse Public API",
     "version": "v1",
-    "description": "The Synapse public API, for partners and a venue's own developers.\n\n**Auth.** `Authorization: Bearer syn_live_…` — an API key created in Settings → API keys.\nEach key carries scopes; a call without the scope it needs is 403 `insufficient_scope`.\n\n**Errors** are RFC 9457 `application/problem+json`. Branch on `code`, never on `detail`.\n\n**Lists** are cursor-paginated: `limit` (≤200) and `cursor`, answered with\n`{ data, has_more, next_cursor }`. Syncable lists take `updated_since`.\n\n**Idempotency.** Creates and money-moving calls take an `Idempotency-Key` header; a retry\nwith the same key and body returns the original response with `Idempotency-Replayed: true`.\n\n**Rate limits.** 50-request burst, 1,000 an hour per key. See the `RateLimit-*` headers;\na 429 carries `Retry-After`.\n\n**Money** is `{ minor, currency }`. Instants are RFC 3339 UTC."
+    "description": "The Synapse public API, for partners and a venue's own developers.\n\n**Auth.** `Authorization: Bearer syn_live_…` — an API key created in Settings → API keys.\nEach key carries scopes; a call without the scope it needs is 403 `insufficient_scope`.\nInstalled apps send `Authorization: Bearer syn_at_…`, an OAuth access token from `/oauth/token`.\nThe venue approves each app's scopes, and a token lasts an hour before it is renewed with a refresh token.\n\n**Errors** are RFC 9457 `application/problem+json`. Branch on `code`, never on `detail`.\n\n**Lists** are cursor-paginated: `limit` (≤200) and `cursor`, answered with\n`{ data, has_more, next_cursor }`. Syncable lists take `updated_since`.\n\n**Idempotency.** Creates and money-moving calls take an `Idempotency-Key` header; a retry\nwith the same key and body returns the original response with `Idempotency-Replayed: true`.\n\n**Rate limits.** 50-request burst, 1,000 an hour per key. See the `RateLimit-*` headers;\na 429 carries `Retry-After`.\n\n**Money** is `{ minor, currency }`. Instants are RFC 3339 UTC."
   },
   "components": {
     "securitySchemes": {
       "apiKey": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "syn_live_…"
+        "bearerFormat": "syn_live_…",
+        "description": "An API key (syn_live_…) or an installed app's OAuth access token (syn_at_…)."
+      },
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://admin.gosynapse.net/oauth/authorize",
+            "tokenUrl": "https://api.gosynapse.net/oauth/token",
+            "refreshUrl": "https://api.gosynapse.net/oauth/token",
+            "scopes": {
+              "members:read": "Read members",
+              "members:write": "Create and update members",
+              "members:merge": "Merge duplicate members",
+              "members:sensitive": "See allergies, access needs and case detail",
+              "applicants:read": "Read applicants",
+              "applicants:write": "Create, update and decide applicants",
+              "reservations:read": "Read reservations and availability",
+              "reservations:write": "Create, change, seat and cancel reservations",
+              "events:read": "Read events",
+              "events:write": "Create and update events",
+              "tickets:read": "Read tickets",
+              "tickets:write": "Issue, check in and cancel tickets",
+              "checkins:read": "Read check-ins and guest passes",
+              "checkins:write": "Check people in and issue guest passes",
+              "cloakroom:read": "Read cloakroom tickets",
+              "cloakroom:write": "Store and return cloakroom items",
+              "loyalty:read": "Read loyalty balances and ledgers",
+              "loyalty:write": "Top up and adjust loyalty balances",
+              "passes:read": "Read wallet passes",
+              "passes:issue": "Issue wallet passes",
+              "passes:revoke": "Revoke wallet passes",
+              "billing:read": "Read plans, subscriptions and invoices",
+              "cases:read": "Read member cases",
+              "cases:write": "Open and update member cases",
+              "checks:read": "Read checks and their lines",
+              "payments:read": "Read payments",
+              "webhooks:manage": "Manage webhook endpoints",
+              "event_log:read": "Read the event log"
+            }
+          }
+        }
       }
     },
     "schemas": {}
   },
   "paths": {
+    "/oauth/token": {
+      "post": {
+        "operationId": "oauthToken",
+        "summary": "Exchange an authorization code or refresh token for tokens",
+        "tags": [
+          "oauth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "grant_type": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "redirect_uri": {
+                    "type": "string"
+                  },
+                  "code_verifier": {
+                    "type": "string"
+                  },
+                  "refresh_token": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": {}
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string",
+                      "enum": [
+                        "Bearer"
+                      ]
+                    },
+                    "expires_in": {
+                      "type": "number"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    },
+                    "scope": {
+                      "type": "string"
+                    },
+                    "installation_id": {
+                      "type": "string"
+                    },
+                    "organization_id": {
+                      "type": "string"
+                    },
+                    "venue_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "access_token",
+                    "token_type",
+                    "expires_in",
+                    "refresh_token",
+                    "scope",
+                    "installation_id",
+                    "organization_id",
+                    "venue_ids"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is invalid, or the grant is invalid, expired or already used.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false,
+                  "description": "The request is invalid, or the grant is invalid, expired or already used."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client authentication failed. The WWW-Authenticate header is set when Basic credentials were sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Client authentication failed. The WWW-Authenticate header is set when Basic credentials were sent."
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "The body was not application/x-www-form-urlencoded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false,
+                  "description": "The body was not application/x-www-form-urlencoded."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. The Retry-After header says how many seconds to wait before trying again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "enum": [
+                        "slow_down"
+                      ]
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Too many requests. The Retry-After header says how many seconds to wait before trying again."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/revoke": {
+      "post": {
+        "operationId": "oauthRevoke",
+        "summary": "Revoke an access or refresh token",
+        "tags": [
+          "oauth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  },
+                  "token_type_hint": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": {}
+              }
+            }
+          }
+        },
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Always empty, whether or not the token was known.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false,
+                  "description": "Always empty, whether or not the token was known."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is invalid, or the grant is invalid, expired or already used.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false,
+                  "description": "The request is invalid, or the grant is invalid, expired or already used."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client authentication failed. The WWW-Authenticate header is set when Basic credentials were sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Client authentication failed. The WWW-Authenticate header is set when Basic credentials were sent."
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "The body was not application/x-www-form-urlencoded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false,
+                  "description": "The body was not application/x-www-form-urlencoded."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests. The Retry-After header says how many seconds to wait before trying again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "enum": [
+                        "slow_down"
+                      ]
+                    },
+                    "error_description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Too many requests. The Retry-After header says how many seconds to wait before trying again."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/oauth-authorization-server": {
+      "get": {
+        "operationId": "oauthServerMetadata",
+        "summary": "Read the OAuth server metadata",
+        "tags": [
+          "oauth"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "issuer": {
+                      "type": "string"
+                    },
+                    "authorization_endpoint": {
+                      "type": "string"
+                    },
+                    "token_endpoint": {
+                      "type": "string"
+                    },
+                    "revocation_endpoint": {
+                      "type": "string"
+                    },
+                    "response_types_supported": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "grant_types_supported": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "code_challenge_methods_supported": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "token_endpoint_auth_methods_supported": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "revocation_endpoint_auth_methods_supported": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "scopes_supported": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "issuer",
+                    "authorization_endpoint",
+                    "token_endpoint",
+                    "revocation_endpoint",
+                    "response_types_supported",
+                    "grant_types_supported",
+                    "code_challenge_methods_supported",
+                    "token_endpoint_auth_methods_supported",
+                    "revocation_endpoint_auth_methods_supported",
+                    "scopes_supported"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/public/v1/me": {
       "get": {
         "operationId": "getMe",
@@ -23,7 +488,7 @@
         "tags": [
           "me"
         ],
-        "description": "Returns the key that made the call: its ID, organisation, scopes, the venues it is limited to (empty means all) and whether it is a live or test key. Any valid key can call it, whatever its scopes, so use it to check a key works.",
+        "description": "Returns the key or installed app that made the call: its ID, organisation, scopes, the venues it is limited to (empty means all) and whether it is a live or test key. For an installed app, installation_id and application_id (the app's client ID) are set; for a key both are null. Any valid key or installation can call it, whatever its scopes, so use it to check the credential works.",
         "responses": {
           "200": {
             "description": "Default Response",
@@ -63,6 +528,14 @@
                         "live",
                         "test"
                       ]
+                    },
+                    "installation_id": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "application_id": {
+                      "nullable": true,
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -71,9 +544,37 @@
                     "org_id",
                     "scopes",
                     "venue_ids",
-                    "mode"
+                    "mode",
+                    "installation_id",
+                    "application_id"
                   ],
                   "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/v1/me/installation": {
+      "delete": {
+        "operationId": "removeMyInstallation",
+        "summary": "Remove this app's installation",
+        "tags": [
+          "me"
+        ],
+        "description": "An installed app removes its own installation: its access and refresh tokens stop working, and its webhook endpoints are disabled. The organisation keeps its record of the install. Only an installed app's access token can make this call; an API key gets a 400.",
+        "responses": {
+          "204": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true,
+                  "enum": [
+                    null
+                  ]
                 }
               }
             }
@@ -3459,7 +3960,7 @@
         "tags": [
           "members"
         ],
-        "description": "Check-ins, table and room reservations, event tickets, POS checks (when the POS product is on), loyalty ledger entries and cases for one member, newest first. Each item has a `type`, the instant it `occurred_at`, the item's own public `id` and a short plain-English `summary`. A key limited to venues sees only check-ins, reservations, tickets and checks at those venues; loyalty entries and cases are never venue-limited. Page with `limit` and `cursor`; the cursor is opaque.",
+        "description": "Check-ins (`checkins:read`), table and room reservations (`reservations:read`, a table needs the bookings module and a room the rooms module) and event tickets (`tickets:read`) for one member, newest first; POS checks too when the POS product is on and the key has `checks:read`, loyalty ledger entries with `loyalty:read`, and cases with `cases:read`. Each item has a `type`, the instant it `occurred_at`, the item's own public `id` and a short plain-English `summary`. A key limited to venues sees only check-ins, reservations, tickets and checks at those venues, and only loyalty entries tied to a check at one of them; cases are never venue-limited. Page with `limit` and `cursor`; the cursor is opaque.",
         "parameters": [
           {
             "schema": {
@@ -8636,7 +9137,7 @@
         "tags": [
           "door"
         ],
-        "description": "Guest passes, oldest first by `created_at`, or by `updated_at` with `updated_since`. Filter by the night (`valid_on`), the host member, the type and the status.",
+        "description": "Guest passes, oldest first by `created_at`, or by `updated_at` with `updated_since`. Filter by the night (`valid_on`), the host member, the type and the status. A key limited to venues sees its venues' passes and those valid at any venue.",
         "parameters": [
           {
             "schema": {
@@ -8791,6 +9292,10 @@
                           },
                           "updated_at": {
                             "type": "string"
+                          },
+                          "venue_id": {
+                            "nullable": true,
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -8806,7 +9311,8 @@
                           "price",
                           "redeemed_at",
                           "created_at",
-                          "updated_at"
+                          "updated_at",
+                          "venue_id"
                         ],
                         "additionalProperties": false
                       }
@@ -8837,7 +9343,7 @@
         "tags": [
           "door"
         ],
-        "description": "Issues a `day` pass (a non-member, by `holder_name`) or a `guest` pass for a member's guest (`host_member_id` and `guest_name`), valid on `valid_on` (the venue's calendar date, today by default). A merged host member hosts through whoever they were merged into. With `guest_email` or `guest_phone` the guest is matched or made as a person and the pass is their visit under the host's guest number; adding the same guest for the same night again returns the same pass. Nothing is sent to the guest.",
+        "description": "Issues a `day` pass (a non-member, by `holder_name`) or a `guest` pass for a member's guest (`host_member_id` and `guest_name`), valid on `valid_on` (the venue's calendar date, today by default). A merged host member hosts through whoever they were merged into. With `guest_email` or `guest_phone` the guest is matched or made as a person and the pass is their visit under the host's guest number; adding the same guest for the same night again returns the same pass. A pass with `venue_id` is valid only at that venue; a key limited to one venue issues for it, one limited to several must name one, and an org-wide key may leave it out for a pass valid anywhere. Nothing is sent to the guest.",
         "requestBody": {
           "required": true,
           "content": {
@@ -8861,6 +9367,9 @@
                       "valid_on": {
                         "type": "string",
                         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      "venue_id": {
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -8898,6 +9407,9 @@
                       "valid_on": {
                         "type": "string",
                         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      "venue_id": {
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -8986,6 +9498,10 @@
                     },
                     "updated_at": {
                       "type": "string"
+                    },
+                    "venue_id": {
+                      "nullable": true,
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -9001,7 +9517,8 @@
                     "price",
                     "redeemed_at",
                     "created_at",
-                    "updated_at"
+                    "updated_at",
+                    "venue_id"
                   ],
                   "additionalProperties": false
                 }
@@ -9018,7 +9535,7 @@
         "tags": [
           "cloakroom"
         ],
-        "description": "The organisation's cloakroom tickets, oldest first by `created_at`, or by `updated_at` with `updated_since`. Filter by `status` or `member_id`. Cloakroom tickets belong to the organisation, so a key limited to venues sees them all.",
+        "description": "The organisation's cloakroom tickets, oldest first by `created_at`, or by `updated_at` with `updated_since`. Filter by `status` or `member_id`. A key limited to venues sees only its venues' tickets.",
         "parameters": [
           {
             "schema": {
@@ -9133,6 +9650,10 @@
                           },
                           "updated_at": {
                             "type": "string"
+                          },
+                          "venue_id": {
+                            "nullable": true,
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -9148,7 +9669,8 @@
                           "checked_in_at",
                           "collected_at",
                           "created_at",
-                          "updated_at"
+                          "updated_at",
+                          "venue_id"
                         ],
                         "additionalProperties": false
                       }
@@ -9179,7 +9701,7 @@
         "tags": [
           "cloakroom"
         ],
-        "description": "Stores items for a member (`member_id`) or a named guest (`holder_name`) and returns the ticket with its claim `code`. A member who was merged away is stored against the member they were folded into.",
+        "description": "Stores items for a member (`member_id`) or a named guest (`holder_name`) at a venue (`venue_id`, which may be left out when the key or the organisation has one venue) and returns the ticket with its claim `code`. A member who was merged away is stored against the member they were folded into.",
         "requestBody": {
           "required": true,
           "content": {
@@ -9215,6 +9737,9 @@
                     "nullable": true,
                     "type": "string",
                     "maxLength": 1000
+                  },
+                  "venue_id": {
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -9281,6 +9806,10 @@
                     },
                     "updated_at": {
                       "type": "string"
+                    },
+                    "venue_id": {
+                      "nullable": true,
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -9296,7 +9825,8 @@
                     "checked_in_at",
                     "collected_at",
                     "created_at",
-                    "updated_at"
+                    "updated_at",
+                    "venue_id"
                   ],
                   "additionalProperties": false
                 }
@@ -9380,6 +9910,10 @@
                     },
                     "updated_at": {
                       "type": "string"
+                    },
+                    "venue_id": {
+                      "nullable": true,
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -9395,7 +9929,8 @@
                     "checked_in_at",
                     "collected_at",
                     "created_at",
-                    "updated_at"
+                    "updated_at",
+                    "venue_id"
                   ],
                   "additionalProperties": false
                 }
@@ -9490,6 +10025,10 @@
                     },
                     "updated_at": {
                       "type": "string"
+                    },
+                    "venue_id": {
+                      "nullable": true,
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -9505,7 +10044,8 @@
                     "checked_in_at",
                     "collected_at",
                     "created_at",
-                    "updated_at"
+                    "updated_at",
+                    "venue_id"
                   ],
                   "additionalProperties": false
                 }
@@ -9590,6 +10130,10 @@
                     },
                     "updated_at": {
                       "type": "string"
+                    },
+                    "venue_id": {
+                      "nullable": true,
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -9605,7 +10149,8 @@
                     "checked_in_at",
                     "collected_at",
                     "created_at",
-                    "updated_at"
+                    "updated_at",
+                    "venue_id"
                   ],
                   "additionalProperties": false
                 }
@@ -11620,7 +12165,9 @@
                             "type": "string",
                             "enum": [
                               "subscription",
-                              "event_ticket"
+                              "event_ticket",
+                              "booking",
+                              "account_charge"
                             ]
                           },
                           "status": {
@@ -11998,7 +12545,9 @@
                       "type": "string",
                       "enum": [
                         "subscription",
-                        "event_ticket"
+                        "event_ticket",
+                        "booking",
+                        "account_charge"
                       ]
                     },
                     "status": {
@@ -18254,6 +18803,9 @@
   "security": [
     {
       "apiKey": []
+    },
+    {
+      "oauth2": []
     }
   ],
   "x-error-codes": {
@@ -18274,6 +18826,12 @@
       "title": "Invalid cursor",
       "explanation": "The cursor parameter is not one this API issued, or it was changed.",
       "fix": "Pass next_cursor back exactly as the previous page returned it. To start from the beginning, leave cursor out."
+    },
+    "persisted_query_required": {
+      "status": 400,
+      "title": "Persisted query required",
+      "explanation": "Installed apps must send GraphQL queries as automatic persisted queries.",
+      "fix": "Send extensions.persistedQuery { version: 1, sha256Hash } with the query (the SDK does this for you)."
     },
     "idempotency_key_required": {
       "status": 400,
@@ -18298,6 +18856,12 @@
       "title": "Invalid API key",
       "explanation": "The Authorization header is missing, is not a Synapse key, or names a key that is unknown, revoked or expired, or belongs to an archived organisation. All of these return the same response on purpose.",
       "fix": "Check the key in Settings → API keys. If it was revoked or has expired, create a new one."
+    },
+    "invalid_token": {
+      "status": 401,
+      "title": "Invalid access token",
+      "explanation": "The OAuth access token is unknown, expired or revoked, or the app's installation was removed or suspended.",
+      "fix": "Refresh the token with your refresh token. If refreshing fails, ask the organisation's admin to connect the app again."
     },
     "forbidden": {
       "status": 403,
@@ -18638,6 +19202,153 @@
       "scope": "event_log:read",
       "group": "Platform",
       "label": "Read the event log"
+    }
+  ],
+  "x-webhook-events": [
+    {
+      "type": "applicant.converted",
+      "resource": "applicant",
+      "scope": "applicants:read"
+    },
+    {
+      "type": "applicant.created",
+      "resource": "applicant",
+      "scope": "applicants:read"
+    },
+    {
+      "type": "applicant.decided",
+      "resource": "applicant",
+      "scope": "applicants:read"
+    },
+    {
+      "type": "applicant.updated",
+      "resource": "applicant",
+      "scope": "applicants:read"
+    },
+    {
+      "type": "check.closed",
+      "resource": "check",
+      "scope": "checks:read"
+    },
+    {
+      "type": "check.opened",
+      "resource": "check",
+      "scope": "checks:read"
+    },
+    {
+      "type": "check.voided",
+      "resource": "check",
+      "scope": "checks:read"
+    },
+    {
+      "type": "checkin.created",
+      "resource": "checkin",
+      "scope": "checkins:read"
+    },
+    {
+      "type": "cloakroom.collected",
+      "resource": "cloakroom",
+      "scope": "cloakroom:read"
+    },
+    {
+      "type": "event.ticket.cancelled",
+      "resource": "ticket",
+      "scope": "tickets:read"
+    },
+    {
+      "type": "event.ticket.checked_in",
+      "resource": "ticket",
+      "scope": "tickets:read"
+    },
+    {
+      "type": "event.ticket.paid",
+      "resource": "ticket",
+      "scope": "tickets:read"
+    },
+    {
+      "type": "event.ticket.reserved",
+      "resource": "ticket",
+      "scope": "tickets:read"
+    },
+    {
+      "type": "invoice.issued",
+      "resource": "invoice",
+      "scope": "billing:read"
+    },
+    {
+      "type": "invoice.paid",
+      "resource": "invoice",
+      "scope": "billing:read"
+    },
+    {
+      "type": "loyalty.credited",
+      "resource": "loyalty_membership",
+      "scope": "loyalty:read"
+    },
+    {
+      "type": "loyalty.redeemed",
+      "resource": "loyalty_membership",
+      "scope": "loyalty:read"
+    },
+    {
+      "type": "member.created",
+      "resource": "member",
+      "scope": "members:read"
+    },
+    {
+      "type": "member.merged",
+      "resource": "member",
+      "scope": "members:read"
+    },
+    {
+      "type": "member.status_changed",
+      "resource": "member",
+      "scope": "members:read"
+    },
+    {
+      "type": "member.updated",
+      "resource": "member",
+      "scope": "members:read"
+    },
+    {
+      "type": "pass.issued",
+      "resource": "pass",
+      "scope": "passes:read"
+    },
+    {
+      "type": "pass.revoked",
+      "resource": "pass",
+      "scope": "passes:read"
+    },
+    {
+      "type": "payment.captured",
+      "resource": "payment",
+      "scope": "payments:read"
+    },
+    {
+      "type": "payment.refunded",
+      "resource": "payment",
+      "scope": "payments:read"
+    },
+    {
+      "type": "reservation.cancelled",
+      "resource": "reservation",
+      "scope": "reservations:read"
+    },
+    {
+      "type": "reservation.created",
+      "resource": "reservation",
+      "scope": "reservations:read"
+    },
+    {
+      "type": "reservation.seated",
+      "resource": "reservation",
+      "scope": "reservations:read"
+    },
+    {
+      "type": "reservation.updated",
+      "resource": "reservation",
+      "scope": "reservations:read"
     }
   ]
 }
