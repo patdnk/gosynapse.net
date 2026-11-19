@@ -1,0 +1,129 @@
+---
+title: Authorise an install
+description: The authorisation code flow with PKCE that connects your app to a club.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+An install starts with a redirect. Your app sends an ADMIN of a club to the consent page, the admin approves it, and Synapse sends them back to your app with a one-time code. Your app then trades the code for tokens. This is the OAuth 2.0 authorization code flow with PKCE, and every app uses it, confidential or public.
+
+## The flow
+
+```text
+Your app                  Admin's browser                 Synapse
+   |  1. redirect to /oauth/authorize  |                          |
+   |---------------------------------->|------------------------->|
+   |                                   |  2. consent screen       |
+   |                                   |<-------------------------|
+   |                                   |  3. Allow                |
+   |                                   |------------------------->|
+   |  4. redirect to redirect_uri?code=…&state=…                  |
+   |<----------------------------------|<-------------------------|
+   |  5. POST /oauth/token (code + code_verifier)                 |
+   |------------------------------------------------------------->|
+   |  6. access_token, refresh_token, installation_id, venue_ids  |
+   |<-------------------------------------------------------------|
+```
+
+## 1. Build the authorise URL
+
+Send the admin to the consent page at `https://admin.gosynapse.net/oauth/authorize` with these query parameters:
+
+| Parameter | Value |
+| --- | --- |
+| `response_type` | Always `code`. The implicit flow (`token`) is not supported. |
+| `client_id` | Your app's `app_…` id, from Settings → Developer apps. |
+| `redirect_uri` | One of your registered redirect URIs, exactly as registered. |
+| `scope` | Space-separated scopes. Leave it out to request all the app's scopes. |
+| `state` | **Required.** An unguessable value your app creates and checks on return. |
+| `code_challenge` | The PKCE challenge, derived from the verifier. |
+| `code_challenge_method` | Always `S256`. The `plain` method is refused. |
+
+Use the SDK, which generates the PKCE verifier for you (see [Using the SDK](/docs/developers/apps/sdk/)), or make it yourself:
+
+```js
+// PKCE: a random verifier, and its S256 challenge
+const verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));
+const challenge = base64url(
+  new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier))),
+);
+```
+
+Keep the verifier with the admin's session on your side. You need it again at step 5.
+
+<Aside type="caution">
+  Every request uses PKCE with `S256`, including confidential clients. Requests without `code_challenge` or `state` are refused.
+</Aside>
+
+## 2. The consent screen
+
+The admin sees your app's logo, name, developer and description, then "*Your app* wants access to *their club*". The screen lists the scopes you asked for in plain English, with restricted scopes in amber. If the club already has this app installed, it says "Update access" and shows what the install has now.
+
+Where the club has more than one venue, the admin chooses which venues the install can see. An admin can only grant venues they already manage. You cannot ask for particular venues; read them from the token response or from `GET /public/v1/me` after you connect.
+
+The admin must be an ADMIN of the organisation. A manager or anyone below ADMIN cannot approve an install. If the visitor is in more than one organisation, they pick one first, and the list shows only organisations where they are an ADMIN.
+
+## 3. Return to your app
+
+When the admin allows access, Synapse redirects to your `redirect_uri` with `code` and your `state`:
+
+```text
+https://your-app.example.test/oauth/callback?code=…&state=…
+```
+
+Check that `state` matches the value you created before you do anything else. If it does not match, stop.
+
+If the admin cancels, or something else stops the request, Synapse redirects with `error` and your `state`, as RFC 6749 describes. Where the request itself cannot be trusted (an unknown `client_id`, or a `redirect_uri` that does not exactly match a registered one), Synapse shows an error page and does **not** redirect. Your app should not depend on a redirect in those cases.
+
+## 4. Exchange the code
+
+Post the code and the verifier to `https://api.gosynapse.net/oauth/token`. The body is form-encoded.
+
+```bash
+curl -X POST https://api.gosynapse.net/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code" \
+  -d "code=$CODE" \
+  -d "redirect_uri=https://your-app.example.test/oauth/callback" \
+  -d "client_id=app_…" \
+  -d "code_verifier=$VERIFIER"
+```
+
+Use the same `redirect_uri` as in step 1, character for character.
+
+The response is JSON, with `Cache-Control: no-store`:
+
+```json
+{
+  "access_token": "syn_at_…",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "syn_rt_…",
+  "scope": "members:read events:read",
+  "installation_id": "ins_…",
+  "organization_id": "org_…",
+  "venue_ids": []
+}
+```
+
+An empty `venue_ids` means the install covers the whole organisation. The response includes the installation and venue details, so your app does not need an extra call straight after connecting.
+
+### Client authentication
+
+| Client type | At the token endpoint |
+| --- | --- |
+| Confidential | Send the client secret, with `client_secret_basic` (HTTP Basic with `client_id` and secret) or `client_secret_post` (a `client_secret` form field). The secret is shown once, when it is created or rotated. |
+| Public | Send `client_id` only. PKCE is the only proof of the request. |
+
+## Codes
+
+- A code lasts **60 seconds** and works once.
+- Using a code a second time revokes every token that code produced. Treat that as a sign the code leaked.
+
+## Discovery
+
+Generic OAuth libraries can read the server's metadata from `https://api.gosynapse.net/.well-known/oauth-authorization-server` (RFC 8414). It lists the authorise, token and revoke URLs, the supported PKCE method (`S256`) and the client authentication methods.
+
+<Aside type="tip">
+  If refreshing a token fails, send the admin back through the consent page. This is also how a club reconnects once a refresh token reaches its one-year limit.
+</Aside>

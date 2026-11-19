@@ -44,6 +44,17 @@ export default defineConfig({
             "developers/conventions",
             "developers/webhooks",
             "developers/graphql",
+            {
+              label: "Build an app",
+              items: [
+                "developers/apps",
+                "developers/apps/authorize",
+                "developers/apps/tokens",
+                "developers/apps/scopes-and-venues",
+                "developers/apps/webhooks",
+                "developers/apps/sdk",
+              ],
+            },
           ],
         },
         ...openAPISidebarGroups,

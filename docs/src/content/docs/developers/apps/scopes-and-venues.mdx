@@ -1,0 +1,54 @@
+---
+title: Scopes and venues
+description: The scopes an install can hold, the restricted ones, venue limits, module licensing and rate limits.
+---
+
+import ScopeTable from '../../../../components/ScopeTable.astro';
+import { Aside } from '@astrojs/starlight/components';
+
+Installed apps use the same scope strings as [API keys](/docs/developers/authentication/#scopes). One install holds a set of scopes, and every call is checked against that set.
+
+## What an install is granted
+
+An install's scopes are the scopes your app asked for, intersected with the scopes registered for your app, intersected with the scopes the admin left ticked. An admin can untick any scope that is not essential, so your app must handle a `403` `insufficient_scope` response. That response lists the scopes the call `required` and the ones the install is `missing`.
+
+[`GET /me`](/docs/developers/reference/operations/getme/) works with any valid token.
+
+<ScopeTable />
+
+### Restricted scopes
+
+Four scopes are restricted: `members:sensitive`, `members:merge`, `passes:revoke` and `payments:read`. Synapse decides which apps may hold them, so an app must be registered with a restricted scope before it can ask for one. An organisation's admins cannot add them to an app themselves. Ask Synapse.
+
+## Changing scopes
+
+To add scopes later, send the admin a new authorise request with the scopes you need. The consent screen then reads "Update access" and replaces the install's scopes with the new set. Existing tokens keep working, and the new set takes effect at once.
+
+## Venues
+
+Each install has a venue list. An empty list means the install covers every venue in the organisation.
+
+- The admin chooses the venues when they approve the install. The choice appears only when the organisation has more than one venue.
+- An admin limited to some venues can grant only those venues. "All venues" is not offered to them.
+- Your app cannot ask for particular venues. Read `venue_ids` from the token response or from `GET /public/v1/me`.
+- An admin can change the venues later from Settings → Connected apps. The change applies to the next request, with no reconnection.
+
+Venue limits apply to what your app can read and to webhook deliveries. An install limited to Ashgrove only sees Ashgrove's reservations, and gets only Ashgrove's webhook events.
+
+## One install per club
+
+Each club has one install of each app. An admin who connects the app again updates that install rather than creating a new one, so a club's ADMINs share it. If the install was revoked, approving it again brings back the same installation with new tokens. The old tokens stay dead.
+
+## Licensing
+
+Licences apply to the organisation, not to the app. If the club does not have a module, such as Events, calls to its endpoints answer `403` with `module_not_licensed`, exactly as they would for an API key. The consent screen hides scopes the club cannot use and says why, so an admin is not asked to grant something that will not work. If a module is switched off later, the scope stays granted and the same response comes back.
+
+<Aside type="note">
+  Only ADMINs can approve an install. A manager or anyone below ADMIN is refused on the consent page.
+</Aside>
+
+## Rate limits
+
+Each install has its own rate-limit budget, separate from every other install of the same app, so one busy club cannot starve another. The numbers are the same as for an API key: a burst of 50 and 1,000 requests an hour on the REST API, and 1,000 and 10,000 for GraphQL. Responses carry `RateLimit-*` headers for the install's budget. Read them the same way as the [rate limits](/docs/developers/rate-limits/) page describes.
+
+On top of that, Synapse caps the whole app at ten times the per-key hourly rate, across all its installs. That protects everyone if a client secret leaks and someone mass-creates installs.

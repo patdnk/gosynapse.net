@@ -1,0 +1,141 @@
+---
+title: Using the SDK
+description: The @gosynapse/sdk TypeScript client, with quickstarts for API keys and installed apps.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`@gosynapse/sdk` is a TypeScript client for the public API. It covers both API keys and installed apps, and it handles pagination, idempotency keys, retries, token refresh and webhook signature checks.
+
+<Aside type="caution">
+  The package is not yet on the npm registry; publishing to npm is coming soon. Until then, install it from its tarball:
+</Aside>
+
+```sh
+npm install ./gosynapse-sdk-1.0.0.tgz
+```
+
+It needs Node 20 or later, and ships ESM and CommonJS builds with TypeScript types.
+
+## API key quickstart
+
+```ts
+import { Synapse } from "@gosynapse/sdk";
+
+const synapse = new Synapse({ apiKey: process.env.SYNAPSE_API_KEY! });
+
+const me = await synapse.me();
+console.log(me.scopes);
+
+const member = await synapse.members.get("mem_ashgrove_0001");
+```
+
+Use a `syn_test_…` key while you build. Test keys only work in sandbox organisations.
+
+## OAuth quickstart (installed apps)
+
+An installed app sends a venue admin to the authorise page, then trades the code for tokens. It needs a registered app first, in **Settings → Developer apps**, and you can install a draft in your own organisation to try it.
+
+```ts
+import { buildAuthorizeUrl, exchangeCode, Synapse, type OAuthTokens } from "@gosynapse/sdk";
+
+const clientId = "app_fernhollow_pos_bridge";
+const redirectUri = "https://bridge.example.test/oauth/callback";
+
+// 1. Send the admin to the authorise page. Keep codeVerifier with the user's session.
+const { url, codeVerifier } = await buildAuthorizeUrl({
+  clientId,
+  redirectUri,
+  scopes: ["members:read", "events:read"],
+  state: "opaque-state-you-check-on-return",
+});
+// redirect the admin to `url`
+
+// 2. On the callback, check `state`, then exchange the code for tokens.
+const tokens: OAuthTokens = await exchangeCode({
+  clientId,
+  code: callbackCode,
+  codeVerifier,
+  redirectUri,
+});
+
+// 3. Build the client. Save every new set of tokens: the refresh token rotates.
+const synapse = new Synapse({
+  oauth: {
+    clientId,
+    tokens,
+    onTokens: (next) => saveTokens(next),
+  },
+});
+```
+
+Confidential apps also pass `clientSecret` to `exchangeCode` and to `Synapse`.
+Call `synapse.revoke()` to disconnect the app.
+
+The client refreshes the access token before it expires, and once more if a call fails with `invalid_token`. Concurrent calls share a single refresh, because a rotated refresh token can only be used once. Every rotation is passed to `onTokens`, so save it there.
+
+## Pagination
+
+List methods return a `Paginated` value. Iterate it, or read one page at a time:
+
+```ts
+for await (const member of synapse.members.list({ limit: 100 })) {
+  console.log(member.id);
+}
+
+const page = await synapse.members.list({ limit: 100 }).page();
+// page.data, page.hasMore, page.nextCursor
+```
+
+## Errors
+
+Every non-2xx answer throws a `SynapseError` (or a subclass):
+
+```ts
+import { InsufficientScopeError, RateLimitError, SynapseError } from "@gosynapse/sdk";
+
+try {
+  await synapse.members.get("mem_ashgrove_0001");
+} catch (err) {
+  if (err instanceof RateLimitError) console.log("retry after", err.retryAfter);
+  else if (err instanceof InsufficientScopeError) console.log("missing", err.missing);
+  else if (err instanceof SynapseError) console.log(err.code, err.requestId, err.errors);
+  else throw err;
+}
+```
+
+`code` is the API's stable machine code, for example `not_found` or `validation_failed`. `requestId` is for support. An installed app that gets `invalid_token` after a refresh has lost its install: send the admin back through consent.
+
+## Retries and idempotency
+
+Transient failures (network errors, 429 and 5xx) are retried with backoff, two times by default (`maxRetries`). Every `POST` gets an `Idempotency-Key`, generated for you unless you pass one, so a retried create never makes a duplicate:
+
+```ts
+await synapse.members.create(body, { idempotencyKey: "signup-2026-11-19-0042" });
+```
+
+Each attempt times out after 30 seconds (`timeoutMs`).
+
+## GraphQL
+
+Installed apps must send GraphQL as persisted queries. Pass the query string, and the SDK sends it with its persisted-query hash:
+
+```ts
+const data = await synapse.graphql<{ me: { id: string; name: string } }>(
+  "query Me { me { id name } }",
+);
+```
+
+GraphQL `errors` throw a `SynapseError` with code `graphql_error`, and the messages are in `err.errors`.
+
+## Webhooks
+
+`webhooks.construct` and `webhooks.verify` check a delivery's signature. The [installed apps webhook page](/docs/developers/apps/webhooks/) has the full example.
+
+## Versioning
+
+`1.x` targets `/public/v1`. A breaking change to that path gets a new major version of the SDK and a new path. `SDK_API_DIGEST` identifies the OpenAPI document the SDK was generated from, and `SDK_VERSION` is the package version.
+
+```ts
+import { SDK_API_DIGEST, SDK_VERSION } from "@gosynapse/sdk";
+```

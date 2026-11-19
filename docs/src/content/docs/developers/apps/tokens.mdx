@@ -1,0 +1,108 @@
+---
+title: Tokens
+description: Access and refresh tokens, how they rotate, what revokes them, and how an app uninstalls itself.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+An install is authorised with two kinds of opaque token. Both are random strings, hashed on Synapse's side, and checked on every request, so revoking one takes effect at once.
+
+| Token | Prefix | Lifetime |
+| --- | --- | --- |
+| Access token | `syn_at_` | 1 hour |
+| Refresh token | `syn_rt_` | 90 days, sliding: each refresh resets the 90 days |
+| Refresh token cap | | 1 year from the club's consent. After that the admin must reconnect. |
+
+The prefixes let secret scanners find leaked tokens, in the same way as `syn_live_` keys.
+
+## Calling the API
+
+Send the access token as a bearer token:
+
+```bash
+curl https://api.gosynapse.net/public/v1/members?limit=20 \
+  -H "Authorization: Bearer syn_at_…"
+```
+
+When a token is unknown, expired, revoked, or belongs to an install or app that has been revoked, suspended or closed, the API answers `401` with problem code `invalid_token` and a `WWW-Authenticate: Bearer error="invalid_token"` header. Treat that as "refresh, then retry once". If the refresh fails too, send the admin back through [consent](/docs/developers/apps/authorize/).
+
+Installed apps must also send GraphQL as automatic persisted queries. A request that sends a free-form query gets `persisted_query_required`. API keys are not affected.
+
+## Refreshing
+
+Exchange the refresh token at the token endpoint:
+
+```bash
+curl -X POST https://api.gosynapse.net/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token" \
+  -d "refresh_token=$REFRESH_TOKEN" \
+  -d "client_id=app_…"
+```
+
+Confidential clients also authenticate here, with the same methods as at the code exchange. Public clients send `client_id` only.
+
+The response is a new access token and a new refresh token. **Every refresh rotates the refresh token**: the old one stops working as soon as the new one is issued. Save the new pair before you do anything else with it, or the next refresh will fail. The [SDK](/docs/developers/apps/sdk/) refreshes for you and calls `onTokens` with each new pair.
+
+### Reuse detection
+
+Refresh tokens belong to a family, one family per consent. If an old refresh token is presented again:
+
+- Synapse revokes the whole family, including its access tokens, and returns `invalid_grant`.
+- The install itself stays active, but this app's tokens are all gone, so it must get new ones through consent.
+- An audit entry is written, and the club's ADMINs are told.
+
+A 10-second grace window covers the case where a response was lost in transit. The same refresh token can be replayed once within those 10 seconds and gets the same answer back. Do not rely on that window for normal operation: a refresh that succeeds should be saved immediately.
+
+## Revoking
+
+`POST /oauth/revoke` (RFC 7009) revokes an access or refresh token. Revoking a refresh token revokes its whole family. The endpoint always answers `200`, so it cannot be used to check whether a token is valid.
+
+```bash
+curl -X POST https://api.gosynapse.net/oauth/revoke \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "token=$REFRESH_TOKEN" \
+  -d "client_id=app_…"
+```
+
+Revoking tokens does not remove the install. The club's admin still sees it under Settings → Connected apps, and removes it there if they want it gone.
+
+### Uninstalling from your app
+
+An app can remove its own install with `DELETE /public/v1/me/installation`. It needs no particular scope. The result matches an admin revoking the install: tokens stop working and the install's webhook endpoints are disabled.
+
+```bash
+curl -X DELETE https://api.gosynapse.net/public/v1/me/installation \
+  -H "Authorization: Bearer syn_at_…"
+```
+
+### Revoking as an admin
+
+From Settings → Connected apps an ADMIN can revoke an install, or edit its venues. Revoking stops every token straight away and disables the install's webhook endpoints. Nothing is deleted: the data your app already fetched stays with the app, and Synapse does not push anything more to it.
+
+## Checking what the token can do
+
+There is no token introspection endpoint. To learn what an install can see, call `GET /public/v1/me`. For an install it returns `kind: "installation"`, with `installation_id`, `application_id`, `org_id`, `scopes` and `venue_ids`.
+
+```json
+{
+  "kind": "installation",
+  "installation_id": "ins_…",
+  "application_id": "app_…",
+  "org_id": "org_…",
+  "scopes": ["members:read", "events:read"],
+  "venue_ids": ["ven_…"]
+}
+```
+
+Scopes and venues are read from the install on every request, not stored in the token. When an admin changes them, the change applies to the next call with no reconnection.
+
+## When an app is suspended or a club is locked
+
+- **App suspended.** Every token for the app fails straight away. The installs are kept, so they return to service when Synapse restores the app.
+- **Club locked.** Tokens still authenticate, but calls answer `402` with `org_locked`. Refreshing still works, so the app recovers by itself once the club is unlocked.
+- **Club closed.** Its installs are revoked in the same step, and their tokens fail with `invalid_token`.
+
+<Aside type="caution">
+  Store tokens on your server, or in a secret store on the device. Never put them in a URL, a log line or client-side code that other people can read. If a token leaks, revoke it at `/oauth/revoke`.
+</Aside>

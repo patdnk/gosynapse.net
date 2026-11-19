@@ -1,0 +1,51 @@
+---
+title: Build an app
+description: Installed apps connect to Synapse through OAuth, so a club admin can approve them on a consent screen instead of copying an API key.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+An installed app is software that many organisations can use. Each club's admin approves it once on a consent page, and the app then calls the [public API](/docs/developers/) with tokens that belong to that club's install of the app. The club never shares an API key with you.
+
+If you are building an integration for one organisation's own systems, an [API key](/docs/developers/authentication/) is simpler. Use an installed app when other clubs should be able to connect your software themselves.
+
+## Keys or installed apps
+
+|  | API key | Installed app |
+| --- | --- | --- |
+| Who grants access | An admin creates the key in Settings → API keys | An admin approves the app on the consent page |
+| What it acts as | The key | The installation: one organisation's install of your app |
+| Credential | `syn_live_…` or `syn_test_…`, long-lived | `syn_at_…` access token (1 hour) with a `syn_rt_…` refresh token |
+| Revoked by | The admin, from the key list | The admin, from Settings → Connected apps |
+
+Tokens act as the installation. The admin who approved it appears only on the audit record of that consent.
+
+## Register your app
+
+Your organisation's admins register apps in **Settings → Developer apps**. Each app has:
+
+- **A name and a short description**, shown on the consent screen with your organisation's name.
+- **Redirect URIs**, one or more. Use HTTPS. Loopback addresses on any port (the local machine's own name and its IPv4 and IPv6 addresses, for development) and custom schemes for native apps are also allowed. Synapse matches each one as an exact string, so a redirect URI with a different path or query is refused.
+- **A client type.** A *confidential* client is a server that keeps a client secret. A *public* client is a browser or native app with no secret. Both use PKCE.
+- **The scopes it may ask for.** This is the maximum; an admin can grant less. See [Scopes and venues](/docs/developers/apps/scopes-and-venues/).
+- **An optional webhook URL**, which becomes a default webhook endpoint for each install. See [Webhooks for apps](/docs/developers/apps/webhooks/).
+
+Four scopes are *restricted*: `members:sensitive`, `members:merge`, `passes:revoke` and `payments:read`. Only Synapse can add them to an app, so if your app needs one, ask Synapse. The consent screen flags them in amber.
+
+### Draft and live
+
+A new app starts as a **draft**. A draft can be installed only by the organisation that registered it, plus any test organisations Synapse names. Use that to build and test against your own club before anyone else sees the app.
+
+Synapse moves an app to **live** when it is ready for any organisation's ADMIN to install. Synapse can also **suspend** an app. A suspended app's tokens stop working at once and it cannot be installed again, and the ADMINs of every organisation that has it installed are told. When Synapse restores it, they are told that too.
+
+<Aside type="note">
+  Registering an app and listing it are separate. There is no marketplace or app directory. Organisations find your app through you.
+</Aside>
+
+## Where to go next
+
+- [Authorise an install](/docs/developers/apps/authorize/): the consent flow, PKCE and `state`
+- [Tokens](/docs/developers/apps/tokens/): lifetimes, rotation, revocation and uninstalling
+- [Scopes and venues](/docs/developers/apps/scopes-and-venues/): what an install can reach, and its limits
+- [Webhooks for apps](/docs/developers/apps/webhooks/): default endpoints and verifying deliveries
+- [Using the SDK](/docs/developers/apps/sdk/): the TypeScript client for both auth modes

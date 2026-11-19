@@ -1,0 +1,68 @@
+---
+title: Webhooks for apps
+description: Default webhook endpoints for installs, how they are signed, and how to verify a delivery with the SDK.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Installs receive the same [webhook](/docs/developers/webhooks/) deliveries as API keys: the same envelope, the same `Synapse-Signature` header and the same retry rules. This page covers what is different for an installed app.
+
+## The default endpoint
+
+If your app has a webhook URL registered, every install gets an endpoint for it when the club approves the app. Its event types are limited to the scopes the install holds. The signing secret for that endpoint is shown to the club's admin under Settings → Connected apps, and the admin gives it to your app (or your app's operator does). Store the secret with your app's other configuration.
+
+## Your own endpoints
+
+An install that holds `webhooks:manage` can create, list and delete webhook endpoints over the API, with `POST /public/v1/webhook-endpoints`. It sees and changes only the endpoints it owns; endpoints created by an admin or by another install are not visible to it.
+
+```bash
+curl -X POST https://api.gosynapse.net/public/v1/webhook-endpoints \
+  -H "Authorization: Bearer syn_at_…" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-app.example.test/hooks/synapse",
+    "description": "Ashgrove reservations",
+    "event_types": ["reservation.*"]
+  }'
+```
+
+The response carries the endpoint's signing secret, shown once. As with API keys, `event_types` takes exact names, a family such as `reservation.*`, or `*`. Types the install's scopes cannot cover are refused when the endpoint is created. Endpoints must be public HTTPS addresses.
+
+## What an install receives
+
+- **Scope and venue limits apply.** An install limited to some venues receives only events from those venues.
+- **Scopes lost later.** If an admin removes a scope, event types it can no longer read stop being delivered, at the time of each delivery.
+- **Revoking.** Revoking an install disables its endpoints. Uninstalling deletes them.
+
+## Verify each delivery
+
+Check the signature against the raw request body before you parse the JSON. Frameworks that parse JSON for you must hand over the original bytes. The [SDK](/docs/developers/apps/sdk/) does the check:
+
+```ts
+import { webhooks, WebhookVerificationError } from "@gosynapse/sdk";
+
+app.post("/synapse/webhooks", rawBodyParser, async (req, res) => {
+  try {
+    // Pass both secrets while a rotation is in progress; pass one when there is none.
+    const secrets = [process.env.SYNAPSE_WEBHOOK_SECRET!, process.env.SYNAPSE_WEBHOOK_PREVIOUS_SECRET].filter(
+      (s): s is string => Boolean(s),
+    );
+    const event = await webhooks.construct(req.body, req.headers, secrets);
+    if (event.type === "reservation.seated") handleSeated(event.data.object);
+    res.sendStatus(204);
+  } catch (err) {
+    if (err instanceof WebhookVerificationError) return res.sendStatus(400);
+    throw err;
+  }
+});
+```
+
+`rawBodyParser` and `handleSeated` are your app's own code. `webhooks.verify` returns a boolean instead of throwing. Both reject signatures more than 300 seconds old unless you pass `toleranceSeconds`.
+
+<Aside type="tip">
+  Deliveries can arrive more than once. Use `Synapse-Event-Id` to skip events you have already handled.
+</Aside>
+
+## Rotating the secret
+
+Rotating an endpoint's secret gives you a new one, shown once. While you switch over, accept both the old and the new secret, as the example above does.
